@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<%- include('../partials/head') %>
+<body>
+    <div class="container py-4">
+        <a href="/gallery" class="btn btn-link ps-0">&larr; Galeriye dön</a>
+        <div class="row">
+            <div class="col-md-8">
+                <img src="<%= item.image_path %>" class="img-fluid rounded shadow-sm" alt="<%= item.title %>">
+            </div>
+            <div class="col-md-4">
+                <h2><%= item.title %></h2>
+                <p><small class="text-muted">Yükleyen: <%= item.owner || 'Bilinmiyor' %></small></p>
+                <p><small class="text-muted">Tarih: <%= item.created_at %></small></p>
+            </div>
+        </div>
+        <hr>
+        <h5 class="mt-4">Diğer fotoğraflar</h5>
+        <div class="row g-3">
+            <% others.forEach(o=>{ %>
+                <div class="col-6 col-md-3">
+                    <a href="/gallery/<%= o.id %>-<%= slugify(o.title||'', {lower:true, strict:true}) %>">
+                        <img src="<%= o.image_path %>" class="img-fluid rounded" alt="<%= o.title %>">
+                    </a>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+    <%- include('../partials/script') %>
+</body>
+</html>

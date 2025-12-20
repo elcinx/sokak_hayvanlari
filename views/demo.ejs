@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<%- include('./partials/head') %>
+<body>
+    <div class="container py-4">
+        <h1 class="mb-3">2 Dakikada Demo</h1>
+        <p class="text-muted">Geliştirme ortamı için hızlı tur. Prod’da kapalı.</p>
+        <ol class="list-group list-group-numbered">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Haritayı aç (marker, heatmap, filtreler)
+                <a href="/" class="btn btn-primary btn-sm">Harita</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Besleme detayına git, yorum/like dene
+                <a href="/feeds/1" class="btn btn-primary btn-sm">Feed Detay</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Leaderboard ve puanları incele
+                <a href="/api/leaderboard/weekly" class="btn btn-outline-primary btn-sm">Weekly API</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Admin Dashboard (istatistikler)
+                <a href="/admin/dashboard" class="btn btn-primary btn-sm">Admin Dashboard</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Yorum moderasyonu
+                <a href="/admin/comments" class="btn btn-primary btn-sm">Comments</a>
+            </li>
+        </ol>
+        <div class="mt-4">
+            <h5>Demo Giriş Bilgileri</h5>
+            <p>admin@test.com / 123456</p>
+            <p>koord@test.com / 123456</p>
+        </div>
+    </div>
+    <%- include('./partials/script') %>
+</body>
+</html>

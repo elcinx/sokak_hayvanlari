@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head.ejs') %>
+    <body>
+        <div class="d-flex" id="wrapper">
+            <!-- Sidebar-->
+        <%- include('../partials/sidebar.ejs') %>
+            <!-- Page content wrapper-->
+            <div id="page-content-wrapper">
+                <!-- Top navigation-->
+                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                    <div class="container-fluid">
+                        <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                     <%- include('../partials/right-top-menu.ejs') %>
+                    </div>
+                </nav>
+                <!-- Page content-->
+                <div class="container-fluid">
+                    <h1 class="mt-3"><%= contentTitle %></h1>
+                <div class="row">
+                    <div class="col-sm-8 bg-light ms-2 border border-info">
+                    <form method="post">
+                       <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                      <input type="hidden" name="noticeid" value="<%=oldData.noticeid%>">
+                        <div class="form-group row mb-2 mt-3">
+                          <label for="title" class="col-sm-3 col-form-label">Anouncment Title</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" id="title" name="title" placeholder="Tittle" value="<%=oldData.title %>">
+                          </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                          <label for="explain" class="col-sm-3 col-form-label">Anouncment Explain</label>
+                          <div class="col-sm-9">
+                            <textarea name="explain" id="explain"><%=oldData.exp%></textarea>
+                          </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                          <label for="category" class="col-sm-3 col-form-label">Kategori</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" id="category" name="category" value="<%=oldData.category||''%>">
+                          </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                          <label for="publish_at" class="col-sm-3 col-form-label">Yayın Tarihi</label>
+                          <div class="col-sm-9">
+                            <input type="datetime-local" class="form-control" id="publish_at" name="publish_at" value="<%= oldData.publish_at ? new Date(oldData.publish_at).toISOString().slice(0,16) : '' %>">
+                          </div>
+                        </div>
+                     <div class="form-group row mb-2">
+                          <div class="col-sm-3">Aktif</div>
+                          <div class="col-sm-9">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="gridCheck1" name="isActive" <%=oldData.is_active?"checked":null%>>
+                              <label class="form-check-label" for="gridCheck1">
+                                Yayında
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                          <div class="col-sm-3">User</div>
+                          <div class="col-sm-9">
+                              <select name="user" id="user" class="form-control">
+                                  <%users.forEach(element => { %>
+                                      <option value="<%=element.userid %>" <%=element.userid==oldData.created_by?"selected":null  %>> <%=element.name+" "+element.surname %> </option>
+                                  <% }) %>
+                                </select>
+                          </div>
+                      </div>
+
+                        <div class="form-group row justify-content-end mb-2">
+                          <div class="col-sm-9 ">
+                            <button type="submit" class="btn btn-primary">Düzelt</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+
+           <%- include('../partials/script.ejs') %>    
+
+    <!--Ck Editor script kodu-->
+    <script>
+      ClassicEditor
+              .create( document.querySelector( '#explain' ) )
+              .then( editor => {
+                      console.log( editor );
+              } )
+              .catch( error => {
+                      console.error( error );
+              } );
+  </script>
+    </body>
+</html>

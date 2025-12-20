@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="tr">
+<%- include('../partials/head') %>
+    <body>
+        <div class="d-flex" id="wrapper">
+            <div id="page-content-wrapper">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                    <div class="container-fluid">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                                <li class="nav-item"><a class="nav-link" href="/gallery">Galeri</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/auth/login">Giriş</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    <h1 class="mt-4"><%= contentTitle %></h1>    
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-light border rounded shadow-sm">
+                                <div class="small text-muted">Toplam Besleme</div>
+                                <div class="h4 mb-0" id="totalFeeds"><%= summary.totalFeeds %></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-light border rounded shadow-sm">
+                                <div class="small text-muted">Aktif Nokta</div>
+                                <div class="h4 mb-0" id="activePoints"><%= summary.activePoints %></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-light border rounded shadow-sm">
+                                <div class="small text-muted">Bugün Besleme</div>
+                                <div class="h4 mb-0" id="todayFeeds"><%= summary.todayFeeds %></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-light border rounded shadow-sm">
+                                <div class="small text-muted">Online</div>
+                                <div class="h4 mb-0" id="onlineUsers">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <h3>Harita & Noktalar</h3>
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                <button class="btn btn-outline-primary btn-sm" id="locateBtn">Konumumu bul</button>
+                                <button class="btn btn-outline-secondary btn-sm" id="toggleHeatmap">Heatmap</button>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input filter-status" type="checkbox" id="filterCritical" value="critical" checked>
+                                    <label class="form-check-label" for="filterCritical">Kritik</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input filter-status" type="checkbox" id="filterNew" value="new" checked>
+                                    <label class="form-check-label" for="filterNew">Yeni</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input filter-status" type="checkbox" id="filterSteady" value="steady" checked>
+                                    <label class="form-check-label" for="filterSteady">Düzenli</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input filter-status" type="checkbox" id="filterNormal" value="normal" checked>
+                                    <label class="form-check-label" for="filterNormal">Diğer</label>
+                                </div>
+                            </div>
+                            <div id="map" class="mb-4"></div>
+                            <h4 class="mb-3">Son Duyurular</h4>
+                            <% data.slice(0,5).forEach(element=>{ %>
+                                <div class="alert alert-info">
+                                    <a href="/announcements/<%=element.slug%>" class="link-primary" style="text-decoration:none;">
+                                        <strong><%=element.title %></strong>
+                                    </a>
+                                </div>
+                            <% }) %>
+                        </div>
+                        <div class="col-lg-3">
+                            <%- include('./announcements-sidebar') %>  
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h4>Mini Galeri</h4>
+                        <div class="row g-3">
+                            <% gallery.forEach(g=>{ %>
+                                <div class="col-6 col-md-2">
+                                    <a href="/gallery/<%= g.id %>-<%= require('slugify')(g.title||'', {lower:true, strict:true}) %>">
+                                        <img src="/<%= g.image_path %>" class="img-fluid rounded" alt="<%= g.title %>">
+                                    </a>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h4>Bu Haftanın En İyileri (Top 5)</h4>
+                        <ul class="list-group" id="weeklyTop">
+                            <li class="list-group-item">Yükleniyor...</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <%- include('../partials/script') %>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const isAuth = <%= fullname ? "true" : "false" %>;
+        // Online kullanıcı sayısı
+        const socket = io();
+        socket.on('online-count', ({online})=>{
+            document.getElementById('onlineUsers').innerText = online;
+        });
+        // Özet bilgiyi güncelle
+        fetch('/api/metrics/summary')
+            .then(r=>r.json())
+            .then(d=>{
+                document.getElementById('totalFeeds').innerText=d.totalFeeds;
+                document.getElementById('activePoints').innerText=d.activePoints;
+                document.getElementById('todayFeeds').innerText=d.todayFeeds;
+                document.getElementById('onlineUsers').innerText=d.online;
+            })
+            .catch(()=>{});
+
+        // Leaflet harita
+        const map = L.map('map').setView([20, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let markers=[];
+        let statusByKey={};
+        let heatLayer=L.layerGroup();
+
+        // Status bilgisi & heatmap
+        fetch('/api/feeds/points-summary?days=30')
+            .then(r=>r.json())
+            .then(rows=>{
+                rows.forEach(r=>{
+                    const key=`${r.lat},${r.lng}`;
+                    statusByKey[key]=r.status;
+                });
+                rows.forEach(r=>{
+                    const intensity = Math.min(1 + r.feed_count/5, 5);
+                    const circle = L.circle([r.lat, r.lng], {
+                        radius: 200 * intensity,
+                        color: 'red',
+                        opacity: 0.4,
+                        fillOpacity:0.15
+                    });
+                    heatLayer.addLayer(circle);
+                });
+            });
+
+        // Marker çiz
+        fetch('/api/feeds')
+            .then(r=>r.json())
+            .then(feeds=>{
+                feeds.forEach(feed=>{
+                    if (!feed.lat || !feed.lng) return;
+                    const popupParts = [];
+                    if (feed.photo_path){
+                        popupParts.push(`<img src="/${feed.photo_path}" style="max-width:180px; display:block; margin-bottom:8px;">`);
+                    }
+                    popupParts.push(`<strong>${feed.name || 'Kullanıcı'}</strong>`);
+                    popupParts.push(`<div>${dayjs(feed.created_at).format('DD.MM.YYYY HH:mm')}</div>`);
+                    if (feed.note) popupParts.push(`<div>${feed.note}</div>`);
+                    popupParts.push(`<div>Yorum: ${feed.comment_count||0} / Beğeni: ${feed.like_count||0}</div>`);
+                    popupParts.push(`<a href="/feeds/${feed.id}" class="btn btn-sm btn-outline-primary mt-1">Detay</a>`);
+                    if (isAuth){
+                        popupParts.push(`<button class="btn btn-sm btn-outline-secondary mt-1 fav-btn" data-lat="${feed.lat}" data-lng="${feed.lng}">Favori</button>`);
+                    }
+                    const key = `${Number(feed.lat).toFixed(4)},${Number(feed.lng).toFixed(4)}`;
+                    const status = statusByKey[key] || 'normal';
+                    const marker = L.marker([feed.lat, feed.lng], {status});
+                    marker.bindPopup(popupParts.join('<br>'));
+                    marker.addTo(map);
+                    markers.push(marker);
+                });
+                attachFavHandlers();
+            }).catch(()=>{});
+
+        // Konumumu bul
+        const locateBtn = document.getElementById('locateBtn');
+        locateBtn.addEventListener('click', ()=>{
+            if (!navigator.geolocation) return alert('Tarayıcı konum desteği yok');
+            locateBtn.disabled = true;
+            navigator.geolocation.getCurrentPosition((pos)=>{
+                const {latitude, longitude} = pos.coords;
+                map.setView([latitude, longitude], 14);
+                L.marker([latitude, longitude]).addTo(map).bindPopup("Konumum").openPopup();
+                locateBtn.disabled = false;
+            }, ()=>{
+                alert('Konum alınamadı');
+                locateBtn.disabled = false;
+            });
+        });
+
+        // Filtreler
+        const filters = document.querySelectorAll('.filter-status');
+        filters.forEach(f=>f.addEventListener('change', applyFilters));
+        function applyFilters(){
+            const active = Array.from(filters).filter(f=>f.checked).map(f=>f.value);
+            markers.forEach(m=>{
+                const status = m.options.status || 'normal';
+                if (active.includes(status)) {
+                    m.addTo(map);
+                } else {
+                    map.removeLayer(m);
+                }
+            });
+        }
+
+        // Heatmap toggle
+        document.getElementById('toggleHeatmap').addEventListener('click', ()=>{
+            if (map.hasLayer(heatLayer)) {
+                map.removeLayer(heatLayer);
+            } else {
+                heatLayer.addTo(map);
+            }
+        });
+
+        // Favori ekle
+        function attachFavHandlers(){
+            document.querySelectorAll('.fav-btn').forEach(btn=>{
+                btn.addEventListener('click', ()=>{
+                    const lat=btn.getAttribute('data-lat');
+                    const lng=btn.getAttribute('data-lng');
+                    fetch('/api/favorites', {
+                        method:'POST',
+                        headers:{'Content-Type':'application/json'},
+                        body: JSON.stringify({lat,lng})
+                    }).then(r=>r.json()).then(()=>{ btn.innerText="Eklendi"; btn.disabled=true;}).catch(()=>{});
+                });
+            });
+        }
+
+        // Haftalık leaderboard
+        fetch('/api/leaderboard/weekly')
+            .then(r=>r.json())
+            .then(list=>{
+                const ul = document.getElementById('weeklyTop');
+                ul.innerHTML='';
+                list.slice(0,5).forEach((item,idx)=>{
+                    const li=document.createElement('li');
+                    li.className="list-group-item d-flex justify-content-between";
+                    li.innerHTML=`<span>${idx+1}. ${item.name}</span><span>${item.points}</span>`;
+                    ul.appendChild(li);
+                });
+                if (list.length===0){
+                    ul.innerHTML='<li class="list-group-item">Veri yok</li>';
+                }
+            }).catch(()=>{
+                const ul = document.getElementById('weeklyTop');
+                ul.innerHTML='<li class="list-group-item">Yüklenemedi</li>';
+            });
+    </script>
+    </body>
+</html>
