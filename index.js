@@ -24,6 +24,7 @@ const csurf = require("csurf");
 const { v4: uuid } = require("uuid");
 
 app.set("view engine", "ejs");
+app.set("trust proxy", 1);
 
 app.use(helmet());
 
