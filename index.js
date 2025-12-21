@@ -26,7 +26,6 @@ const { v4: uuid } = require("uuid");
 app.set("view engine", "ejs");
 
 app.use(helmet());
-app.use(corsMiddleware);
 
 app.use((req,res,next)=>{
     req.id = uuid();
@@ -51,6 +50,9 @@ const feedsRouter = require("./router/feeds.js");
 const leaderboardRouter = require("./router/leaderboard.js");
 const adminRouter = require("./router/admin.js");
 const userRouter = require("./router/user.js");
+
+// CORS only for API
+app.use("/api", corsMiddleware);
 
 app.use("/auth", authRouter);
 app.use(metricsRouter);
@@ -123,7 +125,7 @@ app.use((err, req, res, next) => {
 });
 
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, { cors: { origin: config.corsAllowlist.length ? config.corsAllowlist : "*" } });
 const broadcastOnline = () => {
     io.emit("online-count", { online: io.engine.clientsCount });
 };

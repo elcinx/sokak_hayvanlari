@@ -23,9 +23,8 @@ module.exports = (req, res, next) => {
     baseCors(req, res, (err) => {
         if (err && err.message === "CORS_BLOCKED") {
             const origin = err.origin || req.headers.origin || "-";
-            const host = req.headers.host || "-";
             const path = req.originalUrl || "-";
-            console.error(`[CORS] blocked origin=${origin} host=${host} path=${path} allowlist=${allowlist.join(",")}`);
+            console.error(`[CORS] blocked origin=${origin} path=${path}`);
             return res.status(403).json({ error: "CORS not allowed" });
         }
         next(err);
