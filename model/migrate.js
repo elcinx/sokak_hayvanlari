@@ -1,7 +1,18 @@
 const db = require("./data");
 
 async function ensureTables() {
-    // Roller
+    // Users (other tables reference this)
+    await db.execute(`
+        CREATE TABLE IF NOT EXISTS users (
+            userid INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100),
+            surname VARCHAR(100),
+            email VARCHAR(100) UNIQUE,
+            password VARCHAR(255)
+        )
+    `);
+
+    // Roles
     await db.execute(`
         CREATE TABLE IF NOT EXISTS roles (
             roleid INT AUTO_INCREMENT PRIMARY KEY,
@@ -9,7 +20,7 @@ async function ensureTables() {
         )
     `);
 
-    // Kullanıcı - rol eşleşmesi
+    // User - Role mapping
     await db.execute(`
         CREATE TABLE IF NOT EXISTS user_roles (
             userid INT NOT NULL,
@@ -37,7 +48,7 @@ async function ensureTables() {
         )
     `);
 
-    // Galeri öğeleri (feed log'dan türetilebilir ama talep gereği ayrı tablo)
+    // Gallery items
     await db.execute(`
         CREATE TABLE IF NOT EXISTS gallery_items (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,7 +60,7 @@ async function ensureTables() {
         )
     `);
 
-    // Feed logları
+    // Feed logs
     await db.execute(`
         CREATE TABLE IF NOT EXISTS feed_logs (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -65,11 +76,10 @@ async function ensureTables() {
             FOREIGN KEY (user_id) REFERENCES users(userid) ON DELETE CASCADE
         )
     `);
-    // Ek kolonlar (geriye dönük)
     try { await db.execute("ALTER TABLE feed_logs ADD COLUMN photo_url VARCHAR(500)"); } catch(e){}
     try { await db.execute("ALTER TABLE feed_logs ADD COLUMN photo_key VARCHAR(255)"); } catch(e){}
 
-    // Yorumlar
+    // Comments
     await db.execute(`
         CREATE TABLE IF NOT EXISTS feed_comments (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -83,7 +93,7 @@ async function ensureTables() {
         )
     `);
 
-    // Beğeniler
+    // Likes
     await db.execute(`
         CREATE TABLE IF NOT EXISTS feed_likes (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -96,7 +106,7 @@ async function ensureTables() {
         )
     `);
 
-    // Favoriler
+    // Favorites
     await db.execute(`
         CREATE TABLE IF NOT EXISTS user_favorites (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -109,7 +119,7 @@ async function ensureTables() {
         )
     `);
 
-    // Puan defteri
+    // Points ledger
     await db.execute(`
         CREATE TABLE IF NOT EXISTS points_ledger (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -122,7 +132,7 @@ async function ensureTables() {
         )
     `);
 
-    // Rozetler
+    // Badges
     await db.execute(`
         CREATE TABLE IF NOT EXISTS badges (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -135,7 +145,7 @@ async function ensureTables() {
         )
     `);
 
-    // Kullanıcı rozetleri
+    // User badges
     await db.execute(`
         CREATE TABLE IF NOT EXISTS user_badges (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -148,7 +158,7 @@ async function ensureTables() {
         )
     `);
 
-    // Leaderboard cache (opsiyonel)
+    // Leaderboard cache (optional)
     await db.execute(`
         CREATE TABLE IF NOT EXISTS leaderboard_cache (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -160,13 +170,13 @@ async function ensureTables() {
         )
     `);
 
-    // Varsayılan roller
+    // Seed default roles
     const [roleRows] = await db.execute("SELECT COUNT(*) AS c FROM roles");
     if (roleRows[0].c === 0) {
         await db.execute("INSERT INTO roles (name) VALUES (?), (?), (?)", ["admin", "koordinator", "kullanici"]);
     }
 
-    // En az bir admin ata (ilk kullanıcıyı admin yapar)
+    // Make first user admin if none
     const [userRoleCount] = await db.execute("SELECT COUNT(*) AS c FROM user_roles");
     if (userRoleCount[0].c === 0) {
         const [users] = await db.execute("SELECT userid FROM users ORDER BY userid ASC LIMIT 1");
@@ -178,7 +188,7 @@ async function ensureTables() {
         }
     }
 
-    // Varsayılan rozetler
+    // Default badges
     const badgesSeed = [
         { code:"ISTIKRARLI", name:"İstikrarlı Besleyici", description:"Son 7 gün her gün en az 1 besleme", icon:null },
         { code:"KESIFCI", name:"Keşifçi", description:"10 farklı lokasyonda besleme", icon:null },
