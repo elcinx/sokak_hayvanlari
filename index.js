@@ -11,6 +11,7 @@ const seedDev = require("./seed/devSeed");
 const app = express();
 const ensureTables = require("./model/migrate");
 const metricsController = require("./controller/metrics");
+const bootstrapAdmin = require("./services/bootstrapAdmin");
 
 app.use("/static", express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.isAbsolute(config.uploadDir) ? config.uploadDir : path.join(__dirname, config.uploadDir)));
@@ -133,6 +134,9 @@ io.on("connection", (socket) => {
 });
 
 ensureTables()
+    .then(() => {
+        return bootstrapAdmin();
+    })
     .then(() => {
         if (config.seedEnabled && config.nodeEnv !== "production") {
             seedDev().catch(err=>logger.error({originalUrl:"seed",session:{}}, err, "seed_dev"));
