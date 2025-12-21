@@ -43,25 +43,42 @@ app.use((req,res,next)=>{
 });
 app.use(locals);
 
-const adminRouter = require("./router/admin.js");
-const userRouter = require("./router/user.js");
 const authRouter = require("./router/auth.js");
 const metricsRouter = require("./router/metrics.js");
 const galleryRouter = require("./router/gallery.js");
 const feedsRouter = require("./router/feeds.js");
 const leaderboardRouter = require("./router/leaderboard.js");
+const adminRouter = require("./router/admin.js");
+const userRouter = require("./router/user.js");
 
-app.use(adminRouter);
-app.use("/user", userRouter);
 app.use("/auth", authRouter);
 app.use(metricsRouter);
 app.use(galleryRouter);
 app.use(feedsRouter);
 app.use(leaderboardRouter);
+app.use(adminRouter); // routes start with /admin
+app.use("/user", userRouter); // legacy prefix
+app.use("/", userRouter); // root site pages
 
 if (config.nodeEnv !== "production") {
     app.get("/demo", (req,res)=> {
         res.render("demo", { title:"2 Dakikada Demo", contentTitle:"Demo Akışı" });
+    });
+    // Debug route list
+    app.get("/routes", (req,res)=>{
+        const routes = [];
+        app._router.stack.forEach((m)=>{
+            if (m.route && m.route.path){
+                routes.push({path:m.route.path, methods:Object.keys(m.route.methods)});
+            } else if (m.name === 'router' && m.handle.stack){
+                m.handle.stack.forEach((s)=>{
+                    if (s.route){
+                        routes.push({path:s.route.path, methods:Object.keys(s.route.methods)});
+                    }
+                });
+            }
+        });
+        res.json(routes);
     });
 }
 
