@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const required = ["PORT","DB_HOST","DB_USER","DB_PASS","DB_NAME","SESSION_SECRET","BASE_URL","NODE_ENV","UPLOAD_DIR","STORAGE_DRIVER"];
 const pkg = require("./package.json");
 
