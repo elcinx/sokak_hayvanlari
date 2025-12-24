@@ -1,18 +1,23 @@
 const path = require("path");
 const fs = require("fs");
 const config = require("../config");
+const storageDriver = (process.env.STORAGE_DRIVER || config.storageDriver || "local").toLowerCase();
 let cloudinary;
-if (config.storageDriver === "cloudinary") {
-    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET){
-        console.error("Cloudinary seçili ama CLOUDINARY_* değişkenleri eksik");
-        process.exit(1);
-    }
+if (storageDriver === "cloudinary") {
     cloudinary = require("cloudinary").v2;
-    cloudinary.config({
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-        api_key: process.env.CLOUDINARY_API_KEY,
-        api_secret: process.env.CLOUDINARY_API_SECRET
-    });
+    if (process.env.CLOUDINARY_URL) {
+        cloudinary.config({ cloudinary_url: process.env.CLOUDINARY_URL });
+    } else {
+        if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET){
+            console.error("Cloudinary se?ili ama CLOUDINARY_* de?i?kenleri eksik");
+            process.exit(1);
+        }
+        cloudinary.config({
+            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            api_secret: process.env.CLOUDINARY_API_SECRET
+        });
+    }
 }
 
 const localSave = async (file) => {
@@ -43,7 +48,7 @@ const cloudDelete = async (key) => {
 
 exports.saveImage = async (file) => {
     if (!file) return { url:null, key:null };
-    if (config.storageDriver === "cloudinary") {
+    if (storageDriver === "cloudinary") {
         return cloudSave(file);
     }
     return localSave(file);
@@ -51,8 +56,10 @@ exports.saveImage = async (file) => {
 
 exports.deleteImage = async (key) => {
     if (!key) return;
-    if (config.storageDriver === "cloudinary") {
+    if (storageDriver === "cloudinary") {
         return cloudDelete(key);
     }
     return localDelete(key);
 };
+
+exports.getStorageDriver = () => storageDriver;

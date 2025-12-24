@@ -9,6 +9,7 @@ const path = require("path");
 const helmet = require("helmet");
 const corsMiddleware = require("./middleware/corsConfig");
 const config = require("./config");
+const { getStorageDriver } = require("./services/storage");
 const logger = require("./utils/logger");
 const seedDev = require("./seed/devSeed");
 
@@ -99,7 +100,10 @@ app.get("/health", async (req,res)=>{
             status:"ok",
             db:true,
             app_version:config.appVersion,
-            storage_driver: config.storageDriver,
+            storage_driver: getStorageDriver(),
+            storage_driver_env: process.env.STORAGE_DRIVER || null,
+            cloudinary_url_set: !!process.env.CLOUDINARY_URL,
+            cloudinary_keys_set: !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET),
             db_name: config.db.database
         });
     }catch(err){
@@ -108,7 +112,10 @@ app.get("/health", async (req,res)=>{
             status:"degraded",
             db:"down",
             app_version:config.appVersion,
-            storage_driver: config.storageDriver,
+            storage_driver: getStorageDriver(),
+            storage_driver_env: process.env.STORAGE_DRIVER || null,
+            cloudinary_url_set: !!process.env.CLOUDINARY_URL,
+            cloudinary_keys_set: !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET),
             db_name: config.db.database
         });
     }
