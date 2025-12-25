@@ -95,8 +95,8 @@
                         <div class="row g-3">
                             <% gallery.forEach(g=>{ %>
                                 <div class="col-6 col-md-2">
-                                    <a href="/gallery/<%= g.id %>-<%= require('slugify')(g.title||'', {lower:true, strict:true}) %>">
-                                        <img src="/<%= g.image_path %>" class="img-fluid rounded" alt="<%= g.title %>">
+                                    <a href="/gallery/<%= g.id %>-<%= slugify(g.title||'', {lower:true, strict:true}) %>">
+                                        <img src="<%= g.image_path %>" class="img-fluid rounded" alt="<%= g.title %>">
                                     </a>
                                 </div>
                             <% }) %>
