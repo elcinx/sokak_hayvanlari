@@ -124,7 +124,8 @@ exports.galleryList = async (req, res, next) => {
         );
         const items = rows.map(r=>({
             ...r,
-            image_url: r.photo_url || null
+            image_url: (r.photo_url && (r.photo_url.startsWith("http://") || r.photo_url.startsWith("https://"))) ? r.photo_url : null,
+            url: (r.photo_url && (r.photo_url.startsWith("http://") || r.photo_url.startsWith("https://"))) ? r.photo_url : null
         }));
         res.render("admin/gallery-list", {
             title:"Galeri Yönetimi",
