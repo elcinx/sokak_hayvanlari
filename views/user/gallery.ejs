@@ -5,23 +5,99 @@
     <div class="container py-4">
         <h1 class="mb-4"><%= contentTitle %></h1>
         <div class="row g-3">
-            <% if (items.length===0){ %>
-                <p>Henüz galeri içeriği yok.</p>
+            <% const showSkeleton = items.length === 0; %>
+            <div class="col-12 <%= showSkeleton ? '' : 'd-none' %>">
+                <div class="card border-0 bg-light p-4 text-center">
+                    <h5 class="mb-1">Henuz galeri icerigi yok.</h5>
+                    <p class="text-muted mb-0">Yeni yuklemeler geldiginde burada goreceksiniz.</p>
+                </div>
+            </div>
+            <% if (showSkeleton) { %>
+                <% for (let i = 0; i < 4; i++) { %>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card placeholder-glow">
+                            <div class="placeholder w-100" style="height:200px;"></div>
+                        </div>
+                    </div>
+                <% } %>
             <% } %>
             <% items.forEach(item=>{ %>
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="<%= item.image_path %>" class="card-img-top" alt="<%= item.title %>">
-                        <div class="card-body">
-                            <h5 class="card-title"><%= item.title %></h5>
-                            <p class="card-text"><small class="text-muted">Yükleyen: <%= item.owner || 'Bilinmiyor' %></small></p>
-                            <a href="/gallery/<%= item.id %>-<%= require('slugify')(item.title||'', {lower:true, strict:true}) %>" class="btn btn-outline-primary btn-sm">Görüntüle</a>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="gallery-card position-relative overflow-hidden rounded shadow-sm">
+                        <img src="<%= item.image_path %>" class="w-100 d-block" alt="<%= item.title %>">
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-light gallery-open"
+                            data-bs-toggle="modal"
+                            data-bs-target="#galleryModal"
+                            data-src="<%= item.image_path %>"
+                            data-title="<%= item.title || '' %>"
+                            data-owner="<%= item.owner || 'Bilinmiyor' %>"
+                            data-date="<%= item.created_at %>"
+                        >
+                            Goruntule
+                        </button>
+                        <div class="gallery-overlay p-2">
+                            <div class="fw-semibold text-white"><%= (item.title || 'Besleme').slice(0, 60) %></div>
+                            <div class="small text-white-50"><%= item.owner || 'Bilinmiyor' %></div>
+                            <div class="small text-white-50"><%= item.created_at %></div>
                         </div>
                     </div>
                 </div>
             <% }) %>
         </div>
+
+        <% if (totalPages > 1) { %>
+            <nav class="mt-4" aria-label="Galeri sayfalama">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
+                        <a class="page-link" href="/gallery?page=<%= Math.max(1, page - 1) %>">Onceki</a>
+                    </li>
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= page === i ? 'active' : '' %>">
+                            <a class="page-link" href="/gallery?page=<%= i %>"><%= i %></a>
+                        </li>
+                    <% } %>
+                    <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
+                        <a class="page-link" href="/gallery?page=<%= Math.min(totalPages, page + 1) %>">Sonraki</a>
+                    </li>
+                </ul>
+            </nav>
+        <% } %>
     </div>
+
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="galleryModalTitle">Gorsel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="galleryModalImage" src="" class="img-fluid rounded" alt="">
+                    <div class="mt-2 text-muted small" id="galleryModalMeta"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <%- include('../partials/script') %>
+    <script src="/js/gallery.js"></script>
+    <style>
+        .gallery-card img { height: 200px; object-fit: cover; }
+        .gallery-overlay {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.7), rgba(0,0,0,0));
+        }
+        .gallery-open {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            opacity: 0.9;
+        }
+    </style>
 </body>
 </html>

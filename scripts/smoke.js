@@ -4,8 +4,9 @@ const checks = [
   { url:"http://localhost:3000/", expect:200 },
   { url:"http://localhost:3000/auth/login", expect:200 },
   { url:"http://localhost:3000/health", expect:200 },
-  { url:"http://localhost:3000/api/metrics/summary", expect:200 },
-  { url:"http://localhost:3000/api/feeds", expect:200 },
+  { url:"http://localhost:3000/gallery", expect:200 },
+  { url:"http://localhost:3000/announcements", expect:200 },
+  { url:"http://localhost:3000/sitemap.xml", expect:200 },
 ];
 
 async function main(){

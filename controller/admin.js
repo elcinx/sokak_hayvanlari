@@ -1,6 +1,27 @@
 const db = require("../model/data");
 const slugify = require("slugify");
 
+const buildUniqueSlug = async (title, excludeId = null) => {
+    const base = slugify(title || "", { lower: true, strict: true }) || "duyuru";
+    const like = `${base}%`;
+    const params = excludeId ? [like, excludeId] : [like];
+    const where = excludeId ? "WHERE slug LIKE ? AND noticeid<>?" : "WHERE slug LIKE ?";
+    const [rows] = await db.execute(`SELECT slug FROM announcements ${where}`, params);
+    const existing = rows.map((r) => r.slug);
+    if (!existing.includes(base)) {
+        return base;
+    }
+    let max = 1;
+    existing.forEach((s) => {
+        const match = s.match(new RegExp(`^${base}-(\\d+)$`));
+        if (match) {
+            const n = parseInt(match[1], 10);
+            if (n > max) max = n;
+        }
+    });
+    return `${base}-${max + 1}`;
+};
+
 exports.adminList = async (req, res) => {
     const [rows] = await db.execute(`
         SELECT a.*, u.name 
@@ -19,6 +40,7 @@ exports.adminPostAddAnc = async (req, res, next) => {
     const body = req.body;
     const isActive = body.isActive ? true : false;
     try {
+        const slug = await buildUniqueSlug(body.title || "");
         await db.execute(
             "INSERT INTO announcements (title, exp, is_active, created_by, slug, category, publish_at) VALUES (?,?,?,?,?,?,?)",
             [
@@ -26,7 +48,7 @@ exports.adminPostAddAnc = async (req, res, next) => {
                 body.explain,
                 isActive,
                 req.session.userid,
-                slugify(body.title || "", { lower: true, strict: true }),
+                slug,
                 body.category || null,
                 body.publish_at || new Date(),
             ]
@@ -50,6 +72,7 @@ exports.adminGetEditAnc = async (req, res, next) => {
 exports.adminPostEditAnc = async (req, res, next) => {
     const isActive = req.body.isActive ? true : false;
     try {
+        const slug = await buildUniqueSlug(req.body.title || "", req.body.noticeid);
         await db.execute(
             "UPDATE announcements SET title=?, exp=?, is_active=?, created_by=?, slug=?, category=?, publish_at=? WHERE noticeid=?",
             [
@@ -57,7 +80,7 @@ exports.adminPostEditAnc = async (req, res, next) => {
                 req.body.explain,
                 isActive,
                 req.body.user,
-                slugify(req.body.title || "", { lower: true, strict: true }),
+                slug,
                 req.body.category || null,
                 req.body.publish_at || new Date(),
                 req.body.noticeid,

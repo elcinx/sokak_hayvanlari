@@ -6,15 +6,16 @@ exports.userHome = async (req, res, next) => {
         const [[totalFeeds]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs");
         const [[activePoints]] = await db.execute("SELECT COUNT(DISTINCT CONCAT(lat, ',', lng)) AS c FROM feed_logs");
         const [[todayFeeds]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs WHERE DATE(created_at)=CURDATE()");
-        const base = require("../config").baseUrl.replace(/\/$/,"");
         const [galleryRaw] = await db.execute(
-            `SELECT id, photo_url, photo_path, note AS title FROM feed_logs 
-             WHERE photo_path IS NOT NULL ORDER BY created_at DESC LIMIT 6`
+            `SELECT id, photo_url, note AS title FROM feed_logs 
+             WHERE photo_url IS NOT NULL ORDER BY created_at DESC LIMIT 6`
         );
         const gallery = galleryRaw.map(g=>({
             ...g,
-            image_path: g.photo_url || (g.photo_path ? `${base}/${g.photo_path}`:null)
+            image_path: g.photo_url || null
         }));
+        const [[totalVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs");
+        const [[todayVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs WHERE DATE(visited_at)=CURDATE()");
         res.render("user/index", {
             title: "Ana sayfa",
             contentTitle: "Ana sayfa",
@@ -23,6 +24,8 @@ exports.userHome = async (req, res, next) => {
                 totalFeeds: totalFeeds?.c || 0,
                 activePoints: activePoints?.c || 0,
                 todayFeeds: todayFeeds?.c || 0,
+                totalVisits: totalVisits?.c || 0,
+                todayVisits: todayVisits?.c || 0,
             },
             gallery,
         });

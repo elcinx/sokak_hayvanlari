@@ -47,9 +47,16 @@ exports.postLogin=async(req,res,next)=>{
                 INNER JOIN user_roles ur ON ur.roleid=r.roleid
                 WHERE ur.userid=? LIMIT 1
             `,[user[0][0].userid]);
-            req.session.role=roles[0]?.name || "kullanici";
+            const rawRole = roles[0]?.name || "kullanici";
+            if (rawRole === "admin" || rawRole === "moderator") {
+                req.session.role = rawRole;
+            } else if (rawRole === "koordinator") {
+                req.session.role = "admin";
+            } else {
+                req.session.role = "user";
+            }
         }catch(e){
-            req.session.role="kullanici";
+            req.session.role="user";
         }
         //Kullanıcı beni hatırla seçeneğini seçmişse cookie oluştur
         if (req.body.cbhatirla=="1"){ 

@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Visitor log (cooldown)
+    fetch("/api/metrics/visit", { method: "POST" }).catch(() => {});
+
     // Ozet bilgiyi guncelle
     fetch("/api/metrics/summary")
         .then((r) => r.json())
@@ -21,10 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const activePoints = document.getElementById("activePoints");
             const todayFeeds = document.getElementById("todayFeeds");
             const onlineUsers = document.getElementById("onlineUsers");
+            const totalVisits = document.getElementById("totalVisits");
+            const todayVisits = document.getElementById("todayVisits");
             if (totalFeeds) totalFeeds.innerText = d.totalFeeds;
             if (activePoints) activePoints.innerText = d.activePoints;
             if (todayFeeds) todayFeeds.innerText = d.todayFeeds;
             if (onlineUsers) onlineUsers.innerText = d.online;
+            if (totalVisits) totalVisits.innerText = d.totalVisits;
+            if (todayVisits) todayVisits.innerText = d.todayVisits;
         })
         .catch(() => {});
 

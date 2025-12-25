@@ -13,6 +13,9 @@
                 </nav>
                 <div class="container-fluid">
                     <h1 class="mt-3"><%= contentTitle %></h1>
+                    <% if (typeof flash !== "undefined" && flash && flash.text) { %>
+                        <div class="alert alert-<%= flash.type || 'info' %>"><%= flash.text %></div>
+                    <% } %>
                     <div class="row">
                         <div class="col-sm-8 bg-light ms-2 border border-info p-3">
                             <form method="post" enctype="multipart/form-data">

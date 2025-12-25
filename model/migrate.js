@@ -170,11 +170,21 @@ async function ensureTables() {
         )
     `);
 
+    // Visit logs
+    await db.execute(`
+        CREATE TABLE IF NOT EXISTS visit_logs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            ip_hash VARCHAR(128) NOT NULL,
+            ua_hash VARCHAR(128) NOT NULL,
+            visited_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            INDEX (ip_hash),
+            INDEX (visited_at)
+        )
+    `);
+
     // Seed default roles
-    const [roleRows] = await db.execute("SELECT COUNT(*) AS c FROM roles");
-    if (roleRows[0].c === 0) {
-        await db.execute("INSERT INTO roles (name) VALUES (?), (?), (?)", ["admin", "koordinator", "kullanici"]);
-    }
+    await db.execute("INSERT IGNORE INTO roles (name) VALUES (?), (?), (?)", ["admin", "moderator", "user"]);
+    await db.execute("INSERT IGNORE INTO roles (name) VALUES (?), (?)", ["koordinator", "kullanici"]);
 
     // Make first user admin if none
     const [userRoleCount] = await db.execute("SELECT COUNT(*) AS c FROM user_roles");

@@ -155,6 +155,16 @@ app.use((req,res,next)=>{
 });
 
 app.use((err, req, res, next) => {
+    if (err && err.code === "EBADCSRFTOKEN") {
+        if (req.path && req.path.startsWith("/api/")) {
+            return res.status(403).json({ error: "CSRF doğrulaması başarısız" });
+        }
+        return res.status(403).render("errors/403", { title: "Güvenlik Hatası" });
+    }
+    next(err);
+});
+
+app.use((err, req, res, next) => {
     logger.error(req, err, "global_error");
     if (req.path && req.path.startsWith("/api/")){
         return res.status(500).json({error:"Sunucu hatası"});

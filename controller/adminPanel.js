@@ -114,23 +114,26 @@ exports.commentsList = async (req, res, next) => {
 exports.galleryList = async (req, res, next) => {
     try {
         const base = config.baseUrl.replace(/\/$/,"");
+        const flash = req.session.flash;
+        delete req.session.flash;
         const [rows] = await db.execute(
             `SELECT f.id, f.photo_url, f.photo_path, f.note AS title, f.created_at, u.name AS owner
              FROM feed_logs f
              LEFT JOIN users u ON u.userid=f.user_id
-             WHERE f.photo_path IS NOT NULL OR f.photo_url IS NOT NULL
+             WHERE f.photo_url IS NOT NULL
              ORDER BY f.created_at DESC
              LIMIT 50`
         );
         const items = rows.map(r=>({
             ...r,
-            image_url: (r.photo_url && (r.photo_url.startsWith("http://") || r.photo_url.startsWith("https://"))) ? r.photo_url : null,
-            url: (r.photo_url && (r.photo_url.startsWith("http://") || r.photo_url.startsWith("https://"))) ? r.photo_url : null
+            image_url: r.photo_url || null,
+            url: r.photo_url || null
         }));
         res.render("admin/gallery-list", {
             title:"Galeri Yönetimi",
             contentTitle:"Galeri Yönetimi",
             items,
+            flash,
             csrfToken: req.csrfToken()
         });
     } catch (err) {
@@ -140,10 +143,13 @@ exports.galleryList = async (req, res, next) => {
 };
 
 exports.galleryAddForm = (req, res) => {
+    const flash = req.session.flash;
+    delete req.session.flash;
     res.render("admin/gallery-add", {
         title:"Galeri Yönetimi",
         contentTitle:"Resim Yükle",
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        flash,
     });
 };
 
@@ -151,7 +157,8 @@ exports.galleryAddCreate = async (req, res, next) => {
     try {
         const title = (req.body.title || "").trim();
         if (!req.file) {
-            return res.status(400).send("Resim yüklenmedi");
+            req.session.flash = { type: "danger", text: "Resim yüklenmedi" };
+            return res.redirect("/admin/gallery/add");
         }
         const saved = await storage.saveImage(req.file);
         const photoUrl = saved.url;
@@ -161,6 +168,7 @@ exports.galleryAddCreate = async (req, res, next) => {
             "INSERT INTO feed_logs (user_id, photo_path, photo_url, photo_key, lat, lng, note, points) VALUES (?,?,?,?,?,?,?,0)",
             [req.session.userid, photoPath, photoUrl, photoKey, 0, 0, title || null]
         );
+        req.session.flash = { type: "success", text: "Görsel yüklendi" };
         return res.redirect("/admin/gallery/list");
     } catch (err) {
         logger.error(req, err, "admin_gallery_add");
@@ -176,6 +184,7 @@ exports.galleryDelete = async (req, res, next) => {
             await storage.deleteImage(row.photo_key || row.photo_path);
         }
         await db.execute("DELETE FROM feed_logs WHERE id=?", [galleryId]);
+        req.session.flash = { type: "success", text: "Görsel silindi" };
         return res.redirect("/admin/gallery/list");
     } catch (err) {
         logger.error(req, err, "admin_gallery_delete");
