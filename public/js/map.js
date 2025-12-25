@@ -135,7 +135,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     .then((r) => r.json())
                     .then((rows) => {
                         const points = rows.map((r) => [r.lat, r.lng, r.intensity]);
-                        heatLayer = L.heatLayer(points, { radius: 25, blur: 18, maxZoom: 17 });
+                        heatLayer = L.heatLayer(points, {
+                            radius: 28,
+                            blur: 16,
+                            maxZoom: 17,
+                            minOpacity: 0.5,
+                            gradient: {
+                                0.2: "#fff5f5",
+                                0.4: "#ff8a80",
+                                0.6: "#ff5252",
+                                0.8: "#c62828",
+                                1.0: "#8e0000",
+                            },
+                        });
                         heatLayer.addTo(map);
                     })
                     .catch(() => {});
