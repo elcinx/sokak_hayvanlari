@@ -35,7 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
         attribution: "&copy; OpenStreetMap contributors",
     }).addTo(map);
 
-    let markers = [];
+    let feedMarkers = [];
+    let feedsLayer = L.layerGroup().addTo(map);
     let heatLayer = null;
     let selectedLat = null;
     let selectedLng = null;
@@ -83,12 +84,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const active = Array.from(filters)
             .filter((f) => f.checked)
             .map((f) => f.value);
-        markers.forEach((m) => {
+        feedMarkers.forEach((m) => {
             const status = m.options.status || "normal";
             if (active.includes(status)) {
-                m.addTo(map);
+                feedsLayer.addLayer(m);
             } else {
-                map.removeLayer(m);
+                feedsLayer.removeLayer(m);
             }
         });
     }
@@ -171,58 +172,63 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function loadFeeds(options = {}) {
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/\"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+
+    async function loadFeeds(options = {}) {
         const { fitBounds = false } = options;
-        fetch("/api/feeds")
-            .then((r) => r.json())
-            .then((feeds) => {
-                markers.forEach((m) => map.removeLayer(m));
-                markers = [];
-                const bounds = L.latLngBounds([]);
-                let hasValidPoint = false;
-                feeds.forEach((feed) => {
-                    const lat = Number(feed.lat);
-                    const lng = Number(feed.lng);
-                    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
-                    if (lat === 0 && lng === 0) return;
-                    const popupParts = [];
-                    if (feed.photo_url) {
-                        popupParts.push(
-                            `<img src="${feed.photo_url}" style="max-width:180px; display:block; margin-bottom:8px;">`
-                        );
-                    }
-                    popupParts.push(`<strong>${feed.user_name || "Kullanici"}</strong>`);
-                    popupParts.push(`<div>${formatDate(feed.created_at)}</div>`);
-                    if (feed.note) popupParts.push(`<div>${feed.note}</div>`);
-                    popupParts.push(
-                        `<div>Yorum: ${feed.comments_count || 0} / Begeni: ${feed.likes_count || 0}</div>`
-                    );
-                    popupParts.push(
-                        `<a href="/feeds/${feed.id}" class="btn btn-sm btn-outline-primary mt-1">Detay</a>`
-                    );
-                    if (isAuth) {
-                        popupParts.push(
-                            `<button class="btn btn-sm btn-outline-secondary mt-1 fav-btn" data-lat="${feed.lat}" data-lng="${feed.lng}">Favori</button>`
-                        );
-                    }
-                    const marker = L.marker([lat, lng], { status: feed.status || "normal" });
-                    marker.bindPopup(popupParts.join("<br>"));
-                    marker.addTo(map);
-                    markers.push(marker);
-                    bounds.extend([lat, lng]);
-                    hasValidPoint = true;
-                });
-                attachFavHandlers();
-                applyFilters();
-                if (fitBounds) {
-                    if (hasValidPoint) {
-                        map.fitBounds(bounds, { padding: [30, 30] });
-                    } else {
-                        map.setView([20, 0], 2);
-                    }
-                }
+        try {
+            const r = await fetch("/api/feeds");
+            const feeds = await r.json();
+            renderFeeds(feeds, { fitBounds });
+        } catch (err) {}
+    }
+
+    function renderFeeds(feeds, options = {}) {
+        const { fitBounds = false } = options;
+        feedsLayer.clearLayers();
+        feedMarkers = [];
+        const bounds = L.latLngBounds([]);
+        let hasValidPoint = false;
+        feeds
+            .filter((f) => {
+                const lat = Number(f.lat);
+                const lng = Number(f.lng);
+                if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
+                if (lat === 0 && lng === 0) return false;
+                return true;
             })
-            .catch(() => {});
+            .forEach((feed) => {
+                const lat = Number(feed.lat);
+                const lng = Number(feed.lng);
+                const img = feed.photo_url
+                    ? `<img src="${feed.photo_url}" style="width:100%;max-width:220px;border-radius:8px;margin-top:6px" />`
+                    : "";
+                const note = escapeHtml(feed.note || "");
+                const user = escapeHtml(feed.user_name || "");
+                const created = formatDate(feed.created_at);
+                const popup = `<b>${note}</b><br/><small>${user}</small><br/><small>${created}</small>${img}`;
+                const marker = L.marker([lat, lng], { status: feed.status || "normal" });
+                marker.bindPopup(popup);
+                marker.addTo(feedsLayer);
+                feedMarkers.push(marker);
+                bounds.extend([lat, lng]);
+                hasValidPoint = true;
+            });
+        applyFilters();
+        if (fitBounds) {
+            if (hasValidPoint) {
+                map.fitBounds(bounds, { padding: [30, 30] });
+            } else {
+                map.setView([20, 0], 2);
+            }
+        }
     }
 
     function updateSelectedText() {
@@ -268,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!modal) return;
         updateSelectedText();
         if (!Number.isFinite(selectedLat) || !Number.isFinite(selectedLng)) {
-            showFeedFormError("Önce haritada bir nokta seç.");
+            showFeedFormError("Once haritada bir nokta sec.");
         } else {
             showFeedFormError("");
         }
@@ -297,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
         feedForm.addEventListener("submit", (event) => {
             event.preventDefault();
             if (!Number.isFinite(selectedLat) || !Number.isFinite(selectedLng)) {
-                showFeedFormError("Önce haritada bir nokta seç.");
+                showFeedFormError("Once haritada bir nokta sec.");
                 return;
             }
             if (selectedLat === 0 && selectedLng === 0) {
@@ -331,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const modal = getModal();
                     if (modal) modal.hide();
                     resetFeedForm();
-                    loadFeeds({ fitBounds: false });
+                    return loadFeeds({ fitBounds: false });
                 })
                 .catch((err) => {
                     showFeedFormError(err.message || "Kaydetme basarisiz");
