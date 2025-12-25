@@ -31,7 +31,10 @@
                                     <div class="card-body">
                                         <h5 class="card-title"><%= item.title %></h5>
                                         <p class="card-text"><small class="text-muted">Yükleyen: <%= item.owner || 'Bilinmiyor' %></small></p>
-                                        <a class="btn btn-sm btn-danger" href="/admin/gallery/delete/<%= item.id %>">Sil</a>
+                                        <form method="POST" action="/admin/gallery/delete/<%= item.id %>">
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                            <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

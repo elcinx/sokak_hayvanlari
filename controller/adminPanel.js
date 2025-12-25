@@ -130,7 +130,8 @@ exports.galleryList = async (req, res, next) => {
         res.render("admin/gallery-list", {
             title:"Galeri Yönetimi",
             contentTitle:"Galeri Yönetimi",
-            items
+            items,
+            csrfToken: req.csrfToken()
         });
     } catch (err) {
         logger.error(req, err, "admin_gallery_list");
@@ -163,6 +164,21 @@ exports.galleryAddCreate = async (req, res, next) => {
         return res.redirect("/admin/gallery/list");
     } catch (err) {
         logger.error(req, err, "admin_gallery_add");
+        next(err);
+    }
+};
+
+exports.galleryDelete = async (req, res, next) => {
+    try {
+        const galleryId = req.params.id;
+        const [[row]] = await db.execute("SELECT photo_key, photo_path FROM feed_logs WHERE id=?", [galleryId]);
+        if (row && (row.photo_key || row.photo_path)) {
+            await storage.deleteImage(row.photo_key || row.photo_path);
+        }
+        await db.execute("DELETE FROM feed_logs WHERE id=?", [galleryId]);
+        return res.redirect("/admin/gallery/list");
+    } catch (err) {
+        logger.error(req, err, "admin_gallery_delete");
         next(err);
     }
 };
