@@ -104,17 +104,6 @@
   </div>
 </div>
 
-<script>
-  $(function () {
-   $(".delete-btn").click(function (){//listedeki click botununa tıklandığında çalışacak jquery kodları
-     let id = $(this).data('id'); //delete butonu üzerinden data-id ve data-title attribute'leri ile bilgiler çekiliyor. 
-     let title = $(this).data('title');
-     $(".modal-body #id").text(id); //modalbox üzerindeki id id'li label'ın text'i set ediliyor
-     $(".modal-body #title").text(title); //modalbox üzerindeki title id'li label'ın text'i set ediliyor
-     $(".modal-footer #yes").attr("href","/admin/delete/anc/"+id); //Linkli Evet butonunun href attribute'i set ediliyor
-     $(".modal-body #ancid").attr("value",id); //hidden input'un value değeri anouncemnet id'ye set ediliyor.
-   })
-  });
-</script>
+<script src="/static/js/admin-list-anc.js"></script>
     </body>
 </html>

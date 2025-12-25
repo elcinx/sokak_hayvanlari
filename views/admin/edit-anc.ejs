@@ -85,16 +85,6 @@
 
            <%- include('../partials/script.ejs') %>    
 
-    <!--Ck Editor script kodu-->
-    <script>
-      ClassicEditor
-              .create( document.querySelector( '#explain' ) )
-              .then( editor => {
-                      console.log( editor );
-              } )
-              .catch( error => {
-                      console.error( error );
-              } );
-  </script>
+    <script src="/static/js/admin-anc-form.js"></script>
     </body>
 </html>

@@ -36,9 +36,17 @@ app.use(helmet({
         useDefaults: true,
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "https://unpkg.com"],
-            styleSrc: ["'self'", "https://unpkg.com", "'unsafe-inline'"],
-            imgSrc: ["'self'", "https://res.cloudinary.com", "data:"]
+            scriptSrc: [
+                "'self'",
+                "https://unpkg.com",
+                "https://cdn.jsdelivr.net",
+                "https://cdn.ckeditor.com",
+                "https://ajax.googleapis.com"
+            ],
+            styleSrc: ["'self'", "https://unpkg.com", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
+            imgSrc: ["'self'", "https://res.cloudinary.com", "data:", "https:"],
+            fontSrc: ["'self'", "data:", "https:"],
+            connectSrc: ["'self'", "https:"]
         }
     }
 }));
