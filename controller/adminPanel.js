@@ -2,6 +2,7 @@ const db = require("../model/data");
 const metrics = require("./metrics");
 const logger = require("../utils/logger");
 const config = require("../config");
+const storage = require("../services/storage");
 
 exports.dashboard = async (req, res, next) => {
     try {
@@ -132,6 +133,34 @@ exports.galleryList = async (req, res, next) => {
         });
     } catch (err) {
         logger.error(req, err, "admin_gallery_list");
+        next(err);
+    }
+};
+
+exports.galleryAddForm = (req, res) => {
+    res.render("admin/gallery-add", {
+        title:"Galeri Yönetimi",
+        contentTitle:"Resim Yükle"
+    });
+};
+
+exports.galleryAddCreate = async (req, res, next) => {
+    try {
+        const title = (req.body.title || "").trim();
+        if (!req.file) {
+            return res.status(400).send("Resim yüklenmedi");
+        }
+        const saved = await storage.saveImage(req.file);
+        const photoUrl = saved.url;
+        const photoKey = saved.key;
+        const photoPath = saved.key.startsWith("uploads") ? saved.key : null;
+        await db.execute(
+            "INSERT INTO feed_logs (user_id, photo_path, photo_url, photo_key, lat, lng, note, points) VALUES (?,?,?,?,?,?,?,0)",
+            [req.session.userid, photoPath, photoUrl, photoKey, 0, 0, title || null]
+        );
+        return res.redirect("/admin/gallery/list");
+    } catch (err) {
+        logger.error(req, err, "admin_gallery_add");
         next(err);
     }
 };

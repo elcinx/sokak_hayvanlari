@@ -8,11 +8,14 @@ const requireRole = require("../middleware/requireRole");
 const adminPanel = require("../controller/adminPanel");
 const feedsController = require("../controller/feeds");
 const leaderboard = require("../controller/leaderboard");
+const upload = require("../middleware/upload");
 
 router.get("/",isAuth,requireRole("admin","koordinator"),csrf,adminController.adminList);
 router.get("/dashboard",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.dashboard);
 router.get("/gallery",isAuth,requireRole("admin","koordinator"),(req,res)=>res.redirect("/admin/gallery/list"));
 router.get("/gallery/list",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.galleryList);
+router.get("/gallery/add",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.galleryAddForm);
+router.post("/gallery/add",isAuth,requireRole("admin","koordinator"),upload.single("image"),adminPanel.galleryAddCreate);
 router.get("/feeds",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.feedList);
 router.get("/feeds/delete/:id", isAuth, requireRole("admin","koordinator"), feedsController.deleteFeed);
 router.get("/comments",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.commentsList);
