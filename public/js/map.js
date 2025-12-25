@@ -190,37 +190,38 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (err) {}
     }
 
+    function addFeedMarker(feed) {
+        const lat = Number(feed.lat);
+        const lng = Number(feed.lng);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+        if (lat === 0 && lng === 0) return null;
+        const img = feed.photo_url
+            ? `<img src="${feed.photo_url}" style="width:100%;max-width:220px;border-radius:8px;margin-top:6px" />`
+            : "";
+        const note = escapeHtml(feed.note || "");
+        const user = escapeHtml(feed.user_name || "");
+        const created = formatDate(feed.created_at);
+        const popup = `<b>${note}</b><br/><small>${user}</small><br/><small>${created}</small>${img}`;
+        const marker = L.marker([lat, lng], { status: feed.status || "normal" });
+        marker.bindPopup(popup);
+        marker.addTo(feedsLayer);
+        feedMarkers.push(marker);
+        return marker;
+    }
+
     function renderFeeds(feeds, options = {}) {
         const { fitBounds = false } = options;
         feedsLayer.clearLayers();
         feedMarkers = [];
         const bounds = L.latLngBounds([]);
         let hasValidPoint = false;
-        feeds
-            .filter((f) => {
-                const lat = Number(f.lat);
-                const lng = Number(f.lng);
-                if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
-                if (lat === 0 && lng === 0) return false;
-                return true;
-            })
-            .forEach((feed) => {
-                const lat = Number(feed.lat);
-                const lng = Number(feed.lng);
-                const img = feed.photo_url
-                    ? `<img src="${feed.photo_url}" style="width:100%;max-width:220px;border-radius:8px;margin-top:6px" />`
-                    : "";
-                const note = escapeHtml(feed.note || "");
-                const user = escapeHtml(feed.user_name || "");
-                const created = formatDate(feed.created_at);
-                const popup = `<b>${note}</b><br/><small>${user}</small><br/><small>${created}</small>${img}`;
-                const marker = L.marker([lat, lng], { status: feed.status || "normal" });
-                marker.bindPopup(popup);
-                marker.addTo(feedsLayer);
-                feedMarkers.push(marker);
-                bounds.extend([lat, lng]);
+        feeds.forEach((feed) => {
+            const marker = addFeedMarker(feed);
+            if (marker) {
+                bounds.extend(marker.getLatLng());
                 hasValidPoint = true;
-            });
+            }
+        });
         applyFilters();
         if (fitBounds) {
             if (hasValidPoint) {
@@ -328,19 +329,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: formData,
             })
                 .then(async (res) => {
-                    if (res.ok) return res.json().catch(() => ({}));
-                    const errData = await res.json().catch(() => ({}));
-                    const msg = errData.error || "Kaydetme basarisiz";
-                    throw new Error(`${res.status} ${msg}`);
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) {
+                        const msg = data.error || "Kaydetme basarisiz";
+                        throw new Error(`${res.status} ${msg}`);
+                    }
+                    return data;
                 })
-                .then(() => {
+                .then((data) => {
                     const modal = getModal();
                     if (modal) modal.hide();
                     resetFeedForm();
-                    return loadFeeds({ fitBounds: false });
+                    const feed = data.feed || data;
+                    const marker = addFeedMarker(feed || {});
+                    if (!marker) {
+                        return loadFeeds({ fitBounds: false });
+                    }
+                    applyFilters();
                 })
                 .catch((err) => {
+                    console.error(err);
                     showFeedFormError(err.message || "Kaydetme basarisiz");
+                    alert(err.message || "Kaydetme basarisiz");
                 });
         });
     }
