@@ -68,26 +68,6 @@
                             </div>
                             <div class="position-relative mb-4">
                                 <button class="btn btn-primary btn-sm position-absolute top-0 end-0 m-2" id="openFeedForm">➕ Besleme Ekle</button>
-                                <div class="card shadow-sm position-absolute top-0 end-0 m-2" id="feedFormCard" style="display:none; z-index:1000; width:260px;">
-                                    <div class="card-body p-3">
-                                        <div class="small text-muted mb-2" id="selectedCoords">Seçilen: -</div>
-                                        <form id="feedForm">
-                                            <div class="mb-2">
-                                                <label class="form-label small" for="feedNote">Not</label>
-                                                <textarea class="form-control" id="feedNote" name="note" rows="2" required></textarea>
-                                            </div>
-                                            <div class="mb-2">
-                                                <label class="form-label small" for="feedPhoto">Fotoğraf (ops.)</label>
-                                                <input class="form-control form-control-sm" type="file" id="feedPhoto" name="photo" accept="image/*">
-                                            </div>
-                                            <div class="text-danger small mb-2" id="feedFormError" style="display:none;"></div>
-                                            <div class="d-flex gap-2">
-                                                <button type="submit" class="btn btn-primary btn-sm">Kaydet</button>
-                                                <button type="button" class="btn btn-outline-secondary btn-sm" id="cancelFeedForm">İptal</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
                                 <div id="map"></div>
                             </div>
                             <h4 class="mb-3">Son Duyurular</h4>
@@ -129,5 +109,36 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js" defer></script>
     <script src="/js/map.js" defer></script>
+    <div class="modal fade" id="feedModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="feedForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Besleme Ekle</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label class="form-label small" for="feedCoords">Seçilen konum</label>
+                            <input type="text" class="form-control" id="feedCoords" readonly>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small" for="feedNote">Not</label>
+                            <textarea class="form-control" id="feedNote" name="note" rows="3" maxlength="300" required></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small" for="feedPhoto">Fotoğraf (ops.)</label>
+                            <input class="form-control form-control-sm" type="file" id="feedPhoto" name="photo" accept="image/*">
+                        </div>
+                        <div class="text-danger small" id="feedFormError" style="display:none;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-sm">Kaydet</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal" id="cancelFeedForm">İptal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     </body>
 </html>

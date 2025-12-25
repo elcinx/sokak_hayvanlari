@@ -39,15 +39,15 @@ document.addEventListener("DOMContentLoaded", () => {
     let heatLayer = null;
     let selectedLat = null;
     let selectedLng = null;
-    let previewMarker = null;
+    let selectedMarker = null;
 
     const openFeedFormBtn = document.getElementById("openFeedForm");
-    const feedFormCard = document.getElementById("feedFormCard");
+    const feedModalEl = document.getElementById("feedModal");
     const feedForm = document.getElementById("feedForm");
+    const feedCoords = document.getElementById("feedCoords");
     const feedNote = document.getElementById("feedNote");
     const feedPhoto = document.getElementById("feedPhoto");
     const feedFormError = document.getElementById("feedFormError");
-    const selectedCoords = document.getElementById("selectedCoords");
     const cancelFeedForm = document.getElementById("cancelFeedForm");
 
     loadFeeds({ fitBounds: true });
@@ -61,14 +61,17 @@ document.addEventListener("DOMContentLoaded", () => {
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
                     const { latitude, longitude } = pos.coords;
-                    map.setView([latitude, longitude], 14);
-                    L.marker([latitude, longitude]).addTo(map).bindPopup("Konumum").openPopup();
+                    map.setView([latitude, longitude], 15);
+                    setSelectedLocation(latitude, longitude, true);
                     locateBtn.disabled = false;
                 },
                 () => {
-                    alert("Konum alinamadi");
+                    const needsHttps = window.location.protocol !== "https:" && window.location.hostname !== "localhost";
+                    const suffix = needsHttps ? " HTTPS gerekli olabilir." : "";
+                    alert(`Konum izni verilmedi / Konum alınamadı.${suffix}`);
                     locateBtn.disabled = false;
-                }
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
             );
         });
     }
@@ -223,11 +226,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateSelectedText() {
-        if (!selectedCoords) return;
+        if (!feedCoords) return;
         if (Number.isFinite(selectedLat) && Number.isFinite(selectedLng)) {
-            selectedCoords.textContent = `Seçilen: ${selectedLat.toFixed(5)},${selectedLng.toFixed(5)}`;
+            feedCoords.value = `${selectedLat.toFixed(5)},${selectedLng.toFixed(5)}`;
         } else {
-            selectedCoords.textContent = "Seçilen: -";
+            feedCoords.value = "";
         }
     }
 
@@ -249,27 +252,43 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedLat = null;
         selectedLng = null;
         updateSelectedText();
-        if (previewMarker) {
-            map.removeLayer(previewMarker);
-            previewMarker = null;
+        if (selectedMarker) {
+            map.removeLayer(selectedMarker);
+            selectedMarker = null;
         }
     }
 
-    if (openFeedFormBtn && feedFormCard) {
+    function getModal() {
+        if (!feedModalEl || typeof bootstrap === "undefined") return null;
+        return bootstrap.Modal.getOrCreateInstance(feedModalEl);
+    }
+
+    function openFeedModal() {
+        const modal = getModal();
+        if (!modal) return;
+        updateSelectedText();
+        if (!Number.isFinite(selectedLat) || !Number.isFinite(selectedLng)) {
+            showFeedFormError("Önce haritada bir nokta seç.");
+        } else {
+            showFeedFormError("");
+        }
+        modal.show();
+    }
+
+    if (openFeedFormBtn) {
         openFeedFormBtn.addEventListener("click", () => {
-            feedFormCard.style.display = "block";
-            updateSelectedText();
-            if (!Number.isFinite(selectedLat) || !Number.isFinite(selectedLng)) {
-                showFeedFormError("Önce haritada bir nokta seç.");
-            } else {
-                showFeedFormError("");
-            }
+            openFeedModal();
         });
     }
 
-    if (cancelFeedForm && feedFormCard) {
+    if (cancelFeedForm) {
         cancelFeedForm.addEventListener("click", () => {
-            feedFormCard.style.display = "none";
+            resetFeedForm();
+        });
+    }
+
+    if (feedModalEl) {
+        feedModalEl.addEventListener("hidden.bs.modal", () => {
             resetFeedForm();
         });
     }
@@ -306,10 +325,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (res.ok) return res.json().catch(() => ({}));
                     const errData = await res.json().catch(() => ({}));
                     const msg = errData.error || "Kaydetme basarisiz";
-                    throw new Error(msg);
+                    throw new Error(`${res.status} ${msg}`);
                 })
                 .then(() => {
-                    feedFormCard.style.display = "none";
+                    const modal = getModal();
+                    if (modal) modal.hide();
                     resetFeedForm();
                     loadFeeds({ fitBounds: false });
                 })
@@ -320,15 +340,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     map.on("click", (e) => {
-        selectedLat = e.latlng.lat;
-        selectedLng = e.latlng.lng;
+        setSelectedLocation(e.latlng.lat, e.latlng.lng, true);
+    });
+
+    function setSelectedLocation(lat, lng, openModal) {
+        selectedLat = lat;
+        selectedLng = lng;
         updateSelectedText();
-        if (!previewMarker) {
-            previewMarker = L.marker([selectedLat, selectedLng]);
-            previewMarker.addTo(map);
+        if (!selectedMarker) {
+            selectedMarker = L.marker([selectedLat, selectedLng]);
+            selectedMarker.addTo(map);
         } else {
-            previewMarker.setLatLng([selectedLat, selectedLng]);
+            selectedMarker.setLatLng([selectedLat, selectedLng]);
         }
         showFeedFormError("");
-    });
+        if (openModal) openFeedModal();
+    }
 });
