@@ -36,28 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }).addTo(map);
 
     let markers = [];
-    let statusByKey = {};
-    let heatLayer = L.layerGroup();
-
-    // Status bilgisi & heatmap
-    fetch("/api/feeds/points-summary?days=30")
-        .then((r) => r.json())
-        .then((rows) => {
-            rows.forEach((r) => {
-                const key = `${r.lat},${r.lng}`;
-                statusByKey[key] = r.status;
-            });
-            rows.forEach((r) => {
-                const intensity = Math.min(1 + r.feed_count / 5, 5);
-                const circle = L.circle([r.lat, r.lng], {
-                    radius: 200 * intensity,
-                    color: "red",
-                    opacity: 0.4,
-                    fillOpacity: 0.15,
-                });
-                heatLayer.addLayer(circle);
-            });
-        });
+    let heatLayer = null;
 
     // Marker ciz
     fetch("/api/feeds")
@@ -66,18 +45,16 @@ document.addEventListener("DOMContentLoaded", () => {
             feeds.forEach((feed) => {
                 if (!feed.lat || !feed.lng) return;
                 const popupParts = [];
-                if (feed.photo_path) {
+                if (feed.photo_url) {
                     popupParts.push(
-                        `<img src="/${feed.photo_path}" style="max-width:180px; display:block; margin-bottom:8px;">`
+                        `<img src="${feed.photo_url}" style="max-width:180px; display:block; margin-bottom:8px;">`
                     );
                 }
-                popupParts.push(`<strong>${feed.name || "Kullanici"}</strong>`);
-                popupParts.push(
-                    `<div>${dayjs(feed.created_at).format("DD.MM.YYYY HH:mm")}</div>`
-                );
+                popupParts.push(`<strong>${feed.user_name || "Kullanici"}</strong>`);
+                popupParts.push(`<div>${formatDate(feed.created_at)}</div>`);
                 if (feed.note) popupParts.push(`<div>${feed.note}</div>`);
                 popupParts.push(
-                    `<div>Yorum: ${feed.comment_count || 0} / Begeni: ${feed.like_count || 0}</div>`
+                    `<div>Yorum: ${feed.comments_count || 0} / Begeni: ${feed.likes_count || 0}</div>`
                 );
                 popupParts.push(
                     `<a href="/feeds/${feed.id}" class="btn btn-sm btn-outline-primary mt-1">Detay</a>`
@@ -87,14 +64,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         `<button class="btn btn-sm btn-outline-secondary mt-1 fav-btn" data-lat="${feed.lat}" data-lng="${feed.lng}">Favori</button>`
                     );
                 }
-                const key = `${Number(feed.lat).toFixed(4)},${Number(feed.lng).toFixed(4)}`;
-                const status = statusByKey[key] || "normal";
-                const marker = L.marker([feed.lat, feed.lng], { status });
+                const marker = L.marker([feed.lat, feed.lng], { status: feed.status || "normal" });
                 marker.bindPopup(popupParts.join("<br>"));
                 marker.addTo(map);
                 markers.push(marker);
             });
             attachFavHandlers();
+            applyFilters();
         })
         .catch(() => {});
 
@@ -140,11 +116,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleHeatmap = document.getElementById("toggleHeatmap");
     if (toggleHeatmap) {
         toggleHeatmap.addEventListener("click", () => {
-            if (map.hasLayer(heatLayer)) {
+            if (typeof L.heatLayer !== "function") return;
+            if (heatLayer && map.hasLayer(heatLayer)) {
                 map.removeLayer(heatLayer);
-            } else {
-                heatLayer.addTo(map);
+                return;
             }
+            if (!heatLayer) {
+                fetch("/api/heatmap?days=30")
+                    .then((r) => r.json())
+                    .then((rows) => {
+                        const points = rows.map((r) => [r.lat, r.lng, r.intensity]);
+                        heatLayer = L.heatLayer(points, { radius: 25, blur: 18, maxZoom: 17 });
+                        heatLayer.addTo(map);
+                    })
+                    .catch(() => {});
+                return;
+            }
+            heatLayer.addTo(map);
         });
     }
 
@@ -190,4 +178,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const ul = document.getElementById("weeklyTop");
             if (ul) ul.innerHTML = '<li class="list-group-item">Yuklenemedi</li>';
         });
+
+    function formatDate(value) {
+        if (typeof dayjs === "function") {
+            return dayjs(value).format("DD.MM.YYYY HH:mm");
+        }
+        try {
+            return new Date(value).toLocaleString();
+        } catch (err) {
+            return "";
+        }
+    }
 });

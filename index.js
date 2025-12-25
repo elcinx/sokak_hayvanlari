@@ -19,6 +19,7 @@ const metricsController = require("./controller/metrics");
 const bootstrapAdmin = require("./services/bootstrapAdmin");
 
 app.use("/static", express.static(path.join(__dirname, "public")));
+app.use("/js", express.static(path.join(__dirname, "public", "js")));
 app.use("/uploads", express.static(path.isAbsolute(config.uploadDir) ? config.uploadDir : path.join(__dirname, config.uploadDir)));
 
 const bodyParser = require("body-parser");

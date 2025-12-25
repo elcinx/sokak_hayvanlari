@@ -5,6 +5,8 @@ const logger = require("../utils/logger");
 const storage = require("../services/storage");
 const config = require("../config");
 
+const toPointKey = (lat, lng) => `${Number(lat).toFixed(4)},${Number(lng).toFixed(4)}`;
+
 const validateLatLng = (lat, lng) => {
     const la = parseFloat(lat);
     const ln = parseFloat(lng);
@@ -49,18 +51,66 @@ exports.create = async (req, res, next) => {
 exports.list = async (req, res, next) => {
     try {
         const [rows] = await db.execute(
-            `SELECT f.*, u.name,
-                (SELECT COUNT(*) FROM feed_comments fc WHERE fc.feed_id=f.id AND fc.is_deleted=0) AS comment_count,
-                (SELECT COUNT(*) FROM feed_likes fl WHERE fl.feed_id=f.id) AS like_count
+            `SELECT f.id, f.lat, f.lng, f.note, f.created_at, f.photo_url, f.photo_path,
+                u.name AS user_name,
+                (SELECT COUNT(*) FROM feed_comments fc WHERE fc.feed_id=f.id AND fc.is_deleted=0) AS comments_count,
+                (SELECT COUNT(*) FROM feed_likes fl WHERE fl.feed_id=f.id) AS likes_count
              FROM feed_logs f
              LEFT JOIN users u ON u.userid=f.user_id
              WHERE f.created_at >= (NOW() - INTERVAL 30 DAY)
              ORDER BY f.created_at DESC`
         );
-        const base = config.baseUrl.replace(/\/$/,"");
-        const mapped = rows.map(r=>{
+        const [pointRows] = await db.execute(
+            `SELECT pts.lat_r, pts.lng_r,
+                    MAX(f.created_at) AS last_feed_at,
+                    SUM(CASE WHEN f.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN 1 ELSE 0 END) AS feed_count_7d
+             FROM (
+                SELECT DISTINCT ROUND(lat,4) AS lat_r, ROUND(lng,4) AS lng_r
+                FROM feed_logs
+                WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+             ) AS pts
+             INNER JOIN feed_logs f
+                ON ROUND(f.lat,4)=pts.lat_r AND ROUND(f.lng,4)=pts.lng_r
+             GROUP BY pts.lat_r, pts.lng_r`
+        );
+        const pointStats = {};
+        pointRows.forEach((p) => {
+            const key = `${Number(p.lat_r).toFixed(4)},${Number(p.lng_r).toFixed(4)}`;
+            pointStats[key] = {
+                last_feed_at: p.last_feed_at,
+                feed_count_7d: Number(p.feed_count_7d || 0),
+            };
+        });
+
+        const base = config.baseUrl.replace(/\/$/, "");
+        const now = Date.now();
+        const mapped = rows.map((r) => {
             const url = r.photo_url || (r.photo_path ? `${base}/${r.photo_path}` : null);
-            return {...r, photo_url:url};
+            const point_key = toPointKey(r.lat, r.lng);
+            const stats = pointStats[point_key];
+            const createdAt = new Date(r.created_at);
+            let status = "normal";
+            const hoursSince = (now - createdAt.getTime()) / (1000 * 60 * 60);
+            if (hoursSince <= 48) {
+                status = "new";
+            } else if (stats && now - new Date(stats.last_feed_at).getTime() >= 7 * 24 * 60 * 60 * 1000) {
+                status = "critical";
+            } else if (stats && stats.feed_count_7d >= 3) {
+                status = "steady";
+            }
+            return {
+                id: r.id,
+                lat: Number(r.lat),
+                lng: Number(r.lng),
+                note: r.note || null,
+                created_at: r.created_at,
+                user_name: r.user_name || "Kullanici",
+                photo_url: url,
+                comments_count: Number(r.comments_count || 0),
+                likes_count: Number(r.likes_count || 0),
+                point_key,
+                status,
+            };
         });
         res.json(mapped);
     } catch (err) {
@@ -184,13 +234,20 @@ exports.heatmap = async (req, res, next) => {
     try {
         const days = parseInt(req.query.days || "30", 10);
         const [rows] = await db.execute(
-            `SELECT ROUND(lat,3) AS lat, ROUND(lng,3) AS lng, COUNT(*) AS count
+            `SELECT ROUND(lat,4) AS lat, ROUND(lng,4) AS lng, COUNT(*) AS intensity
              FROM feed_logs
              WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
-             GROUP BY ROUND(lat,3), ROUND(lng,3)`,
+             GROUP BY ROUND(lat,4), ROUND(lng,4)
+             ORDER BY intensity DESC
+             LIMIT 1000`,
             [days]
         );
-        res.json(rows);
+        const mapped = rows.map((r) => ({
+            lat: Number(r.lat),
+            lng: Number(r.lng),
+            intensity: Number(r.intensity || 0),
+        }));
+        res.json(mapped);
     } catch (err) {
         logger.error(req, err, "heatmap");
         next(err);

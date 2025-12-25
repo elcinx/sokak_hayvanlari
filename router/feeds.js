@@ -15,6 +15,7 @@ router.post(
     feedsController.create
 );
 router.get("/api/feeds", feedsController.list);
+router.get("/api/heatmap", feedsController.heatmap);
 router.get("/api/feeds/heatmap", feedsController.heatmap);
 router.get("/api/feeds/points-summary", feedsController.pointsSummary);
 router.get("/api/feeds/:id/comments", feedsController.listComments);
