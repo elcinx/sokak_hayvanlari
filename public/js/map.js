@@ -68,37 +68,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Konumumu bul
     const locateBtn = document.getElementById("locateBtn");
+    const requestGeolocation = () => {
+        if (!navigator.geolocation) {
+            alert("Tarayici konum destegi yok");
+            return;
+        }
+        if (locateBtn) locateBtn.disabled = true;
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const { latitude, longitude } = pos.coords;
+                map.setView([latitude, longitude], 15);
+                setSelectedLocation(latitude, longitude);
+                if (locateBtn) locateBtn.disabled = false;
+            },
+            () => {
+                const needsHttps = window.location.protocol !== "https:" && window.location.hostname !== "localhost";
+                const suffix = needsHttps ? " HTTPS gerekli olabilir." : "";
+                alert(`Konum izni verilmedi / Konum alinamadi.${suffix}`);
+                if (locateBtn) locateBtn.disabled = false;
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+    };
+
     if (heroLocateBtn) {
         heroLocateBtn.addEventListener("click", (event) => {
             event.preventDefault();
             if (mapSection) {
                 mapSection.scrollIntoView({ behavior: "smooth", block: "start" });
             }
-            if (locateBtn) {
-                locateBtn.click();
-            }
+            requestGeolocation();
         });
     }
     if (locateBtn) {
-        locateBtn.addEventListener("click", () => {
-            if (!navigator.geolocation) return alert("Tarayici konum destegi yok");
-            locateBtn.disabled = true;
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    const { latitude, longitude } = pos.coords;
-                    map.setView([latitude, longitude], 15);
-                    setSelectedLocation(latitude, longitude);
-                    locateBtn.disabled = false;
-                },
-                () => {
-                    const needsHttps = window.location.protocol !== "https:" && window.location.hostname !== "localhost";
-                    const suffix = needsHttps ? " HTTPS gerekli olabilir." : "";
-                    alert(`Konum izni verilmedi / Konum alinamadi.${suffix}`);
-                    locateBtn.disabled = false;
-                },
-                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-            );
-        });
+        locateBtn.addEventListener("click", requestGeolocation);
     }
 
     // Filtreler
