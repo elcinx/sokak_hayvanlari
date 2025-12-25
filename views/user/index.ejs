@@ -11,8 +11,8 @@
                         <h1 class="hero-title mb-3">Sokak Hayvanlari Besleme Haritasi</h1>
                         <p class="hero-subtitle mb-4">Sehrindeki patili dostlarin besleme noktalarini birlikte takip edelim.</p>
                         <div class="d-flex flex-wrap gap-3">
-                            <a href="#map" class="btn btn-pet btn-lg">Konumumu Bul</a>
-                            <button class="btn btn-pet-outline btn-lg" id="openFeedForm" type="button">Besleme Ekle</button>
+                            <a href="#map" class="btn btn-primary-red btn-lg">Konumumu Bul</a>
+                            <button class="btn btn-outline-red btn-lg" id="openFeedForm" type="button">Besleme Ekle</button>
                         </div>
                     </div>
                 </div>
@@ -85,24 +85,24 @@
                                 <p class="text-muted mb-0">Konumuna en yakin besleme noktalarini harita uzerinden kesfet.</p>
                             </div>
                             <div class="map-toolbar d-flex flex-wrap gap-2 mt-2 mt-lg-0">
-                                <button class="btn btn-pet btn-sm" id="locateBtn">Konumumu Bul</button>
-                                <button class="btn btn-outline-danger btn-sm" id="toggleHeatmap">Heatmap</button>
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <div class="form-check form-check-inline m-0 me-2">
-                                        <input class="form-check-input filter-status" type="checkbox" id="filterCritical" value="critical" checked>
-                                        <label class="form-check-label" for="filterCritical">Kritik</label>
+                                <button class="btn btn-primary-red btn-sm" id="locateBtn">Konumumu Bul</button>
+                                <button class="btn btn-outline-red btn-sm" id="toggleHeatmap">Heatmap</button>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <div class="chip-filter">
+                                        <input type="checkbox" id="filterCritical" class="filter-status" value="critical" checked>
+                                        <label for="filterCritical">Kritik</label>
                                     </div>
-                                    <div class="form-check form-check-inline m-0 me-2">
-                                        <input class="form-check-input filter-status" type="checkbox" id="filterNew" value="new" checked>
-                                        <label class="form-check-label" for="filterNew">Yeni</label>
+                                    <div class="chip-filter">
+                                        <input type="checkbox" id="filterNew" class="filter-status" value="new" checked>
+                                        <label for="filterNew">Yeni</label>
                                     </div>
-                                    <div class="form-check form-check-inline m-0 me-2">
-                                        <input class="form-check-input filter-status" type="checkbox" id="filterSteady" value="steady" checked>
-                                        <label class="form-check-label" for="filterSteady">Duzenli</label>
+                                    <div class="chip-filter">
+                                        <input type="checkbox" id="filterSteady" class="filter-status" value="steady" checked>
+                                        <label for="filterSteady">Duzenli</label>
                                     </div>
-                                    <div class="form-check form-check-inline m-0">
-                                        <input class="form-check-input filter-status" type="checkbox" id="filterNormal" value="normal" checked>
-                                        <label class="form-check-label" for="filterNormal">Diger</label>
+                                    <div class="chip-filter">
+                                        <input type="checkbox" id="filterNormal" class="filter-status" value="normal" checked>
+                                        <label for="filterNormal">Diger</label>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +119,7 @@
                                 <div class="col-6 col-md-4 col-lg-3">
                                     <a href="/gallery/<%= g.id %>-<%= slugify(g.title||'', {lower:true, strict:true}) %>">
                                         <img src="<%= g.image_path %>" class="img-fluid" alt="<%= g.title %>">
-                                        <span>+</span>
+                                        <span>DETAY</span>
                                     </a>
                                 </div>
                             <% }) %>
@@ -139,17 +139,18 @@
                         <h4 class="mb-3">Son Duyurular</h4>
                         <div class="list-group list-group-flush">
                             <% data.slice(0,5).forEach(element=>{ %>
-                                <a href="/announcements/<%=element.slug%>" class="list-group-item list-group-item-action">
+                                <div class="list-group-item">
                                     <div class="fw-semibold"><%= element.title %></div>
-                                    <div class="small text-muted">Detayi gor</div>
-                                </a>
+                                    <div class="small text-muted mb-2">Duyuru detayi icin tikla</div>
+                                    <a href="/announcements/<%=element.slug%>" class="btn btn-outline-red btn-sm">Detayi Gor</a>
+                                </div>
                             <% }) %>
                         </div>
                     </div>
                     <div class="section-card p-3 p-lg-4 mt-4">
                         <h4 class="mb-3">Besleme Ekle</h4>
                         <p class="text-muted">Haritada bir nokta secip notunu ekle.</p>
-                        <button class="btn btn-pet w-100" type="button" data-bs-toggle="modal" data-bs-target="#feedModal">Besleme Ekle</button>
+                        <button class="btn btn-primary-red w-100" type="button" data-bs-toggle="modal" data-bs-target="#feedModal">Besleme Ekle</button>
                     </div>
                 </div>
             </section>
@@ -185,8 +186,8 @@
                             <div class="text-danger small" id="feedFormError" style="display:none;"></div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-pet btn-sm">Kaydet</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal" id="cancelFeedForm">Iptal</button>
+                            <button type="submit" class="btn btn-primary-red btn-sm">Kaydet</button>
+                            <button type="button" class="btn btn-outline-red btn-sm" data-bs-dismiss="modal" id="cancelFeedForm">Iptal</button>
                         </div>
                     </form>
                 </div>

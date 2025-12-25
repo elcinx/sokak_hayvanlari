@@ -17,6 +17,7 @@
             :root {
                 --pet-red: #c62828;
                 --pet-red-light: #ff5252;
+                --pet-red-dark: #8e0000;
                 --pet-bg: #fff5f5;
                 --pet-card: #ffffff;
                 --pet-ink: #2b1c1c;
@@ -37,7 +38,7 @@
                 border-radius: 16px;
             }
             .pet-navbar {
-                background: linear-gradient(120deg, #c62828, #ff5252);
+                background: rgba(198, 40, 40, 0.96);
                 box-shadow: 0 10px 24px rgba(198, 40, 40, 0.25);
             }
             .pet-navbar .navbar-brand,
@@ -46,6 +47,15 @@
             }
             .pet-navbar .nav-link:hover {
                 color: #ffe3e3 !important;
+                border-bottom: 2px solid #ffe3e3;
+            }
+            .paw-dot {
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                background: #ffe3e3;
+                border-radius: 50%;
+                margin-left: 8px;
             }
             .hero {
                 background: linear-gradient(120deg, rgba(198, 40, 40, 0.9), rgba(255, 82, 82, 0.75)),
@@ -102,24 +112,51 @@
                 border: 1px solid rgba(198, 40, 40, 0.12);
                 box-shadow: var(--pet-shadow);
             }
-            .btn-pet {
-                background: var(--pet-red);
-                border-color: var(--pet-red);
+            .btn-primary-red {
+                border-radius: 999px;
+                padding: 0.6rem 1.4rem;
+                font-weight: 600;
+                color: #fff;
+                background: linear-gradient(90deg, #ff5252, #c62828);
+                border: none;
+                box-shadow: 0 10px 24px rgba(198, 40, 40, 0.25);
+                transition: all 0.2s ease-out;
+            }
+            .btn-primary-red:hover {
+                background: linear-gradient(90deg, #e64545, #a81c1c);
+                transform: scale(1.03);
                 color: #fff;
             }
-            .btn-pet:hover {
-                background: #b71c1c;
-                border-color: #b71c1c;
-                color: #fff;
-            }
-            .btn-pet-outline {
-                border-color: #fff;
-                color: #fff;
-                background: transparent;
-            }
-            .btn-pet-outline:hover {
-                background: #fff;
+            .btn-outline-red {
+                border-radius: 999px;
+                padding: 0.6rem 1.4rem;
+                font-weight: 600;
                 color: var(--pet-red);
+                background: rgba(255, 255, 255, 0.6);
+                border: 1.5px solid var(--pet-red);
+                transition: all 0.2s ease-out;
+            }
+            .btn-outline-red:hover {
+                background: #ffe6e6;
+                color: var(--pet-red-dark);
+                transform: scale(1.03);
+            }
+            .chip-filter input {
+                display: none;
+            }
+            .chip-filter label {
+                border-radius: 999px;
+                padding: 0.35rem 0.9rem;
+                border: 1.5px solid var(--pet-red);
+                color: var(--pet-red);
+                font-size: 0.8rem;
+                cursor: pointer;
+                transition: all 0.2s ease-out;
+            }
+            .chip-filter input:checked + label {
+                background: linear-gradient(90deg, #ff5252, #c62828);
+                color: #fff;
+                border-color: transparent;
             }
             .map-toolbar .btn,
             .map-toolbar .form-check-label {
