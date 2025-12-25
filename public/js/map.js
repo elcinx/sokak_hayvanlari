@@ -42,8 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch("/api/feeds")
         .then((r) => r.json())
         .then((feeds) => {
+            const bounds = L.latLngBounds([]);
+            let hasValidPoint = false;
             feeds.forEach((feed) => {
-                if (!feed.lat || !feed.lng) return;
+                const lat = Number(feed.lat);
+                const lng = Number(feed.lng);
+                if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+                if (lat === 0 && lng === 0) return;
                 const popupParts = [];
                 if (feed.photo_url) {
                     popupParts.push(
@@ -64,13 +69,20 @@ document.addEventListener("DOMContentLoaded", () => {
                         `<button class="btn btn-sm btn-outline-secondary mt-1 fav-btn" data-lat="${feed.lat}" data-lng="${feed.lng}">Favori</button>`
                     );
                 }
-                const marker = L.marker([feed.lat, feed.lng], { status: feed.status || "normal" });
+                const marker = L.marker([lat, lng], { status: feed.status || "normal" });
                 marker.bindPopup(popupParts.join("<br>"));
                 marker.addTo(map);
                 markers.push(marker);
+                bounds.extend([lat, lng]);
+                hasValidPoint = true;
             });
             attachFavHandlers();
             applyFilters();
+            if (hasValidPoint) {
+                map.fitBounds(bounds, { padding: [30, 30] });
+            } else {
+                map.setView([20, 0], 2);
+            }
         })
         .catch(() => {});
 
