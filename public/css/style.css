@@ -1,0 +1,50 @@
+.feed-form {
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(198, 40, 40, 0.1);
+}
+.feed-help {
+    background: #ffe6e6;
+    color: #8e0000;
+    border-radius: 999px;
+    padding: 0.4rem 1rem;
+    display: inline-block;
+}
+.feed-submit-btn {
+    width: 100%;
+}
+.feed-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.announcements-card {
+    background: linear-gradient(135deg, rgba(255, 82, 82, 0.08), rgba(198, 40, 40, 0.12));
+    border: 1px solid rgba(198, 40, 40, 0.18);
+}
+.announcements-card .list-group-item {
+    background: transparent;
+    border-color: rgba(198, 40, 40, 0.12);
+}
+.announcements-card .list-group-item + .list-group-item {
+    border-top: 1px solid rgba(198, 40, 40, 0.12);
+}
+.site-map .section-card {
+    background: #fff;
+}
+.site-map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 82, 82, 0.12);
+    color: #8e0000;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.site-map-link:hover {
+    background: rgba(198, 40, 40, 0.2);
+    color: #8e0000;
+    transform: translateY(-1px);
+}

@@ -11,8 +11,8 @@
                         <h1 class="hero-title mb-3">Sokak Hayvanlari Besleme Haritasi</h1>
                         <p class="hero-subtitle mb-4">Sehrindeki patili dostlarin besleme noktalarini birlikte takip edelim.</p>
                         <div class="d-flex flex-wrap gap-3">
-                            <a href="#map" class="btn btn-primary-red btn-lg">Konumumu Bul</a>
-                            <button class="btn btn-outline-red btn-lg" id="openFeedForm" type="button">Besleme Ekle</button>
+                            <a href="#mapSection" class="btn btn-primary-red btn-lg" id="heroLocateBtn">Konumumu Bul</a>
+                            <button class="btn btn-outline-red btn-lg" id="openFeedForm" type="button">+ Besleme Ekle</button>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
 
             <section class="row g-4">
                 <div class="col-lg-8">
-                    <div class="section-card p-3 p-lg-4">
+                    <div class="section-card p-3 p-lg-4" id="mapSection">
                         <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
                             <div>
                                 <h3 class="mb-1">Harita & Noktalar</h3>
@@ -112,8 +112,11 @@
                         </div>
                     </div>
 
-                    <div class="section-card p-3 p-lg-4 mt-4">
-                        <h4 class="mb-3">Mini Galeri</h4>
+                    <div class="section-card p-3 p-lg-4 mt-4" id="miniGallery">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="mb-0">Mini Galeri</h4>
+                            <a class="btn btn-outline-red btn-sm" href="/gallery">Galeriye Git</a>
+                        </div>
                         <div class="row g-3 mini-gallery">
                             <% gallery.forEach(g=>{ %>
                                 <div class="col-6 col-md-4 col-lg-3">
@@ -135,7 +138,7 @@
                 </div>
 
                 <div class="col-lg-4">
-                    <div class="section-card p-3 p-lg-4">
+                    <div class="section-card p-3 p-lg-4 announcements-card">
                         <h4 class="mb-3">Son Duyurular</h4>
                         <div class="list-group list-group-flush">
                             <% data.slice(0,5).forEach(element=>{ %>
@@ -149,8 +152,58 @@
                     </div>
                     <div class="section-card p-3 p-lg-4 mt-4">
                         <h4 class="mb-3">Besleme Ekle</h4>
-                        <p class="text-muted">Haritada bir nokta secip notunu ekle.</p>
-                        <button class="btn btn-primary-red w-100" type="button" data-bs-toggle="modal" data-bs-target="#feedModal">Besleme Ekle</button>
+                        <div id="feedHelpBar" class="feed-help mb-3" style="display:none;">Haritadan bir nokta secerek yeni besleme ekleyebilirsiniz.</div>
+                        <form method="POST" action="/api/feeds" enctype="multipart/form-data" class="feed-form" id="feedCreateForm">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Yeni Besleme Kaydi</h5>
+                                <input type="hidden" name="lat" id="feedLat">
+                                <input type="hidden" name="lng" id="feedLng">
+                                <div class="mb-3 small text-muted" id="selectedLocationInfo">Henuz haritadan konum secmediniz.</div>
+                                <div class="mb-3">
+                                    <label for="feedType" class="form-label">Besleme Tipi</label>
+                                    <select name="type" id="feedType" class="form-select">
+                                        <option value="mama">Kuru mama</option>
+                                        <option value="yas_mama">Yas mama</option>
+                                        <option value="yemek_artigi">Yemek artigi</option>
+                                        <option value="su">Su</option>
+                                        <option value="diger">Diger</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="feedNote" class="form-label">Not (istege bagli)</label>
+                                    <textarea name="note" id="feedNote" class="form-control" rows="3" placeholder="Orn: 3 kedi + 1 kopek vardi, alan golgeli."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="feedPhoto" class="form-label">Fotograf (opsiyonel)</label>
+                                    <input type="file" name="photo" id="feedPhoto" class="form-control">
+                                </div>
+                                <div class="alert alert-success d-none" id="feedSuccessAlert">Tesekkurler! Besleme kaydiniz haritaya eklendi.</div>
+                                <div class="alert alert-danger d-none" id="feedErrorAlert"></div>
+                                <button type="submit" class="btn btn-primary-red feed-submit-btn" disabled>Beslemeyi Kaydet</button>
+                                <div class="form-text mt-2">* Once haritadan bir nokta secmeniz gerekiyor.</div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section class="site-map mt-4">
+                <div class="section-card p-3 p-lg-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <h5 class="mb-2">Site Map</h5>
+                            <p class="text-muted mb-0">Sokak Hayvanlari platformunda hizli erisim.</p>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row g-2">
+                                <div class="col-6 col-lg-4"><a href="/" class="site-map-link">Ana Sayfa</a></div>
+                                <div class="col-6 col-lg-4"><a href="/#mapSection" class="site-map-link">Harita & Noktalar</a></div>
+                                <div class="col-6 col-lg-4"><a href="/#miniGallery" class="site-map-link">Galeri</a></div>
+                                <div class="col-6 col-lg-4"><a href="/announcements" class="site-map-link">Duyurular</a></div>
+                                <div class="col-6 col-lg-4"><a href="/#about" class="site-map-link">Hakkinda</a></div>
+                                <div class="col-6 col-lg-4"><a href="/auth/login" class="site-map-link">Giris / Admin</a></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -161,37 +214,5 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
         <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js" defer></script>
         <script src="/js/map.js" defer></script>
-
-        <div class="modal fade" id="feedModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="feedForm">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Besleme Ekle</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-2">
-                                <label class="form-label small" for="feedCoords">Secilen konum</label>
-                                <input type="text" class="form-control" id="feedCoords" readonly>
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-label small" for="feedNote">Not</label>
-                                <textarea class="form-control" id="feedNote" name="note" rows="3" maxlength="300" required></textarea>
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-label small" for="feedPhoto">Fotograf (ops.)</label>
-                                <input class="form-control form-control-sm" type="file" id="feedPhoto" name="photo" accept="image/*">
-                            </div>
-                            <div class="text-danger small" id="feedFormError" style="display:none;"></div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary-red btn-sm">Kaydet</button>
-                            <button type="button" class="btn btn-outline-red btn-sm" data-bs-dismiss="modal" id="cancelFeedForm">Iptal</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
     </body>
 </html>
