@@ -31,7 +31,14 @@ const { v4: uuid } = require("uuid");
 app.set("view engine", "ejs");
 app.set("trust proxy", 1);
 
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+            imgSrc: ["'self'", "data:", "https://res.cloudinary.com"]
+        }
+    }
+}));
 
 app.use((req,res,next)=>{
     req.id = uuid();
