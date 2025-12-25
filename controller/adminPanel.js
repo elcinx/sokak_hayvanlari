@@ -140,7 +140,8 @@ exports.galleryList = async (req, res, next) => {
 exports.galleryAddForm = (req, res) => {
     res.render("admin/gallery-add", {
         title:"Galeri Yönetimi",
-        contentTitle:"Resim Yükle"
+        contentTitle:"Resim Yükle",
+        csrfToken: req.csrfToken()
     });
 };
 

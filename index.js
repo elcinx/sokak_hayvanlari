@@ -45,6 +45,11 @@ app.use(cookieParser());
 const csrfProtection = csurf();
 app.use((req,res,next)=>{
     if (req.path.startsWith("/api/")) return next();
+    const method = req.method || "";
+    if (method === "POST" || method === "PUT" || method === "PATCH" || method === "DELETE") {
+        const ct = req.headers["content-type"] || "";
+        if (ct.startsWith("multipart/form-data")) return next();
+    }
     return csrfProtection(req,res,next);
 });
 app.use(locals);
