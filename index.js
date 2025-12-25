@@ -80,10 +80,12 @@ const feedsRouter = require("./router/feeds.js");
 const leaderboardRouter = require("./router/leaderboard.js");
 const adminRouter = require("./router/admin.js");
 const userRouter = require("./router/user.js");
+const apiRouter = require("./router/api.js");
 
 // CORS only for API
 app.use("/api", corsMiddleware);
 
+app.use("/api", apiRouter);
 app.use("/auth", authRouter);
 app.use(metricsRouter);
 app.use(galleryRouter);

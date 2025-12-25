@@ -28,8 +28,9 @@ exports.create = async (req, res, next) => {
             return res.status(400).json({ error: "Not 300 karakteri geçemez" });
         }
         let photoUrl=null, photoKey=null, photoPath=null;
-        if (req.file){
-            const saved = await storage.saveImage(req.file);
+        const uploadFile = req.file || req.files?.photo?.[0] || req.files?.file?.[0];
+        if (uploadFile){
+            const saved = await storage.saveImage(uploadFile);
             photoUrl = saved.url;
             photoKey = saved.key;
             // local için geriye dönük path
