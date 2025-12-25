@@ -21,7 +21,9 @@ exports.create = async (req, res, next) => {
     try {
         const { lat, lng, note } = req.body;
         const parsed = validateLatLng(lat, lng);
-        if (!parsed) return res.status(400).json({ error: "lat/lng geçersiz aralıkta" });
+        if (!parsed || (parsed.lat === 0 && parsed.lng === 0)) {
+            return res.status(400).json({ error: "Konum zorunlu" });
+        }
         if (note && note.length > 300) {
             return res.status(400).json({ error: "Not 300 karakteri geçemez" });
         }
