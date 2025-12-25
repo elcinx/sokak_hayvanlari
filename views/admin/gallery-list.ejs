@@ -24,7 +24,9 @@
                         <% items.forEach(item=>{ %>
                             <div class="col-md-4 mb-3">
                                 <div class="card h-100">
-                                    <img class="card-img-top" src="<%= item.image_path %>" alt="<%= item.title %>">
+                                    <% if (item.image_url && (item.image_url.startsWith("http://") || item.image_url.startsWith("https://"))) { %>
+                                        <img class="card-img-top" src="<%= item.image_url %>" alt="<%= item.title %>" style="max-width:300px; height:auto;">
+                                    <% } %>
                                     <div class="card-body">
                                         <h5 class="card-title"><%= item.title %></h5>
                                         <p class="card-text"><small class="text-muted">Yükleyen: <%= item.owner || 'Bilinmiyor' %></small></p>
