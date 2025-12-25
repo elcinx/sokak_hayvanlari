@@ -1,11 +1,12 @@
 <aside class="admin-sidebar p-3">
-    <div class="fw-bold mb-3">Admin Panel</div>
+    <div class="fw-bold mb-1">Admin Panel</div>
+    <div class="small text-muted mb-3">Yonetim Menusu</div>
     <nav class="nav flex-column">
-        <a class="nav-link <%= activePage === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard">Dashboard</a>
-        <a class="nav-link <%= activePage === 'announcements' ? 'active' : '' %>" href="/admin">Duyurular</a>
-        <a class="nav-link <%= activePage === 'gallery' ? 'active' : '' %>" href="/admin/gallery/list">Galeri</a>
-        <a class="nav-link <%= activePage === 'feeds' ? 'active' : '' %>" href="/admin/feeds">Feeds</a>
-        <a class="nav-link <%= activePage === 'comments' ? 'active' : '' %>" href="/admin/comments">Yorumlar</a>
-        <a class="nav-link <%= activePage === 'badges' ? 'active' : '' %>" href="/admin/badges">Rozetler</a>
+        <a class="nav-link admin-link <%= activePage === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard">Dashboard</a>
+        <a class="nav-link admin-link <%= activePage === 'announcements' ? 'active' : '' %>" href="/admin">Duyurular</a>
+        <a class="nav-link admin-link <%= activePage === 'gallery' ? 'active' : '' %>" href="/admin/gallery/list">Galeri</a>
+        <a class="nav-link admin-link <%= activePage === 'feeds' ? 'active' : '' %>" href="/admin/feeds">Feeds</a>
+        <a class="nav-link admin-link <%= activePage === 'comments' ? 'active' : '' %>" href="/admin/comments">Yorumlar</a>
+        <a class="nav-link admin-link <%= activePage === 'badges' ? 'active' : '' %>" href="/admin/badges">Rozetler</a>
     </nav>
 </aside>

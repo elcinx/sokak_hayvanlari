@@ -221,6 +221,7 @@
                 width: 240px;
                 background: #fff;
                 border-right: 1px solid rgba(198, 40, 40, 0.12);
+                box-shadow: 10px 0 24px rgba(198, 40, 40, 0.04);
                 position: sticky;
                 top: 0;
                 height: 100vh;
@@ -231,10 +232,29 @@
                 padding: 10px 14px;
                 margin: 4px 0;
             }
+            .admin-theme .admin-sidebar .admin-link {
+                position: relative;
+                padding-left: 16px;
+            }
+            .admin-theme .admin-sidebar .admin-link::before {
+                content: "";
+                position: absolute;
+                left: 6px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 6px;
+                height: 6px;
+                border-radius: 999px;
+                background: rgba(198, 40, 40, 0.2);
+            }
             .admin-theme .admin-sidebar .nav-link.active,
             .admin-theme .admin-sidebar .nav-link:hover {
                 background: var(--pet-red);
                 color: #fff;
+            }
+            .admin-theme .admin-sidebar .nav-link.active::before,
+            .admin-theme .admin-sidebar .nav-link:hover::before {
+                background: #fff;
             }
             .admin-theme .admin-main {
                 flex: 1;
@@ -242,15 +262,24 @@
             .admin-theme .admin-topbar {
                 background: #fff;
                 border-bottom: 1px solid rgba(198, 40, 40, 0.12);
+                box-shadow: 0 8px 20px rgba(198, 40, 40, 0.08);
             }
             .admin-theme .admin-card {
                 background: #fff;
                 border-radius: 18px;
                 box-shadow: var(--pet-shadow);
                 border: 1px solid rgba(198, 40, 40, 0.12);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            .admin-theme .admin-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 16px 30px rgba(198, 40, 40, 0.18);
             }
             .admin-theme .table thead th {
                 background: rgba(198, 40, 40, 0.08);
+            }
+            .admin-theme .table tbody tr:hover {
+                background: rgba(198, 40, 40, 0.04);
             }
             .admin-theme .badge-soft {
                 background: rgba(198, 40, 40, 0.12);
