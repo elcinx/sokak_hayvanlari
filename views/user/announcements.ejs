@@ -3,23 +3,41 @@
 <%- include('../partials/head') %>
 <body class="pet-theme">
     <%- include('../partials/navbar') %>
-    <div class="container py-4">
-        <h1 class="mb-4"><%= contentTitle %></h1>
-        <% if (data.length===0){ %>
-            <p>Henüz duyuru yok.</p>
-        <% } %>
-        <% data.forEach(item=>{ %>
-            <div class="section-card mb-3 p-0">
-                <div class="card-body">
-                    <h4 class="card-title">
-                        <a href="/announcements/<%= item.slug %>" class="text-decoration-none"><%= item.title %></a>
-                    </h4>
-                    <p class="text-muted mb-1"><small><%= item.category || 'Genel' %></small></p>
-                    <div class="text-muted mb-2"><small><%= item.publish_at %></small></div>
-                    <a href="/announcements/<%= item.slug %>" class="btn btn-pet btn-sm">Görüntüle</a>
+    <div class="container py-4 announcements-page">
+        <div class="announcements-hero section-card p-4 p-lg-5 mb-4">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="hero-eyebrow text-uppercase">Guncel Bilgilendirme</div>
+                    <h1 class="hero-title mb-2"><%= contentTitle %></h1>
+                    <p class="section-subtitle mb-0">Toplulugumuzdan en yeni haberler, etkinlikler ve duyurular.</p>
                 </div>
             </div>
-        <% }) %>
+        </div>
+
+        <% if (data.length === 0) { %>
+            <div class="section-card p-4 text-center text-muted">Henuz duyuru yok.</div>
+        <% } %>
+
+        <div class="row g-3">
+            <% data.forEach(item=>{ %>
+                <div class="col-12">
+                    <div class="section-card p-3 p-lg-4 announcement-card">
+                        <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                            <div>
+                                <div class="announcement-meta mb-2">
+                                    <span class="badge badge-soft"><%= item.category || 'Genel' %></span>
+                                    <span class="text-muted">• <%= item.publish_at %></span>
+                                </div>
+                                <h4 class="card-title mb-2">
+                                    <a href="/announcements/<%= item.slug %>" class="announcement-link"><%= item.title %></a>
+                                </h4>
+                            </div>
+                            <a href="/announcements/<%= item.slug %>" class="btn btn-outline-red btn-sm">Detayi Gor</a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
     </div>
     <%- include('../partials/script') %>
 </body>

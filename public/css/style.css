@@ -106,6 +106,26 @@
     color: #2b1c1c;
     line-height: 1.5;
 }
+.announcements-hero {
+    background: linear-gradient(120deg, rgba(198, 40, 40, 0.12), rgba(255, 82, 82, 0.12));
+}
+.announcement-card {
+    border-left: 4px solid rgba(198, 40, 40, 0.6);
+}
+.announcement-link {
+    color: #4a1f1f;
+    text-decoration: none;
+}
+.announcement-link:hover {
+    color: #c62828;
+}
+.announcement-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.9rem;
+}
 .site-map-link {
     display: inline-flex;
     align-items: center;
