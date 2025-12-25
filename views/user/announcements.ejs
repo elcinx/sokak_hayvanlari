@@ -2,20 +2,21 @@
 <html lang="tr">
 <%- include('../partials/head') %>
 <body class="pet-theme">
+    <%- include('../partials/navbar') %>
     <div class="container py-4">
         <h1 class="mb-4"><%= contentTitle %></h1>
         <% if (data.length===0){ %>
             <p>Henüz duyuru yok.</p>
         <% } %>
         <% data.forEach(item=>{ %>
-            <div class="card mb-3 shadow-sm">
+            <div class="section-card mb-3 p-0">
                 <div class="card-body">
                     <h4 class="card-title">
                         <a href="/announcements/<%= item.slug %>" class="text-decoration-none"><%= item.title %></a>
                     </h4>
                     <p class="text-muted mb-1"><small><%= item.category || 'Genel' %></small></p>
                     <div class="text-muted mb-2"><small><%= item.publish_at %></small></div>
-                    <a href="/announcements/<%= item.slug %>" class="btn btn-outline-primary btn-sm">Görüntüle</a>
+                    <a href="/announcements/<%= item.slug %>" class="btn btn-pet btn-sm">Görüntüle</a>
                 </div>
             </div>
         <% }) %>

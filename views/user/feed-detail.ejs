@@ -2,10 +2,12 @@
 <html lang="tr">
 <%- include('../partials/head') %>
 <body class="pet-theme">
+    <%- include('../partials/navbar') %>
     <div class="container py-4">
-        <a href="/" class="btn btn-link ps-0">&larr; Haritaya dön</a>
-        <div class="row">
-            <div class="col-md-8">
+        <a href="/" class="btn btn-link ps-0">&larr; Haritaya don</a>
+        <div class="section-card p-4">
+            <div class="row g-4">
+                <div class="col-md-8">
                 <% if (feed.photo_url){ %>
                     <img src="<%= feed.photo_url %>" class="img-fluid rounded mb-3" alt="feed photo">
                 <% } %>
@@ -14,8 +16,8 @@
                 <p><strong>Tarih:</strong> <%= feed.created_at %></p>
                 <p><strong>Not:</strong> <%= feed.note || '-' %></p>
                 <p><strong>Konum:</strong> <%= feed.lat %>, <%= feed.lng %></p>
-            </div>
-            <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
                 <h4>Yorumlar</h4>
                 <div id="comments">
                     <% if (comments.length===0){ %>
@@ -36,7 +38,7 @@
                         <div class="mb-2">
                             <textarea name="content" class="form-control" rows="3" maxlength="500" placeholder="Yorumunuzu yazın"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-sm">Gönder</button>
+                        <button type="submit" class="btn btn-pet btn-sm">Gonder</button>
                     </form>
                 </div>
             </div>
