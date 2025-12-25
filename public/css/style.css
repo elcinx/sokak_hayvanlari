@@ -77,6 +77,35 @@
 .site-map {
     padding-bottom: 2.5rem;
 }
+.admin-simple-list {
+    display: grid;
+    gap: 1rem;
+}
+.admin-item {
+    border: 1px solid rgba(198, 40, 40, 0.12);
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+    background: #fff;
+}
+.admin-item-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.admin-meta {
+    font-size: 0.85rem;
+    color: rgba(43, 28, 28, 0.7);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+}
+.admin-item-body {
+    margin-top: 0.5rem;
+    color: #2b1c1c;
+    line-height: 1.5;
+}
 .site-map-link {
     display: inline-flex;
     align-items: center;

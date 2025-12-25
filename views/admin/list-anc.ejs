@@ -8,46 +8,35 @@
             <%- include('./partials/topbar', { contentTitle, contentDesc: 'Duyurulari yonet' }) %>
             <div class="container-fluid py-4">
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-                    <div class="input-group" style="max-width:320px;">
+                    <div class="input-group" style="max-width:280px;">
                         <span class="input-group-text">Ara</span>
                         <input type="search" class="form-control" id="adminAncSearch" placeholder="Baslik ara...">
                     </div>
                     <a href="/admin/add/anc" class="btn btn-pet">Yeni Duyuru</a>
                 </div>
                 <div class="admin-card p-3">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle" id="adminAncTable">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Baslik</th>
-                                    <th>Kategori</th>
-                                    <th>Yayin</th>
-                                    <th>Aktif</th>
-                                    <th>Islem</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% data.forEach((element,index) => { %>
-                                    <tr>
-                                        <td><%= index+1 %></td>
-                                        <td><%= element.title %></td>
-                                        <td><span class="badge badge-soft"><%= element.category || 'Genel' %></span></td>
-                                        <td><%= element.publish_at %></td>
-                                        <td><input type="checkbox" disabled <%=element.is_active?"checked":null %>></td>
-                                        <td class="text-nowrap">
-                                            <a href="/admin/edit/anc/<%=element.noticeid%>" class="btn btn-sm btn-outline-primary">Duzenle</a>
-                                            <a href="/admin/delete/anc/<%=element.noticeid %>" class="delete-btn btn btn-sm btn-outline-danger" data-id="<%=element.noticeid %>" data-title="<%=element.title %>" data-bs-toggle="modal" data-bs-target="#exampleModal">Sil</a>
-                                        </td>
-                                    </tr>
-                                <% }) %>
-                                <% if (data.length === 0) { %>
-                                    <tr>
-                                        <td colspan="6" class="text-center text-muted">Henuz duyuru yok.</td>
-                                    </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
+                    <div class="admin-simple-list" id="adminAncTable">
+                        <% data.forEach((element,index) => { %>
+                            <div class="admin-item">
+                                <div class="admin-item-head">
+                                    <div>
+                                        <div class="fw-semibold"><%= element.title %></div>
+                                        <div class="admin-meta">
+                                            <span class="badge badge-soft"><%= element.category || 'Genel' %></span>
+                                            <span class="text-muted">- <%= element.publish_at %></span>
+                                            <span class="text-muted">- <%= element.is_active ? 'Aktif' : 'Pasif' %></span>
+                                        </div>
+                                    </div>
+                                    <div class="text-nowrap">
+                                        <a href="/admin/edit/anc/<%=element.noticeid%>" class="btn btn-sm btn-outline-primary">Duzenle</a>
+                                        <a href="/admin/delete/anc/<%=element.noticeid %>" class="delete-btn btn btn-sm btn-outline-danger" data-id="<%=element.noticeid %>" data-title="<%=element.title %>" data-bs-toggle="modal" data-bs-target="#exampleModal">Sil</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                        <% if (data.length === 0) { %>
+                            <div class="text-center text-muted py-4">Henuz duyuru yok.</div>
+                        <% } %>
                     </div>
                 </div>
             </div>
