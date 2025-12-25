@@ -11,6 +11,5 @@ router.get("/api/leaderboard/monthly", leaderboard.monthly);
 router.get("/api/me/badges", isAuth, leaderboard.meBadges);
 router.get("/api/me/points", isAuth, leaderboard.mePoints);
 
-router.get("/admin/badges", isAuth, requireRole("admin","koordinator"), csrf, leaderboard.adminListBadges);
 
 module.exports = router;

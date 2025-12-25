@@ -110,6 +110,32 @@ exports.commentsList = async (req, res, next) => {
     }
 };
 
+exports.galleryList = async (req, res, next) => {
+    try {
+        const base = config.baseUrl.replace(/\/$/,"");
+        const [rows] = await db.execute(
+            `SELECT f.id, f.photo_url, f.photo_path, f.note AS title, f.created_at, u.name AS owner
+             FROM feed_logs f
+             LEFT JOIN users u ON u.userid=f.user_id
+             WHERE f.photo_path IS NOT NULL OR f.photo_url IS NOT NULL
+             ORDER BY f.created_at DESC
+             LIMIT 50`
+        );
+        const items = rows.map(r=>({
+            ...r,
+            image_path: r.photo_url || (r.photo_path ? `${base}/${r.photo_path}` : null)
+        }));
+        res.render("admin/gallery-list", {
+            title:"Galeri Yönetimi",
+            contentTitle:"Galeri Yönetimi",
+            items
+        });
+    } catch (err) {
+        logger.error(req, err, "admin_gallery_list");
+        next(err);
+    }
+};
+
 exports.deleteComment = async (req, res, next) => {
     try {
         await db.execute("UPDATE feed_comments SET is_deleted=1 WHERE id=?", [req.params.id]);

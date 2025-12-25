@@ -38,6 +38,5 @@ router.get("/api/favorites", isAuth, feedsController.listFavorites);
 
 // Sayfa
 router.get("/feeds/:id", csrf, feedsController.view);
-router.get("/admin/feeds/delete/:id", isAuth, requireRole("admin","koordinator"), feedsController.deleteFeed);
 
 module.exports = router;

@@ -6,21 +6,27 @@ const isAuth=require("../middleware/isAuth");
 const csrf=require("../middleware/csrf"); 
 const requireRole = require("../middleware/requireRole");
 const adminPanel = require("../controller/adminPanel");
+const feedsController = require("../controller/feeds");
+const leaderboard = require("../controller/leaderboard");
 
-router.get("/admin",isAuth,requireRole("admin","koordinator"),csrf,adminController.adminList);
-router.get("/admin/dashboard",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.dashboard);
-router.get("/admin/feeds",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.feedList);
-router.get("/admin/comments",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.commentsList);
-router.get("/admin/comments/delete/:id",isAuth,requireRole("admin","koordinator"),adminPanel.deleteComment);
+router.get("/",isAuth,requireRole("admin","koordinator"),csrf,adminController.adminList);
+router.get("/dashboard",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.dashboard);
+router.get("/gallery",isAuth,requireRole("admin","koordinator"),(req,res)=>res.redirect("/admin/gallery/list"));
+router.get("/gallery/list",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.galleryList);
+router.get("/feeds",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.feedList);
+router.get("/feeds/delete/:id", isAuth, requireRole("admin","koordinator"), feedsController.deleteFeed);
+router.get("/comments",isAuth,requireRole("admin","koordinator"),csrf,adminPanel.commentsList);
+router.get("/comments/delete/:id",isAuth,requireRole("admin","koordinator"),adminPanel.deleteComment);
+router.get("/badges", isAuth, requireRole("admin","koordinator"), csrf, leaderboard.adminListBadges);
 
-router.get("/admin/add/anc",isAuth,requireRole("admin","koordinator"),csrf,adminController.adminGetAddAnc)
-router.post("/admin/add/anc",isAuth,requireRole("admin","koordinator"),adminController.adminPostAddAnc)
+router.get("/add/anc",isAuth,requireRole("admin","koordinator"),csrf,adminController.adminGetAddAnc)
+router.post("/add/anc",isAuth,requireRole("admin","koordinator"),adminController.adminPostAddAnc)
 
-router.get("/admin/edit/anc/:id",isAuth,requireRole("admin","koordinator"),csrf,adminController.adminGetEditAnc);
-router.post("/admin/edit/anc/:id",isAuth,requireRole("admin","koordinator"),adminController.adminPostEditAnc);
+router.get("/edit/anc/:id",isAuth,requireRole("admin","koordinator"),csrf,adminController.adminGetEditAnc);
+router.post("/edit/anc/:id",isAuth,requireRole("admin","koordinator"),adminController.adminPostEditAnc);
 
-router.get("/admin/delete/anc/:id",isAuth,requireRole("admin"),adminController.get_deleteAnc);
+router.get("/delete/anc/:id",isAuth,requireRole("admin"),adminController.get_deleteAnc);
 
-router.post("/admin/delete/anc",isAuth,requireRole("admin"),adminController.post_deleteAnc);
+router.post("/delete/anc",isAuth,requireRole("admin"),adminController.post_deleteAnc);
 
 module.exports=router;

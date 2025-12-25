@@ -65,7 +65,7 @@ app.use(metricsRouter);
 app.use(galleryRouter);
 app.use(feedsRouter);
 app.use(leaderboardRouter);
-app.use(adminRouter); // routes start with /admin
+app.use("/admin", adminRouter);
 app.use("/user", userRouter); // legacy prefix
 app.use("/", userRouter); // root site pages
 
