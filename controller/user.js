@@ -16,6 +16,7 @@ exports.userHome = async (req, res, next) => {
         }));
         const [[totalVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs");
         const [[todayVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs WHERE DATE(visited_at)=CURDATE()");
+        const slugify = require("slugify");
         res.render("user/index", {
             title: "Ana sayfa",
             contentTitle: "Ana sayfa",
@@ -28,6 +29,7 @@ exports.userHome = async (req, res, next) => {
                 todayVisits: todayVisits?.c || 0,
             },
             gallery,
+            slugify,
         });
     } catch (err) {
         return next(err);
