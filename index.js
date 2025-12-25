@@ -35,7 +35,20 @@ app.use(helmet({
     contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-            imgSrc: ["'self'", "data:", "https://res.cloudinary.com"]
+            imgSrc: ["'self'", "data:", "https://res.cloudinary.com"],
+            scriptSrc: [
+                "'self'",
+                "https://unpkg.com",
+                "https://ajax.googleapis.com",
+                "https://cdn.jsdelivr.net",
+                "https://cdn.ckeditor.com"
+            ],
+            styleSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "https://unpkg.com",
+                "https://cdn.jsdelivr.net"
+            ]
         }
     }
 }));
