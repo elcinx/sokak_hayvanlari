@@ -1,78 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-<%- include('../partials/head.ejs') %>
-    <body>
-        <div class="d-flex" id="wrapper">
-            <!-- Sidebar-->
-       <%- include('../partials/sidebar.ejs') %>
-            <!-- Page content wrapper-->
-            <div id="page-content-wrapper">
-                <!-- Top navigation-->
-                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-                    <div class="container-fluid">
-                        <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                      <%- include('../partials/right-top-menu.ejs') %>
-                    </div>
-                </nav>
-                <!-- Page content-->
-                <div class="container-fluid">
-                    <h1 class="mt-3"><%= contentTitle %></h1>
-                <div class="row">
-                    <div class="col-sm-8 bg-light ms-2 border border-info">
+<html lang="tr">
+<%- include('../partials/head') %>
+<body class="pet-theme admin-theme">
+    <div class="admin-wrapper">
+        <%- include('./partials/sidebar', { activePage: 'announcements' }) %>
+        <div class="admin-main">
+            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Yeni duyuru olustur' }) %>
+            <div class="container-fluid py-4">
+                <div class="admin-card p-4">
                     <form method="post">
-                      <input type="hidden" name="_csrf" value="<%=csrfToken %>">
-
-                        <div class="form-group row mb-2 mt-3">
-                          <label for="title" class="col-sm-3 col-form-label">Anouncment Title</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control" id="title" name="title" placeholder="Tittle">
-                          </div>
+                        <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Baslik</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="Baslik">
                         </div>
-                        <div class="form-group row mb-2">
-                          <label for="explain" class="col-sm-3 col-form-label">Anouncment Explain</label>
-                          <div class="col-sm-9">
+                        <div class="mb-3">
+                            <label for="explain" class="form-label">Aciklama</label>
                             <textarea name="explain" id="explain"><p></p></textarea>
-                          </div>
                         </div>
-                        <div class="form-group row mb-2">
-                          <label for="category" class="col-sm-3 col-form-label">Kategori</label>
-                          <div class="col-sm-9">
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Kategori</label>
                             <input type="text" class="form-control" id="category" name="category" placeholder="Kategori">
-                          </div>
                         </div>
-                        <div class="form-group row mb-2">
-                          <label for="publish_at" class="col-sm-3 col-form-label">Yayın Tarihi</label>
-                          <div class="col-sm-9">
+                        <div class="mb-3">
+                            <label for="publish_at" class="form-label">Yayin Tarihi</label>
                             <input type="datetime-local" class="form-control" id="publish_at" name="publish_at">
-                          </div>
                         </div>
-                        <div class="form-group row mb-2">
-                          <div class="col-sm-3">Aktif</div>
-                          <div class="col-sm-9">
-                            <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="gridCheck1" name="isActive" checked>
-                              <label class="form-check-label" for="gridCheck1">
-                                Yayında
-                              </label>
-                            </div>
-                          </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="gridCheck1" name="isActive" checked>
+                            <label class="form-check-label" for="gridCheck1">Yayinda</label>
                         </div>
-                        <div class="form-group row justify-content-end mb-2">
-                          <div class="col-sm-9 ">
-                            <button type="submit" class="btn btn-primary">Add</button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                    </div> 
+                        <button type="submit" class="btn btn-pet">Kaydet</button>
+                    </form>
                 </div>
             </div>
         </div>
-
-<%- include('../partials/script.ejs') %>
-               
-
+    </div>
+    <%- include('../partials/script.ejs') %>
     <script src="/static/js/admin-anc-form.js"></script>
-    </body>
+</body>
 </html>

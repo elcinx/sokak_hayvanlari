@@ -175,5 +175,68 @@
                 border-color: var(--pet-red);
                 box-shadow: 0 0 0 0.2rem rgba(198, 40, 40, 0.2);
             }
+            .admin-theme .admin-wrapper {
+                display: flex;
+                min-height: 100vh;
+                background: var(--pet-bg);
+            }
+            .admin-theme .admin-sidebar {
+                width: 240px;
+                background: #fff;
+                border-right: 1px solid rgba(198, 40, 40, 0.12);
+                position: sticky;
+                top: 0;
+                height: 100vh;
+            }
+            .admin-theme .admin-sidebar .nav-link {
+                color: var(--pet-ink);
+                border-radius: 12px;
+                padding: 10px 14px;
+                margin: 4px 0;
+            }
+            .admin-theme .admin-sidebar .nav-link.active,
+            .admin-theme .admin-sidebar .nav-link:hover {
+                background: var(--pet-red);
+                color: #fff;
+            }
+            .admin-theme .admin-main {
+                flex: 1;
+            }
+            .admin-theme .admin-topbar {
+                background: #fff;
+                border-bottom: 1px solid rgba(198, 40, 40, 0.12);
+            }
+            .admin-theme .admin-card {
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: var(--pet-shadow);
+                border: 1px solid rgba(198, 40, 40, 0.12);
+            }
+            .admin-theme .table thead th {
+                background: rgba(198, 40, 40, 0.08);
+            }
+            .admin-theme .badge-soft {
+                background: rgba(198, 40, 40, 0.12);
+                color: var(--pet-red);
+                border-radius: 999px;
+                padding: 0.35rem 0.6rem;
+            }
+            .admin-theme .admin-gallery-item {
+                position: relative;
+                overflow: hidden;
+            }
+            .admin-theme .admin-gallery-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.45);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+            }
+            .admin-theme .admin-gallery-item:hover .admin-gallery-overlay {
+                opacity: 1;
+            }
         </style>
     </head>

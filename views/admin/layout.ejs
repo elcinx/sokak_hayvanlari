@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="tr">
+<%- include('../partials/head') %>
+<body class="pet-theme admin-theme">
+    <div class="admin-wrapper">
+        <%- include('./partials/sidebar', { activePage }) %>
+        <div class="admin-main">
+            <%- include('./partials/topbar', { contentTitle, contentDesc }) %>
+            <div class="container-fluid py-4">
+                <%- body %>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/script') %>
+</body>
+</html>

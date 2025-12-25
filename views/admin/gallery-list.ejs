@@ -1,51 +1,48 @@
 <!DOCTYPE html>
 <html lang="tr">
 <%- include('../partials/head') %>
-    <body>
-        <div class="d-flex" id="wrapper">
-            <%- include('../partials/sidebar') %>
-            <div id="page-content-wrapper">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-                    <div class="container-fluid">
-                        <button class="btn btn-primary" id="sidebarToggle">Menü</button>
-                        <%- include('../partials/right-top-menu') %>
-                    </div>
-                </nav>
-                <div class="container-fluid">
-                    <h1 class="mt-3"><%= contentTitle %></h1>
-                    <% if (flash && flash.text) { %>
-                        <div class="alert alert-<%= flash.type || 'info' %>"><%= flash.text %></div>
-                    <% } %>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div></div>
-                        <a href="/admin/gallery/add" class="btn btn-primary">Yeni Resim</a>
-                    </div>
-                    <div class="row">
-                        <% if (items.length===0){ %>
-                            <p>Henüz resim yüklenmemiş.</p>
-                        <% } %>
-                        <% items.forEach(item=>{ %>
-                            <div class="col-md-4 mb-3">
-                                <div class="card h-100">
-                                    <% const imageUrl = item.image_url || item.url; %>
-                                    <% if (imageUrl && (imageUrl.startsWith("http://") || imageUrl.startsWith("https://"))) { %>
-                                        <img class="card-img-top" src="<%= imageUrl %>" alt="<%= item.title %>" style="max-width:300px; height:auto;">
-                                    <% } %>
-                                    <div class="card-body">
-                                        <h5 class="card-title"><%= item.title %></h5>
-                                        <p class="card-text"><small class="text-muted">Yükleyen: <%= item.owner || 'Bilinmiyor' %></small></p>
-                                        <form method="POST" action="/admin/gallery/delete/<%= item.id %>">
-                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                            <button type="submit" class="btn btn-sm btn-danger">Sil</button>
-                                        </form>
-                                    </div>
+<body class="pet-theme admin-theme">
+    <div class="admin-wrapper">
+        <%- include('./partials/sidebar', { activePage: 'gallery' }) %>
+        <div class="admin-main">
+            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Galeri gorunumu ve yonetimi' }) %>
+            <div class="container-fluid py-4">
+                <% if (flash && flash.text) { %>
+                    <div class="alert alert-<%= flash.type || 'info' %>"><%= flash.text %></div>
+                <% } %>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div></div>
+                    <a href="/admin/gallery/add" class="btn btn-pet">Yeni Yukle</a>
+                </div>
+                <% if (items.length === 0) { %>
+                    <div class="admin-card p-4 text-center">Henuz gorsel yok.</div>
+                <% } %>
+                <div class="row g-3">
+                    <% items.forEach(item=>{ %>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="admin-card admin-gallery-item">
+                                <% const imageUrl = item.image_url || item.url; %>
+                                <% if (imageUrl) { %>
+                                    <img src="<%= imageUrl %>" alt="<%= item.title %>" class="w-100" style="height:220px;object-fit:cover;">
+                                <% } %>
+                                <div class="admin-gallery-overlay">
+                                    <form method="POST" action="/admin/gallery/delete/<%= item.id %>">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button type="submit" class="btn btn-sm btn-outline-light">Sil</button>
+                                    </form>
+                                </div>
+                                <div class="p-3">
+                                    <div class="fw-semibold"><%= item.title %></div>
+                                    <div class="small text-muted"><%= item.owner || 'Bilinmiyor' %></div>
+                                    <div class="small text-muted"><%= item.created_at %></div>
                                 </div>
                             </div>
-                        <% }) %>
-                    </div>
+                        </div>
+                    <% }) %>
                 </div>
             </div>
         </div>
-        <%- include('../partials/script') %>
-    </body>
+    </div>
+    <%- include('../partials/script') %>
+</body>
 </html>

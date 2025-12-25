@@ -1,109 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
-<%- include('../partials/head.ejs') %>
-    <body>
-        <div class="d-flex" id="wrapper">
-            <!-- Sidebar-->
-       <%- include('../partials/sidebar.ejs') %>
-            <!-- Page content wrapper-->
-            <div id="page-content-wrapper">
-                <!-- Top navigation-->
-                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-                    <div class="container-fluid">
-                        <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                      <%- include('../partials/right-top-menu.ejs') %>
+<html lang="tr">
+<%- include('../partials/head') %>
+<body class="pet-theme admin-theme">
+    <div class="admin-wrapper">
+        <%- include('./partials/sidebar', { activePage: 'announcements' }) %>
+        <div class="admin-main">
+            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Duyurulari yonet' }) %>
+            <div class="container-fluid py-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                    <div class="input-group" style="max-width:320px;">
+                        <span class="input-group-text">Ara</span>
+                        <input type="search" class="form-control" id="adminAncSearch" placeholder="Baslik ara...">
                     </div>
-                </nav>
-                <!-- Page content-->
-                <div class="container-fluid">
-                    <h1 class="mt-4"><%=contentTitle %></h1>
-                <div class="row">
-                    <div class="col-sm-8 bg-light ms-2 border border-info">
-                      <table class="table table-striped table-hover table-responsive">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Notice ID</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Explain</th>
-                            <th scope="col">isActive</th>
-                             <th scope="col">User</th>
-                            <th scope="col" class="text-end">Processing</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <% data.forEach((element,index) => { %>
-                            <tr>
-                              <th scope="row">
-                                <%= index+1 %>
-                              </th>
-
-                              <td>
-                                <%= element.noticeid%>
-                              </td>
-
-                              <td>
-                                <%= element.title%>
-                              </td>
-
-                              <td>
-                                <%= element.exp%>
-                              </td>
-
-                              <td>
-                                <input type="checkbox" disabled <%=element.is_active?"checked":null %>>
-                              </td>
-
-                              <td>
-                                <%= element.name||'' %>
-                              </td>
-                              
-                              <td class="text-nowrap text-end">
-                                <a href="/admin/edit/anc/<%=element.noticeid%>" class="btn btn-primary">Edit</a>
-                                <a href="/admin/delete/anc/<%=element.noticeid %>" class="delete-btn btn btn-danger" data-id="<%=element.noticeid %>" data-title="<%=element.title %>" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</a>  
-                              </td>
-                            </tr>
-                            
-                           
-                          <% }) %>
-                        </tbody>
-                      </table>
-
-                      
+                    <a href="/admin/add/anc" class="btn btn-pet">Yeni Duyuru</a>
+                </div>
+                <div class="admin-card p-3">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle" id="adminAncTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Baslik</th>
+                                    <th>Kategori</th>
+                                    <th>Yayin</th>
+                                    <th>Aktif</th>
+                                    <th>Islem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% data.forEach((element,index) => { %>
+                                    <tr>
+                                        <td><%= index+1 %></td>
+                                        <td><%= element.title %></td>
+                                        <td><span class="badge badge-soft"><%= element.category || 'Genel' %></span></td>
+                                        <td><%= element.publish_at %></td>
+                                        <td><input type="checkbox" disabled <%=element.is_active?"checked":null %>></td>
+                                        <td class="text-nowrap">
+                                            <a href="/admin/edit/anc/<%=element.noticeid%>" class="btn btn-sm btn-outline-primary">Duzenle</a>
+                                            <a href="/admin/delete/anc/<%=element.noticeid %>" class="delete-btn btn btn-sm btn-outline-danger" data-id="<%=element.noticeid %>" data-title="<%=element.title %>" data-bs-toggle="modal" data-bs-target="#exampleModal">Sil</a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                                <% if (data.length === 0) { %>
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">Henuz duyuru yok.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
                     </div>
-                    </div> 
                 </div>
             </div>
         </div>
-  <%- include('../partials/script.ejs') %>
-    
-    <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Uyarı</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-  <form action="/admin/delete/anc" method="post">
-     <input type="hidden" name="_csrf" value="<%=csrfToken %>">
-      <div class="modal-body">
-        <p class="fw-bold">Anouncement ID:<label id="id" class="fw-semibold"></label></p>
-        <p class="fw-bold">Anouncement Title:<label id="title" class="fw-semibold"></label></p>
-        <p class="fw-bold">Kaydı silmek istediğinize emin misiniz?</p>
-        <input type="hidden" value="" id="ancid" name="ancid"> <!-- form üzerinde anounce id'yi taşır. anounce Id değeri aşağıdaki scriptte set edilir-->
-      </div>
-      <div class="modal-footer">
-        <a href="#" id="yes" class="btn btn-danger">Linkli Evet</a>
-        <button type="submit" class="btn btn-danger">Post Evet</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hayır</button>
-      </div>
-  </form>
     </div>
-  </div>
-</div>
 
-<script src="/static/js/admin-list-anc.js"></script>
-    </body>
+    <%- include('../partials/script.ejs') %>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Uyari</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/admin/delete/anc" method="post">
+                    <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                    <div class="modal-body">
+                        <p class="fw-bold">Duyuru ID: <label id="id" class="fw-semibold"></label></p>
+                        <p class="fw-bold">Duyuru Baslik: <label id="title" class="fw-semibold"></label></p>
+                        <p class="fw-bold">Kaydi silmek istediginize emin misiniz?</p>
+                        <input type="hidden" value="" id="ancid" name="ancid">
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" id="yes" class="btn btn-outline-danger">Linkli Sil</a>
+                        <button type="submit" class="btn btn-danger">Sil</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Vazgec</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/admin-list-anc.js"></script>
+</body>
 </html>

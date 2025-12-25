@@ -1,41 +1,42 @@
 <!DOCTYPE html>
 <html lang="tr">
 <%- include('../partials/head') %>
-<body>
-    <div class="d-flex" id="wrapper">
-        <%- include('../partials/sidebar') %>
-        <div id="page-content-wrapper">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-                <div class="container-fluid">
-                    <button class="btn btn-primary" id="sidebarToggle">Menü</button>
-                    <%- include('../partials/right-top-menu') %>
-                </div>
-            </nav>
-            <div class="container-fluid">
-                <h1 class="mt-3"><%= contentTitle %></h1>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Kullanıcı</th>
-                                <th>Feed</th>
-                                <th>Yorum</th>
-                                <th>Tarih</th>
-                                <th>İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% comments.forEach(c=>{ %>
+<body class="pet-theme admin-theme">
+    <div class="admin-wrapper">
+        <%- include('./partials/sidebar', { activePage: 'comments' }) %>
+        <div class="admin-main">
+            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Yorum moderasyonu ve denetim' }) %>
+            <div class="container-fluid py-4">
+                <div class="admin-card p-3">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle">
+                            <thead>
                                 <tr>
-                                    <td><%= c.name %></td>
-                                    <td><a href="/feeds/<%= c.feed_id %>" target="_blank">Feed <%= c.feed_id %></a></td>
-                                    <td><%= c.content %></td>
-                                    <td><%= c.created_at %></td>
-                                    <td><a href="/admin/comments/delete/<%= c.id %>" class="btn btn-sm btn-outline-danger">Sil</a></td>
+                                    <th>Kullanici</th>
+                                    <th>Feed</th>
+                                    <th>Yorum</th>
+                                    <th>Tarih</th>
+                                    <th>Islem</th>
                                 </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <% comments.forEach(c=>{ %>
+                                    <tr>
+                                        <td><%= c.name %></td>
+                                        <td><a href="/feeds/<%= c.feed_id %>" target="_blank">Feed <%= c.feed_id %></a></td>
+                                        <td><%= c.content %></td>
+                                        <td><%= c.created_at %></td>
+                                        <td><a href="/admin/comments/delete/<%= c.id %>" class="btn btn-sm btn-outline-danger">Sil</a></td>
+                                    </tr>
+                                <% }) %>
+                                <% if (comments.length === 0) { %>
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted">Henuz yorum yok.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
