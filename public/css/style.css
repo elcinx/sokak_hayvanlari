@@ -30,6 +30,17 @@
     position: relative;
     overflow: hidden;
 }
+.stats-row .stat-card {
+    padding: 0.75rem;
+}
+.stats-row .stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+}
+.stats-row .display-6 {
+    font-size: 1.6rem;
+}
 .stat-card::after {
     content: "";
     position: absolute;
