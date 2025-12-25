@@ -4,6 +4,42 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(198, 40, 40, 0.1);
 }
+.hero-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+}
+.hero-actions .btn {
+    box-shadow: 0 14px 24px rgba(0, 0, 0, 0.15);
+}
+.section-title {
+    font-weight: 700;
+    color: #4a1f1f;
+}
+.section-subtitle {
+    color: rgba(43, 28, 28, 0.7);
+}
+.map-header {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(198, 40, 40, 0.12);
+    margin-bottom: 1rem;
+}
+.stat-card {
+    position: relative;
+    overflow: hidden;
+}
+.stat-card::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 82, 82, 0.08);
+    border-radius: 50%;
+}
 .feed-help {
     background: #ffe6e6;
     color: #8e0000;
@@ -28,6 +64,12 @@
 }
 .announcements-card .list-group-item + .list-group-item {
     border-top: 1px solid rgba(198, 40, 40, 0.12);
+}
+.announcements-card .list-group-item {
+    border-left: 3px solid rgba(255, 82, 82, 0.5);
+}
+.announcements-card .list-group-item .btn {
+    margin-top: 0.5rem;
 }
 .site-map .section-card {
     background: #fff;

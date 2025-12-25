@@ -316,6 +316,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (feedForm) {
         feedForm.addEventListener("submit", (event) => {
             event.preventDefault();
+            if (!isAuth) {
+                showAlert(feedErrorAlert, "Besleme eklemek icin giris yapmalisiniz.");
+                window.location.href = "/auth/login?url=/";
+                return;
+            }
             if (!Number.isFinite(selectedLat) || !Number.isFinite(selectedLng)) {
                 showAlert(feedErrorAlert, "Once haritada bir nokta sec.");
                 return;
@@ -326,16 +331,21 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             showAlert(feedErrorAlert, "");
             showAlert(feedSuccessAlert, "");
-            if (feedLatInput) feedLatInput.value = selectedLat;
-            if (feedLngInput) feedLngInput.value = selectedLng;
+            if (feedLatInput) feedLatInput.value = selectedLat.toFixed(6);
+            if (feedLngInput) feedLngInput.value = selectedLng.toFixed(6);
 
             const formData = new FormData(feedForm);
             const action = feedForm.getAttribute("action") || "/api/feeds";
             fetch(action, {
                 method: "POST",
                 body: formData,
+                credentials: "same-origin",
             })
                 .then(async (res) => {
+                    const contentType = res.headers.get("content-type") || "";
+                    if (res.redirected || contentType.includes("text/html")) {
+                        throw new Error("Giris yapmalisiniz.");
+                    }
                     const data = await res.json().catch(() => ({}));
                     if (!res.ok) {
                         const msg = data.error || "Kaydetme basarisiz";
@@ -344,15 +354,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     return data;
                 })
                 .then(() => {
-                    showAlert(feedSuccessAlert, "Tesekkurler! Besleme kaydiniz haritaya eklendi.");
-                    showAlert(feedErrorAlert, "");
+                    showAlert(feedSuccessAlert, "Besleme kaydi eklendi.");
                     resetFeedForm();
                     return loadFeeds({ fitBounds: false });
                 })
                 .catch((err) => {
                     console.error(err);
                     showAlert(feedErrorAlert, err.message || "Kaydetme basarisiz");
-                    alert(err.message || "Kaydetme basarisiz");
                 });
         });
     }

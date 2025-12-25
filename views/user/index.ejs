@@ -8,9 +8,10 @@
             <section class="hero mb-4">
                 <div class="row align-items-center">
                     <div class="col-lg-7">
+                        <div class="hero-eyebrow mb-2">Sokak Hayvanlari Platformu</div>
                         <h1 class="hero-title mb-3">Sokak Hayvanlari Besleme Haritasi</h1>
                         <p class="hero-subtitle mb-4">Sehrindeki patili dostlarin besleme noktalarini birlikte takip edelim.</p>
-                        <div class="d-flex flex-wrap gap-3">
+                        <div class="d-flex flex-wrap gap-3 hero-actions">
                             <a href="#mapSection" class="btn btn-primary-red btn-lg" id="heroLocateBtn">Konumumu Bul</a>
                             <button class="btn btn-outline-red btn-lg" id="openFeedForm" type="button">+ Besleme Ekle</button>
                         </div>
@@ -21,8 +22,8 @@
             <section id="about" class="section-card p-4 mb-4">
                 <div class="row align-items-center">
                     <div class="col-lg-8">
-                        <h2 class="mb-2">Hakkinda</h2>
-                        <p class="text-muted mb-0">Sokak hayvanlari icin besleme noktalarini goruntule, yeni konumlar ekle ve guvenli bir sekilde paylas.</p>
+                        <h2 class="section-title mb-2">Hakkinda</h2>
+                        <p class="section-subtitle mb-0">Sokak hayvanlari icin besleme noktalarini goruntule, yeni konumlar ekle ve guvenli bir sekilde paylas.</p>
                     </div>
                 </div>
             </section>
@@ -79,10 +80,10 @@
             <section class="row g-4">
                 <div class="col-lg-8">
                     <div class="section-card p-3 p-lg-4" id="mapSection">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 map-header">
                             <div>
-                                <h3 class="mb-1">Harita & Noktalar</h3>
-                                <p class="text-muted mb-0">Konumuna en yakin besleme noktalarini harita uzerinden kesfet.</p>
+                                <h3 class="section-title mb-1">Harita & Noktalar</h3>
+                                <p class="section-subtitle mb-0">Konumuna en yakin besleme noktalarini harita uzerinden kesfet.</p>
                             </div>
                             <div class="map-toolbar d-flex flex-wrap gap-2 mt-2 mt-lg-0">
                                 <button class="btn btn-primary-red btn-sm" id="locateBtn">Konumumu Bul</button>
@@ -112,11 +113,11 @@
                         </div>
                     </div>
 
-                    <div class="section-card p-3 p-lg-4 mt-4" id="miniGallery">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="mb-0">Mini Galeri</h4>
-                            <a class="btn btn-outline-red btn-sm" href="/gallery">Galeriye Git</a>
-                        </div>
+                        <div class="section-card p-3 p-lg-4 mt-4" id="miniGallery">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="section-title mb-0">Mini Galeri</h4>
+                                <a class="btn btn-outline-red btn-sm" href="/gallery">Galeriye Git</a>
+                            </div>
                         <div class="row g-3 mini-gallery">
                             <% gallery.forEach(g=>{ %>
                                 <div class="col-6 col-md-4 col-lg-3">
@@ -130,7 +131,7 @@
                     </div>
 
                     <div class="section-card p-3 p-lg-4 mt-4">
-                        <h4 class="mb-3">Top 5 Besleme Noktasi</h4>
+                        <h4 class="section-title mb-3">Top 5 Besleme Noktasi</h4>
                         <ul class="list-group list-group-flush" id="weeklyTop">
                             <li class="list-group-item">Yukleniyor...</li>
                         </ul>
@@ -139,7 +140,7 @@
 
                 <div class="col-lg-4">
                     <div class="section-card p-3 p-lg-4 announcements-card">
-                        <h4 class="mb-3">Son Duyurular</h4>
+                        <h4 class="section-title mb-3">Son Duyurular</h4>
                         <div class="list-group list-group-flush">
                             <% data.slice(0,5).forEach(element=>{ %>
                                 <div class="list-group-item">
@@ -151,7 +152,7 @@
                         </div>
                     </div>
                     <div class="section-card p-3 p-lg-4 mt-4">
-                        <h4 class="mb-3">Besleme Ekle</h4>
+                        <h4 class="section-title mb-3">Besleme Ekle</h4>
                         <div id="feedHelpBar" class="feed-help mb-3" style="display:none;">Haritadan bir nokta secerek yeni besleme ekleyebilirsiniz.</div>
                         <form method="POST" action="/api/feeds" enctype="multipart/form-data" class="feed-form" id="feedCreateForm">
                             <div class="card-body">
