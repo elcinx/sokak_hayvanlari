@@ -1700,3 +1700,96 @@ body.pet-theme {
 .btn {
     animation: none !important;
 }
+
+/* Global blue-teal theme override */
+:root {
+    --theme-blue-1: #43cea2;
+    --theme-blue-2: #185a9d;
+    --theme-blue-3: #667eea;
+    --theme-ink: #0f2c3f;
+    --theme-muted: #5c6f7c;
+    --theme-surface: #ffffff;
+    --theme-soft: #f3f8fb;
+    --theme-shadow: 0 16px 40px rgba(24, 90, 157, 0.18);
+}
+
+body.pet-theme {
+    background: radial-gradient(circle at top left, #dff7f2, #eef7ff, #e6f0ff);
+    color: var(--theme-ink);
+}
+
+.pet-navbar {
+    background: linear-gradient(90deg, var(--theme-blue-1), var(--theme-blue-2));
+    box-shadow: 0 10px 24px rgba(24, 90, 157, 0.25);
+}
+
+.section-card,
+.stat-card,
+.admin-card,
+.map-card,
+.feed-form-card,
+.announcements-card,
+.gallery-card {
+    background: var(--theme-surface);
+    border-color: rgba(24, 90, 157, 0.12);
+    box-shadow: var(--theme-shadow);
+}
+
+.btn-primary-main,
+.btn-primary-red,
+.btn-main {
+    background: linear-gradient(135deg, var(--theme-blue-1), var(--theme-blue-2));
+    box-shadow: 0 12px 30px rgba(24, 90, 157, 0.35);
+}
+
+.btn-outline-main,
+.btn-outline-red,
+.btn-soft {
+    color: var(--theme-blue-2);
+    border-color: var(--theme-blue-2);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.filter-chip {
+    background: rgba(67, 206, 162, 0.12);
+    color: var(--theme-blue-2);
+    border-color: var(--theme-blue-2);
+}
+.chip-filter input:checked + .filter-chip {
+    background: linear-gradient(135deg, var(--theme-blue-1), var(--theme-blue-2));
+    color: #fff;
+}
+
+.hero-card {
+    background: linear-gradient(135deg, var(--theme-blue-1) 0%, var(--theme-blue-2) 50%, var(--theme-blue-3) 100%);
+}
+
+.hero-subtitle-pill {
+    background: rgba(255, 255, 255, 0.18);
+    color: #f4f9ff;
+}
+
+.hero-badge {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.timeline-list::before {
+    background: rgba(24, 90, 157, 0.2);
+}
+.timeline-dot {
+    background: var(--theme-blue-1);
+}
+
+.map-footnote,
+.section-subtitle,
+.text-muted {
+    color: var(--theme-muted) !important;
+}
+
+.site-map {
+    background: linear-gradient(135deg, #1b6bb1, #2aa0b5);
+}
+
+.wave-divider path {
+    fill: #dff2ff;
+}
