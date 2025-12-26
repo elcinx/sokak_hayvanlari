@@ -1539,3 +1539,32 @@ body.pet-theme {
         scroll-behavior: auto !important;
     }
 }
+
+/* Disable hover/entrance animations to keep cards stable */
+.section-card,
+.stat-card,
+.hero-card,
+.announcement-card,
+.gallery-card,
+.admin-card,
+.map-card,
+.feed-form-card {
+    animation: none !important;
+    transform: none !important;
+}
+.stat-card:hover,
+.timeline-item:hover,
+.gallery-item:hover img,
+.btn:hover,
+.btn:active,
+.hero-card:hover {
+    transform: none !important;
+    box-shadow: inherit !important;
+}
+.brand-emoji,
+.hero-badge {
+    animation: none !important;
+}
+.btn {
+    animation: none !important;
+}
