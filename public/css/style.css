@@ -1180,6 +1180,100 @@ body.pet-theme::before {
     height: auto;
     filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.18));
 }
+.hero-showcase {
+    padding: 0;
+}
+.hero-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 32px;
+    align-items: center;
+    padding: 56px 44px;
+}
+.hero-visual {
+    position: relative;
+    min-height: 360px;
+    border-radius: 26px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #43cea2 0%, #185a9d 50%, #667eea 100%);
+}
+.hero-gradient {
+    position: absolute;
+    inset: 0;
+}
+.hero-wave {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 35%;
+}
+.hero-spark {
+    position: absolute;
+    opacity: 0.8;
+}
+.hero-spark-1 {
+    top: 10%;
+    left: 6%;
+}
+.hero-spark-2 {
+    top: 14%;
+    right: 8%;
+}
+.hero-spark-3 {
+    bottom: 30%;
+    left: 10%;
+}
+.hero-characters {
+    position: absolute;
+    inset: 0;
+}
+.hero-cat {
+    position: absolute;
+    left: 6%;
+    bottom: 6%;
+}
+.hero-dog {
+    position: absolute;
+    right: 6%;
+    bottom: 6%;
+}
+.hero-bowls {
+    position: absolute;
+    left: 50%;
+    bottom: 2%;
+    transform: translateX(-50%);
+}
+.hero-bowls svg {
+    width: 260px;
+    height: auto;
+}
+.hero-cat svg,
+.hero-dog svg {
+    width: 170px;
+    height: auto;
+}
+@media (max-width: 992px) {
+    .hero-content {
+        grid-template-columns: 1fr;
+    }
+    .hero-visual {
+        min-height: 280px;
+    }
+    .hero-cat,
+    .hero-dog {
+        position: static;
+        margin: 0 8px;
+    }
+    .hero-characters {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 16px;
+        padding-bottom: 24px;
+    }
+    .hero-bowls {
+        display: none;
+    }
+}
 
 @keyframes waggle {
 
