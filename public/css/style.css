@@ -1793,3 +1793,37 @@ body.pet-theme {
 .wave-divider path {
     fill: #dff2ff;
 }
+
+/* Force blue theme overrides */
+:root {
+    --pet-red: #185a9d;
+    --pet-red-light: #43cea2;
+    --pet-red-dark: #0b2d52;
+    --pet-bg: #eaf4ff;
+    --pet-card: #ffffff;
+    --pet-ink: #0f2c3f;
+}
+.btn-primary-red,
+.btn-main,
+.btn-primary-main {
+    background: linear-gradient(135deg, #1a6bb5, #0b2d52);
+    box-shadow: 0 12px 30px rgba(12, 58, 110, 0.35);
+}
+.btn-outline-red,
+.btn-outline-main,
+.btn-soft {
+    color: #1a6bb5;
+    border-color: #1a6bb5;
+}
+.chip-filter input:checked + .filter-chip {
+    background: linear-gradient(135deg, #1a6bb5, #0b2d52);
+}
+.filter-chip {
+    border-color: #1a6bb5;
+    color: #1a6bb5;
+    background: rgba(26, 107, 181, 0.12);
+}
+.stat-icon {
+    color: #1a6bb5;
+    background: rgba(26, 107, 181, 0.12);
+}
