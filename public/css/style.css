@@ -1166,6 +1166,14 @@ body.pet-theme::before {
     margin-left: 6px;
     animation: waggle 2s ease-in-out infinite;
 }
+.site-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 4px;
+}
 
 @keyframes waggle {
 

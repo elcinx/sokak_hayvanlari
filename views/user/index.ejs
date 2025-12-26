@@ -1,266 +1,305 @@
 <!DOCTYPE html>
 <html lang="tr">
 <%- include('../partials/head') %>
+
     <body class="pet-theme" data-is-auth="<%= fullname ? 'true' : 'false' %>">
         <%- include('../partials/navbar') %>
 
-        <main class="container py-4">
-            <section class="hero hero-card mb-4">
-                <div class="row align-items-center">
-                    <div class="col-lg-7">
-                        <div class="hero-eyebrow mb-2">Sokak Hayvanlari Platformu</div>
-                        <h1 class="hero-title mb-3">Sokak Hayvanlari Besleme Haritasi</h1>
-                        <p class="hero-subtitle mb-4">Sehrindeki patili dostlarin besleme noktalarini birlikte takip edelim.</p>
-                        <div class="d-flex flex-wrap gap-3 hero-actions">
-                            <a href="#mapSection" class="btn btn-main btn-lg" id="heroLocateBtn">Konumumu Bul 📍</a>
-                            <button class="btn btn-soft btn-lg" id="openFeedForm" type="button">+ Besleme Ekle 🐾</button>
-                        </div>
-                        <div class="hero-badge mt-4">Topluluk projesi 🐶🐱</div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="about" class="section-card p-4 mb-4 about-card">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <h2 class="section-title mb-2">Hakkinda</h2>
-                        <p class="section-subtitle mb-0">Biz bu toplulukta sokak hayvanlarini beslemek icin buradayiz. Siz de katilin, birlikte daha cok cana dokunalim. 💛</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="row g-3 mb-4 stats-row">
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="stat-card p-3 h-100 stat-badge stat-food">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="stat-icon">P</span>
-                            <span class="small text-muted">Toplam Besleme</span>
-                        </div>
-                        <div class="display-6 fw-bold mt-2" id="totalFeeds"><%= summary.totalFeeds %></div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="stat-card p-3 h-100 stat-badge stat-pin">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="stat-icon">L</span>
-                            <span class="small text-muted">Aktif Nokta</span>
-                        </div>
-                        <div class="display-6 fw-bold mt-2" id="activePoints"><%= summary.activePoints %></div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="stat-card p-3 h-100 stat-badge stat-calendar">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="stat-icon">D</span>
-                            <span class="small text-muted">Bugun Besleme</span>
-                        </div>
-                        <div class="display-6 fw-bold mt-2" id="todayFeeds"><%= summary.todayFeeds %></div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="stat-card p-3 h-100 stat-badge stat-online">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="stat-icon">O</span>
-                            <span class="small text-muted">Online</span>
-                        </div>
-                        <div class="display-6 fw-bold mt-2" id="onlineUsers">-</div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4 col-lg-2">
-                    <div class="stat-card p-3 h-100 stat-badge stat-visit">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="stat-icon">V</span>
-                            <span class="small text-muted">Ziyaretci / Bugun</span>
-                        </div>
-                        <div class="h3 fw-bold mt-2 mb-0" id="totalVisits"><%= summary.totalVisits || '-' %></div>
-                        <div class="small text-muted">Bugun: <span id="todayVisits"><%= summary.todayVisits || '-' %></span></div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="row g-4">
-                <div class="col-lg-8">
-                    <div class="section-card p-3 p-lg-4 map-card" id="mapSection">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 map-header">
-                            <div>
-                                <h3 class="section-title mb-1">Harita & Noktalar</h3>
-                                <p class="section-subtitle mb-0">Konumuna en yakin besleme noktalarini harita uzerinden kesfet.</p>
+            <main class="container py-4">
+                <section class="hero hero-card mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-lg-7">
+                            <div class="hero-eyebrow mb-2">Sokak Hayvanlari Platformu</div>
+                            <h1 class="hero-title mb-3">Sokak Hayvanlari Besleme Haritasi</h1>
+                            <p class="hero-subtitle mb-4">Sehrindeki patili dostlarin besleme noktalarini birlikte takip
+                                edelim.</p>
+                            <div class="d-flex flex-wrap gap-3 hero-actions">
+                                <a href="#mapSection" class="btn btn-main btn-lg" id="heroLocateBtn">Konumumu Bul 📍</a>
+                                <button class="btn btn-soft btn-lg" id="openFeedForm" type="button">+ Besleme Ekle
+                                    🐾</button>
                             </div>
-                            <div class="map-toolbar d-flex flex-wrap gap-2 mt-2 mt-lg-0">
-                                <button class="btn btn-main btn-sm" id="locateBtn">Konumumu Bul</button>
-                                <button class="btn btn-soft btn-sm" id="toggleHeatmap">Heatmap</button>
-                                <div class="d-flex flex-wrap gap-2">
-                                    <div class="chip-filter">
-                                        <input type="checkbox" id="filterCritical" class="filter-status" value="critical" checked>
-                                        <label for="filterCritical" class="filter-chip">Kritik</label>
-                                    </div>
-                                    <div class="chip-filter">
-                                        <input type="checkbox" id="filterNew" class="filter-status" value="new" checked>
-                                        <label for="filterNew" class="filter-chip">Yeni</label>
-                                    </div>
-                                    <div class="chip-filter">
-                                        <input type="checkbox" id="filterSteady" class="filter-status" value="steady" checked>
-                                        <label for="filterSteady" class="filter-chip">Duzenli</label>
-                                    </div>
-                                    <div class="chip-filter">
-                                        <input type="checkbox" id="filterNormal" class="filter-status" value="normal" checked>
-                                        <label for="filterNormal" class="filter-chip">Diger</label>
+                            <div class="hero-badge mt-4">Topluluk projesi 🐶🐱</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="about" class="section-card p-4 mb-4 about-card">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h2 class="section-title mb-2">Hakkinda</h2>
+                            <p class="section-subtitle mb-0">Biz bu toplulukta sokak hayvanlarini beslemek icin
+                                buradayiz. Siz de katilin, birlikte daha cok cana dokunalim. 💛</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="row g-3 mb-4 stats-row">
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="stat-card p-3 h-100 stat-badge stat-food">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="stat-icon">P</span>
+                                <span class="small text-muted">Toplam Besleme</span>
+                            </div>
+                            <div class="display-6 fw-bold mt-2" id="totalFeeds">
+                                <%= summary.totalFeeds %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="stat-card p-3 h-100 stat-badge stat-pin">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="stat-icon">L</span>
+                                <span class="small text-muted">Aktif Nokta</span>
+                            </div>
+                            <div class="display-6 fw-bold mt-2" id="activePoints">
+                                <%= summary.activePoints %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="stat-card p-3 h-100 stat-badge stat-calendar">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="stat-icon">D</span>
+                                <span class="small text-muted">Bugun Besleme</span>
+                            </div>
+                            <div class="display-6 fw-bold mt-2" id="todayFeeds">
+                                <%= summary.todayFeeds %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="stat-card p-3 h-100 stat-badge stat-online">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="stat-icon">O</span>
+                                <span class="small text-muted">Online</span>
+                            </div>
+                            <div class="display-6 fw-bold mt-2" id="onlineUsers">-</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-lg-2">
+                        <div class="stat-card p-3 h-100 stat-badge stat-visit">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="stat-icon">V</span>
+                                <span class="small text-muted">Ziyaretci / Bugun</span>
+                            </div>
+                            <div class="h3 fw-bold mt-2 mb-0" id="totalVisits">
+                                <%= summary.totalVisits || '-' %>
+                            </div>
+                            <div class="small text-muted">Bugun: <span id="todayVisits">
+                                    <%= summary.todayVisits || '-' %>
+                                </span></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="section-card p-3 p-lg-4 map-card" id="mapSection">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 map-header">
+                                <div>
+                                    <h3 class="section-title mb-1">Harita & Noktalar</h3>
+                                    <p class="section-subtitle mb-0">Konumuna en yakin besleme noktalarini harita
+                                        uzerinden kesfet.</p>
+                                </div>
+                                <div class="map-toolbar d-flex flex-wrap gap-2 mt-2 mt-lg-0">
+                                    <button class="btn btn-main btn-sm" id="locateBtn">Konumumu Bul</button>
+                                    <button class="btn btn-soft btn-sm" id="toggleHeatmap">Heatmap</button>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <div class="chip-filter">
+                                            <input type="checkbox" id="filterCritical" class="filter-status"
+                                                value="critical" checked>
+                                            <label for="filterCritical" class="filter-chip">Kritik</label>
+                                        </div>
+                                        <div class="chip-filter">
+                                            <input type="checkbox" id="filterNew" class="filter-status" value="new"
+                                                checked>
+                                            <label for="filterNew" class="filter-chip">Yeni</label>
+                                        </div>
+                                        <div class="chip-filter">
+                                            <input type="checkbox" id="filterSteady" class="filter-status"
+                                                value="steady" checked>
+                                            <label for="filterSteady" class="filter-chip">Duzenli</label>
+                                        </div>
+                                        <div class="chip-filter">
+                                            <input type="checkbox" id="filterNormal" class="filter-status"
+                                                value="normal" checked>
+                                            <label for="filterNormal" class="filter-chip">Diger</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="position-relative">
+                                <div id="map"></div>
+                            </div>
+                            <div class="map-footnote small text-muted mt-3">Bugun eklenen beslemeler haritada
+                                vurgulanir.</div>
                         </div>
-                        <div class="position-relative">
-                            <div id="map"></div>
-                        </div>
-                        <div class="map-footnote small text-muted mt-3">Bugun eklenen beslemeler haritada vurgulanir.</div>
-                    </div>
 
                         <div class="section-card p-3 p-lg-4 mt-4 gallery-card" id="miniGallery">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4 class="section-title mb-0">Mini Galeri</h4>
                                 <a class="btn btn-soft btn-sm" href="/gallery">Galeriye Git</a>
                             </div>
-                        <div class="row g-3 mini-gallery">
-                            <% gallery.forEach(g=>{ %>
-                                <div class="col-6 col-md-4 col-lg-3">
-                                    <a href="/gallery/<%= g.id %>-<%= slugify(g.title||'', {lower:true, strict:true}) %>" class="gallery-item">
-                                        <img src="<%= g.image_path %>" class="img-fluid" alt="<%= g.title %>">
-                                        <span>Detay</span>
-                                    </a>
-                                </div>
-                            <% }) %>
+                            <div class="row g-3 mini-gallery">
+                                <% gallery.forEach(g=>{ %>
+                                    <div class="col-6 col-md-4 col-lg-3">
+                                        <a href="/gallery/<%= g.id %>-<%= slugify(g.title||'', {lower:true, strict:true}) %>"
+                                            class="gallery-item">
+                                            <img src="<%= g.image_path %>" class="img-fluid" alt="<%= g.title %>">
+                                            <span>Detay</span>
+                                        </a>
+                                    </div>
+                                    <% }) %>
+                            </div>
+                        </div>
+
+                        <div class="section-card p-3 p-lg-4 mt-4">
+                            <h4 class="section-title mb-3">Top 5 Besleme Noktasi</h4>
+                            <ul class="list-group list-group-flush top5-list" id="weeklyTop">
+                                <li class="list-group-item">Yukleniyor...</li>
+                            </ul>
                         </div>
                     </div>
 
-                    <div class="section-card p-3 p-lg-4 mt-4">
-                        <h4 class="section-title mb-3">Top 5 Besleme Noktasi</h4>
-                        <ul class="list-group list-group-flush top5-list" id="weeklyTop">
-                            <li class="list-group-item">Yukleniyor...</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="section-card p-3 p-lg-4 announcements-card timeline-card">
-                        <h4 class="section-title mb-3">Son Duyurular</h4>
-                        <div class="list-group list-group-flush timeline-list">
-                            <% data.slice(0,5).forEach(element=>{ %>
-                                <div class="list-group-item timeline-item">
-                                    <span class="timeline-dot"></span>
-                                    <div class="fw-semibold"><%= element.title %></div>
-                                    <div class="small text-muted mb-2">Duyuru detayi icin tikla</div>
-                                    <a href="/announcements/<%=element.slug%>" class="btn btn-soft btn-sm">Detayi Gor</a>
+                    <div class="col-lg-4">
+                        <div class="section-card p-3 p-lg-4 announcements-card timeline-card">
+                            <h4 class="section-title mb-3">Son Duyurular</h4>
+                            <div class="list-group list-group-flush timeline-list">
+                                <% data.slice(0,5).forEach(element=>{ %>
+                                    <div class="list-group-item timeline-item">
+                                        <span class="timeline-dot"></span>
+                                        <div class="fw-semibold">
+                                            <%= element.title %>
+                                        </div>
+                                        <div class="small text-muted mb-2">Duyuru detayi icin tikla</div>
+                                        <a href="/announcements/<%=element.slug%>" class="btn btn-soft btn-sm">Detayi
+                                            Gor</a>
+                                    </div>
+                                    <% }) %>
+                            </div>
+                        </div>
+                        <div class="section-card p-3 p-lg-4 mt-4">
+                            <h4 class="section-title mb-3">Besleme Ekle 🐾</h4>
+                            <div class="feed-steps mb-3">
+                                <div class="feed-step">
+                                    <span class="feed-step-dot">1</span>
+                                    <span class="feed-step-label">Konum Seç</span>
                                 </div>
-                            <% }) %>
-                        </div>
-                    </div>
-                    <div class="section-card p-3 p-lg-4 mt-4">
-                        <h4 class="section-title mb-3">Besleme Ekle 🐾</h4>
-                        <div class="feed-steps mb-3">
-                            <div class="feed-step">
-                                <span class="feed-step-dot">1</span>
-                                <span class="feed-step-label">Konum Seç</span>
-                            </div>
-                            <div class="feed-step">
-                                <span class="feed-step-dot">2</span>
-                                <span class="feed-step-label">Formu Doldur</span>
-                            </div>
-                            <div class="feed-step">
-                                <span class="feed-step-dot">3</span>
-                                <span class="feed-step-label">Kaydet</span>
-                            </div>
-                        </div>
-                        <div id="feedHelpBar" class="feed-help mb-3" style="display:none;">Haritadan bir nokta secerek yeni besleme ekleyebilirsiniz.</div>
-                        <form method="POST" action="/api/feeds" enctype="multipart/form-data" class="feed-form feed-form-card" id="feedCreateForm">
-                            <div class="card-body">
-                                <h5 class="card-title mb-3">Yeni Besleme Kaydi</h5>
-                                <input type="hidden" name="lat" id="feedLat">
-                                <input type="hidden" name="lng" id="feedLng">
-                                <div class="mb-3 small text-muted" id="selectedLocationInfo">Henuz haritadan konum secmediniz.</div>
-                                <div class="mb-3">
-                                    <label for="feedType" class="form-label">Besleme Tipi</label>
-                                    <select name="type" id="feedType" class="form-select">
-                                        <option value="mama">Kuru mama</option>
-                                        <option value="yas_mama">Yas mama</option>
-                                        <option value="yemek_artigi">Yemek artigi</option>
-                                        <option value="su">Su</option>
-                                        <option value="diger">Diger</option>
-                                    </select>
+                                <div class="feed-step">
+                                    <span class="feed-step-dot">2</span>
+                                    <span class="feed-step-label">Formu Doldur</span>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="feedNote" class="form-label">Not (istege bagli)</label>
-                                    <textarea name="note" id="feedNote" class="form-control" rows="3" placeholder="Orn: 3 kedi + 1 kopek vardi, alan golgeli."></textarea>
+                                <div class="feed-step">
+                                    <span class="feed-step-dot">3</span>
+                                    <span class="feed-step-label">Kaydet</span>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="feedPhoto" class="form-label">Fotograf (opsiyonel)</label>
-                                    <input type="file" name="photo" id="feedPhoto" class="form-control">
+                            </div>
+                            <div id="feedHelpBar" class="feed-help mb-3" style="display:none;">Haritadan bir nokta
+                                secerek yeni besleme ekleyebilirsiniz.</div>
+                            <form method="POST" action="/api/feeds" enctype="multipart/form-data"
+                                class="feed-form feed-form-card" id="feedCreateForm">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">Yeni Besleme Kaydi</h5>
+                                    <input type="hidden" name="lat" id="feedLat">
+                                    <input type="hidden" name="lng" id="feedLng">
+                                    <div class="mb-3 small text-muted" id="selectedLocationInfo">Henuz haritadan konum
+                                        secmediniz.</div>
+                                    <div class="mb-3">
+                                        <label for="feedType" class="form-label">Besleme Tipi</label>
+                                        <select name="type" id="feedType" class="form-select">
+                                            <option value="mama">Kuru mama</option>
+                                            <option value="yas_mama">Yas mama</option>
+                                            <option value="yemek_artigi">Yemek artigi</option>
+                                            <option value="su">Su</option>
+                                            <option value="diger">Diger</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="feedNote" class="form-label">Not (istege bagli)</label>
+                                        <textarea name="note" id="feedNote" class="form-control" rows="3"
+                                            placeholder="Orn: 3 kedi + 1 kopek vardi, alan golgeli."></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="feedPhoto" class="form-label">Fotograf (opsiyonel)</label>
+                                        <input type="file" name="photo" id="feedPhoto" class="form-control">
+                                    </div>
+                                    <div class="alert alert-success d-none" id="feedSuccessAlert">Tesekkurler! Besleme
+                                        kaydiniz haritaya eklendi.</div>
+                                    <div class="alert alert-danger d-none" id="feedErrorAlert"></div>
+                                    <button type="submit" class="btn btn-main feed-submit-btn" disabled>Beslemeyi Kaydet
+                                        🐾</button>
+                                    <div class="form-text mt-2">* Once haritadan bir nokta secmeniz gerekiyor.</div>
                                 </div>
-                                <div class="alert alert-success d-none" id="feedSuccessAlert">Tesekkurler! Besleme kaydiniz haritaya eklendi.</div>
-                                <div class="alert alert-danger d-none" id="feedErrorAlert"></div>
-                                <button type="submit" class="btn btn-main feed-submit-btn" disabled>Beslemeyi Kaydet 🐾</button>
-                                <div class="form-text mt-2">* Once haritadan bir nokta secmeniz gerekiyor.</div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-
-        <div class="wave-divider">
-            <svg viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M0,64 C240,128 480,128 720,80 C960,32 1200,32 1440,64 L1440,150 L0,150 Z"></path>
-            </svg>
-        </div>
-
-        <footer class="site-map mt-4" id="siteMap">
-            <div class="container">
-                <div class="section-card p-3 p-lg-4">
-                    <div class="row align-items-center">
-                        <div class="col-md-4">
-                            <h5 class="mb-2">Site Map</h5>
-                            <p class="text-muted mb-0">Sokak Hayvanlari platformunda hizli erisim.</p>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="row g-2">
-                                <div class="col-6 col-lg-4"><a href="/" class="site-map-link">Ana Sayfa</a></div>
-                                <div class="col-6 col-lg-4"><a href="/#mapSection" class="site-map-link">Harita & Noktalar</a></div>
-                                <div class="col-6 col-lg-4"><a href="/#miniGallery" class="site-map-link">Galeri</a></div>
-                                <div class="col-6 col-lg-4"><a href="/announcements" class="site-map-link">Duyurular</a></div>
-                                <div class="col-6 col-lg-4"><a href="/#about" class="site-map-link">Hakkinda</a></div>
-                                <div class="col-6 col-lg-4"><a href="/auth/login" class="site-map-link">Giris / Admin</a></div>
-                            </div>
+                            </form>
                         </div>
                     </div>
-                </div>
-                <div class="footer-links mt-4">
-                    <div class="row align-items-center">
-                        <div class="col-md-4">
-                            <div class="footer-brand">Sokak Hayvanlari</div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="footer-nav">
-                                <a href="/#about">Hakkimizda</a>
-                                <a href="/announcements">Iletisim</a>
-                                <a href="/#mapSection">Gonullu Ol</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="footer-social">
-                                <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
-                                <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-                                <a href="https://x.com" target="_blank" rel="noreferrer">X</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </section>
+
+            </main>
+
+            <div class="wave-divider">
+                <svg viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0,64 C240,128 480,128 720,80 C960,32 1200,32 1440,64 L1440,150 L0,150 Z"></path>
+                </svg>
             </div>
-        </footer>
 
-        <%- include('../partials/script') %>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-        <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js" defer></script>
-        <script src="/js/map.js" defer></script>
+            <footer class="site-map mt-4" id="siteMap">
+                <div class="container">
+                    <div class="section-card p-3 p-lg-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-4">
+                                <h5 class="mb-2">Site Map</h5>
+                                <p class="text-muted mb-0">Sokak Hayvanlari platformunda hizli erisim.</p>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row g-2">
+                                    <div class="col-6 col-lg-4"><a href="/" class="site-map-link">Ana Sayfa</a></div>
+                                    <div class="col-6 col-lg-4"><a href="/#mapSection" class="site-map-link">Harita &
+                                            Noktalar</a></div>
+                                    <div class="col-6 col-lg-4"><a href="/#miniGallery" class="site-map-link">Galeri</a>
+                                    </div>
+                                    <div class="col-6 col-lg-4"><a href="/announcements"
+                                            class="site-map-link">Duyurular</a></div>
+                                    <div class="col-6 col-lg-4"><a href="/#about" class="site-map-link">Hakkinda</a>
+                                    </div>
+                                    <div class="col-6 col-lg-4"><a href="/auth/login" class="site-map-link">Giris /
+                                            Admin</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-links mt-4">
+                        <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <div class="footer-brand d-flex align-items-center gap-2">
+                                <img src="/img/kedikopek.png" alt="Sokak Hayvanlari" class="site-logo">
+                                <span>Sokak Hayvanlari</span>
+                            </div>
+                        </div>
+                            <div class="col-md-4">
+                                <div class="footer-nav">
+                                    <a href="/#about">Hakkimizda</a>
+                                    <a href="/announcements">Iletisim</a>
+                                    <a href="/#mapSection">Gonullu Ol</a>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="footer-social">
+                                    <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+                                    <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+                                    <a href="https://x.com" target="_blank" rel="noreferrer">X</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
+            <%- include('../partials/script') %>
+                <script src="/socket.io/socket.io.js"></script>
+                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+                <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js" defer></script>
+                <script src="/js/map.js" defer></script>
     </body>
+
 </html>
