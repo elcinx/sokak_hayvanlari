@@ -187,22 +187,40 @@
     --text-muted: rgba(58, 44, 44, 0.7);
 }
 
-/* Pastel theme overrides */
+/* ============================================
+   MODERN BACKGROUND - Clean & Elegant
+   ============================================ */
+
 body.pet-theme {
-    background: radial-gradient(circle at top left, var(--coral-light), var(--coral-soft), #fff);
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f5f7fa 100%);
     color: var(--text-dark);
     min-height: 100vh;
+    position: relative;
 }
 
+/* Subtle animated background pattern */
 body.pet-theme::before {
     content: "";
     position: fixed;
     inset: 0;
-    background-image: 
-        radial-gradient(circle at 20% 20%, rgba(255, 111, 78, 0.04), transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(230, 91, 61, 0.03), transparent 40%);
+    background-image:
+        radial-gradient(circle at 15% 25%, rgba(255, 111, 78, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 85% 75%, rgba(230, 91, 61, 0.02) 0%, transparent 50%),
+        linear-gradient(135deg, transparent 0%, rgba(255, 111, 78, 0.01) 100%);
     pointer-events: none;
     z-index: -1;
+    animation: backgroundShift 20s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
 }
 
 .hero-card {
@@ -242,7 +260,7 @@ body.pet-theme::before {
     z-index: 0;
 }
 
-.hero-card > * {
+.hero-card>* {
     position: relative;
     z-index: 1;
 }
@@ -283,9 +301,13 @@ body.pet-theme::before {
     font-weight: 600;
     color: #fff;
     background: linear-gradient(135deg, var(--coral-main), var(--coral-dark));
+    background-size: 200% 200%;
     border: none;
-    box-shadow: 0 4px 12px var(--coral-shadow);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 4px 12px var(--coral-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: buttonGradientShift 3s ease infinite;
     position: relative;
     overflow: hidden;
 }
@@ -301,9 +323,9 @@ body.pet-theme::before {
     transition: opacity 0.25s ease;
 }
 
-.btn-main > *,
-.btn-primary-main > *,
-.btn-primary-red > * {
+.btn-main>*,
+.btn-primary-main>*,
+.btn-primary-red>* {
     position: relative;
     z-index: 1;
 }
@@ -311,21 +333,45 @@ body.pet-theme::before {
 .btn-main:hover,
 .btn-primary-main:hover,
 .btn-primary-red:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 20px rgba(255, 111, 78, 0.35);
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 
+        0 12px 30px rgba(255, 111, 78, 0.4),
+        0 0 20px rgba(255, 111, 78, 0.3);
     color: #fff;
+    animation: buttonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes buttonPulse {
+    0%, 100% {
+        box-shadow: 
+            0 12px 30px rgba(255, 111, 78, 0.4),
+            0 0 20px rgba(255, 111, 78, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 12px 30px rgba(255, 111, 78, 0.5),
+            0 0 30px rgba(255, 111, 78, 0.4);
+    }
 }
 
 .btn-main:hover::before,
 .btn-primary-main:hover::before,
 .btn-primary-red:hover::before {
     opacity: 1;
+    animation: buttonShine 2s ease-in-out infinite;
+}
+
+@keyframes buttonShine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
 }
 
 .btn-main:active,
 .btn-primary-main:active,
 .btn-primary-red:active {
-    transform: scale(0.98);
+    transform: scale(0.96) translateY(0);
+    animation: none;
 }
 
 /* Secondary Soft Button */
@@ -394,14 +440,14 @@ body.pet-theme::before {
     box-shadow: 0 2px 8px rgba(255, 111, 78, 0.2);
 }
 
-.chip-filter input:checked + .filter-chip {
+.chip-filter input:checked+.filter-chip {
     background: linear-gradient(135deg, var(--coral-main), var(--coral-dark));
     color: #fff;
     border-color: transparent;
     box-shadow: 0 4px 12px var(--coral-shadow);
 }
 
-.chip-filter input:checked + .filter-chip:hover {
+.chip-filter input:checked+.filter-chip:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(255, 111, 78, 0.3);
 }
@@ -410,36 +456,123 @@ body.pet-theme::before {
    CARD STYLES - Modern with Gradient Borders
    ============================================ */
 
+/* ============================================
+   STAT CARDS - Modern with Pulse Animation
+   ============================================ */
+
 .stat-card {
     border-radius: 24px;
-    background: #ffffff;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(255, 111, 78, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
-    border: 1px solid rgba(255, 111, 78, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: statCardEntrance 0.6s ease-out backwards, statPulse 3s ease-in-out infinite;
 }
 
-/* Soft gradient border effect */
+/* Animated gradient border */
 .stat-card::before {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: -2px;
     border-radius: 24px;
     padding: 2px;
-    background: linear-gradient(135deg, rgba(255, 111, 78, 0.3), rgba(230, 91, 61, 0.2));
+    background: linear-gradient(135deg, var(--coral-main), var(--coral-dark), var(--coral-main));
+    background-size: 200% 200%;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
+    animation: gradientShift 3s ease infinite;
+}
+
+/* Floating particles effect */
+.stat-card::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 111, 78, 0.15), transparent);
+    animation: floatParticle 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes statCardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes statPulse {
+    0%, 100% {
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.08),
+            0 2px 8px rgba(255, 111, 78, 0.1);
+    }
+    50% {
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.08),
+            0 2px 8px rgba(255, 111, 78, 0.2),
+            0 0 20px rgba(255, 111, 78, 0.15);
+    }
+}
+
+@keyframes floatParticle {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(-10px, -15px) scale(1.2);
+        opacity: 0.6;
+    }
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(-12px) scale(1.05) rotate(0.5deg);
+    box-shadow: 
+        0 24px 70px rgba(0, 0, 0, 0.15),
+        0 12px 30px rgba(255, 111, 78, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 1),
+        0 0 40px rgba(255, 111, 78, 0.2);
+    border-color: rgba(255, 111, 78, 0.4);
+    animation: statCardEntrance 0.6s ease-out, statPulseHover 1.5s ease-in-out infinite, cardFloatHover 2s ease-in-out infinite;
+}
+
+@keyframes cardFloatHover {
+    0%, 100% { transform: translateY(-12px) scale(1.05) rotate(0.5deg); }
+    50% { transform: translateY(-16px) scale(1.06) rotate(-0.5deg); }
+}
+
+@keyframes statPulseHover {
+    0%, 100% {
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.12),
+            0 8px 24px rgba(255, 111, 78, 0.25);
+    }
+    50% {
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.12),
+            0 8px 24px rgba(255, 111, 78, 0.35),
+            0 0 30px rgba(255, 111, 78, 0.2);
+    }
 }
 
 .stat-card:hover::before {
@@ -571,11 +704,51 @@ body.pet-theme::before {
    ============================================ */
 
 .feed-form-card {
-    border-radius: 24px;
-    background: var(--coral-soft);
-    border: 1px solid rgba(255, 111, 78, 0.15);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    border-radius: 28px;
+    background: rgba(255, 244, 238, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(255, 111, 78, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
     padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: formCardEntrance 0.7s ease-out backwards;
+}
+
+.feed-form-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+    );
+    transition: left 0.6s ease;
+}
+
+.feed-form-card:hover::before {
+    left: 100%;
+}
+
+@keyframes formCardEntrance {
+    from {
+        opacity: 0;
+        transform: translateX(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
 }
 
 .feed-form-card .form-control,
@@ -621,8 +794,8 @@ body.pet-theme::before {
 }
 
 .feed-step-dot {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--coral-light), var(--coral-soft));
     display: inline-flex;
@@ -631,12 +804,48 @@ body.pet-theme::before {
     font-weight: 700;
     color: var(--coral-main);
     font-size: 0.9rem;
-    box-shadow: 0 2px 8px rgba(255, 111, 78, 0.2);
-    transition: transform 0.3s ease;
+    box-shadow: 
+        0 4px 12px rgba(255, 111, 78, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    animation: stepDotPulse 2s ease-in-out infinite;
+}
+
+.feed-step-dot::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--coral-main);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.4s ease;
 }
 
 .feed-step:hover .feed-step-dot {
-    transform: scale(1.1);
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 
+        0 6px 20px rgba(255, 111, 78, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.feed-step:hover .feed-step-dot::before {
+    opacity: 0.5;
+    transform: scale(1.2);
+}
+
+@keyframes stepDotPulse {
+    0%, 100% {
+        box-shadow: 
+            0 4px 12px rgba(255, 111, 78, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+    50% {
+        box-shadow: 
+            0 4px 16px rgba(255, 111, 78, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
 }
 
 .feed-step-label {
@@ -652,16 +861,25 @@ body.pet-theme::before {
     display: block;
     position: relative;
     overflow: hidden;
-    border-radius: 20px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+    border-radius: 24px;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(255, 111, 78, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: galleryItemEntrance 0.6s ease-out backwards;
 }
 
+.gallery-item:nth-child(1) { animation-delay: 0.1s; }
+.gallery-item:nth-child(2) { animation-delay: 0.2s; }
+.gallery-item:nth-child(3) { animation-delay: 0.3s; }
+.gallery-item:nth-child(4) { animation-delay: 0.4s; }
+
 .gallery-item img {
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
     height: auto;
     display: block;
+    filter: brightness(1) saturate(1);
 }
 
 .gallery-item span {
@@ -673,24 +891,59 @@ body.pet-theme::before {
     opacity: 0;
     color: #fff;
     font-weight: 600;
-    font-size: 1rem;
-    background: linear-gradient(135deg, rgba(255, 111, 78, 0.85), rgba(230, 91, 61, 0.75));
-    backdrop-filter: blur(2px);
-    transition: opacity 0.3s ease;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, rgba(255, 111, 78, 0.9), rgba(230, 91, 61, 0.85));
+    backdrop-filter: blur(4px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1;
+    transform: scale(0.9);
 }
 
 .gallery-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-12px) scale(1.03) rotate(0.5deg);
+    box-shadow: 
+        0 16px 40px rgba(0, 0, 0, 0.18),
+        0 8px 20px rgba(255, 111, 78, 0.3),
+        0 0 30px rgba(255, 111, 78, 0.2);
+    animation: galleryFloat 2s ease-in-out infinite;
+}
+
+@keyframes galleryFloat {
+    0%, 100% { transform: translateY(-12px) scale(1.03) rotate(0.5deg); }
+    50% { transform: translateY(-16px) scale(1.04) rotate(-0.5deg); }
 }
 
 .gallery-item:hover img {
-    transform: scale(1.08);
+    transform: scale(1.12) rotate(2deg);
+    filter: brightness(1.15) saturate(1.2);
+    animation: imagePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes imagePulse {
+    0%, 100% { filter: brightness(1.15) saturate(1.2); }
+    50% { filter: brightness(1.2) saturate(1.3); }
 }
 
 .gallery-item:hover span {
     opacity: 1;
+    transform: scale(1);
+    animation: overlayFade 0.6s ease-out;
+}
+
+@keyframes overlayFade {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes galleryItemEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .top5-list .list-group-item:nth-child(odd) {
@@ -1027,45 +1280,92 @@ body.pet-theme {
 }
 
 /* --- Cards & lists --- */
-/* Section Cards with Gradient Borders */
+/* ============================================
+   MODERN BOXES - Glassmorphism & Animations
+   ============================================ */
+
 .section-card,
 .map-card,
 .gallery-card,
 .announcements-card {
-    border-radius: 24px;
-    background: #ffffff;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(255, 111, 78, 0.08);
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(255, 111, 78, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: cardEntrance 0.6s ease-out backwards;
 }
 
+/* Animated gradient border on hover */
 .section-card::before,
 .map-card::before,
 .gallery-card::before,
 .announcements-card::before {
     content: "";
     position: absolute;
-    inset: 0;
-    border-radius: 24px;
+    inset: -2px;
+    border-radius: 28px;
     padding: 2px;
-    background: linear-gradient(135deg, rgba(255, 111, 78, 0.25), rgba(230, 91, 61, 0.15));
+    background: linear-gradient(135deg, var(--coral-main), var(--coral-dark), var(--coral-main));
+    background-size: 200% 200%;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Shine effect on hover */
+.section-card::after,
+.map-card::after,
+.gallery-card::after,
+.announcements-card::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 70%
+    );
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .section-card:hover,
 .map-card:hover,
 .gallery-card:hover,
 .announcements-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(-10px) scale(1.02) rotate(0.3deg);
+    box-shadow: 
+        0 24px 70px rgba(0, 0, 0, 0.15),
+        0 12px 30px rgba(255, 111, 78, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 1),
+        0 0 30px rgba(255, 111, 78, 0.15);
+    border-color: rgba(255, 111, 78, 0.4);
+    animation: cardFloatHover 2.5s ease-in-out infinite;
 }
 
 .section-card:hover::before,
@@ -1074,6 +1374,36 @@ body.pet-theme {
 .announcements-card:hover::before {
     opacity: 1;
 }
+
+.section-card:hover::after,
+.map-card:hover::after,
+.gallery-card:hover::after,
+.announcements-card:hover::after {
+    opacity: 1;
+    top: -100%;
+    left: -100%;
+    transition: all 0.8s ease;
+}
+
+/* Entrance animation */
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Staggered animation delays */
+.section-card:nth-child(1) { animation-delay: 0.1s; }
+.section-card:nth-child(2) { animation-delay: 0.2s; }
+.section-card:nth-child(3) { animation-delay: 0.3s; }
+.map-card { animation-delay: 0.15s; }
+.gallery-card { animation-delay: 0.25s; }
+.announcements-card { animation-delay: 0.2s; }
 
 .list-group-item {
     border-radius: 12px;
