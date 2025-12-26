@@ -63,11 +63,15 @@
 }
 
 .feed-help {
-    background: #ffe6e6;
-    color: #8e0000;
+    background: var(--coral-light);
+    color: var(--coral-dark);
     border-radius: 999px;
-    padding: 0.4rem 1rem;
+    padding: 0.5rem 1.2rem;
     display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid rgba(255, 111, 78, 0.2);
+    box-shadow: 0 2px 8px rgba(255, 111, 78, 0.1);
 }
 
 .feed-submit-btn {
@@ -168,53 +172,79 @@
     font-size: 0.9rem;
 }
 
+/* ============================================
+   CORAL PASTEL THEME - Modern UI/UX Design
+   Color Palette: #FF6F4E (coral), #FFE7DD (light), #FFF4EE (soft), #E65B3D (dark)
+   ============================================ */
+
+:root {
+    --coral-main: #FF6F4E;
+    --coral-dark: #E65B3D;
+    --coral-light: #FFE7DD;
+    --coral-soft: #FFF4EE;
+    --coral-shadow: rgba(255, 111, 78, 0.15);
+    --text-dark: #3a2c2c;
+    --text-muted: rgba(58, 44, 44, 0.7);
+}
+
 /* Pastel theme overrides */
 body.pet-theme {
-    background: radial-gradient(circle at top left, #ffe9e9, #fff7f2, #ffefe5);
-    color: #3a2c2c;
+    background: radial-gradient(circle at top left, var(--coral-light), var(--coral-soft), #fff);
+    color: var(--text-dark);
+    min-height: 100vh;
 }
 
 body.pet-theme::before {
     content: "";
     position: fixed;
     inset: 0;
-    background-image: radial-gradient(circle at 20% 20%, rgba(255, 107, 107, 0.06), transparent 30%),
-        radial-gradient(circle at 80% 10%, rgba(78, 205, 196, 0.05), transparent 30%),
-        radial-gradient(circle at 80% 80%, rgba(255, 209, 102, 0.06), transparent 30%);
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(255, 111, 78, 0.04), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(230, 91, 61, 0.03), transparent 40%);
     pointer-events: none;
     z-index: -1;
 }
 
 .hero-card {
-    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-    border-radius: 32px;
+    background: linear-gradient(135deg, var(--coral-main), var(--coral-dark));
+    border-radius: 30px;
     padding: 64px 44px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(255, 111, 78, 0.1);
     position: relative;
     overflow: hidden;
     transform: translateY(6px);
 }
 
-.hero-card::before,
+/* Soft glow spotlight behind hero text */
+.hero-card::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 140%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Decorative coral gradient overlay */
 .hero-card::after {
     content: "";
     position: absolute;
-    width: 160px;
-    height: 160px;
+    right: -60px;
+    bottom: -60px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.18);
-    filter: blur(2px);
+    background: rgba(255, 255, 255, 0.15);
+    filter: blur(40px);
+    z-index: 0;
 }
 
-.hero-card::before {
-    right: -40px;
-    bottom: -40px;
-}
-
-.hero-card::after {
-    left: -30px;
-    bottom: 10px;
-    background: rgba(255, 255, 255, 0.12);
+.hero-card > * {
+    position: relative;
+    z-index: 1;
 }
 
 .hero-title {
@@ -240,132 +270,229 @@ body.pet-theme::before {
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
+/* ============================================
+   BUTTON STYLES - Modern Coral Theme
+   ============================================ */
+
+/* Primary Main Button - Coral Gradient */
+.btn-main,
 .btn-primary-main,
 .btn-primary-red {
     border-radius: 999px;
     padding: 0.75rem 1.6rem;
     font-weight: 600;
     color: #fff;
-    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+    background: linear-gradient(135deg, var(--coral-main), var(--coral-dark));
     border: none;
-    box-shadow: 0 10px 25px rgba(255, 107, 107, 0.45);
-    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px var(--coral-shadow);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
+.btn-main::before,
+.btn-primary-main::before,
+.btn-primary-red::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--coral-dark), var(--coral-main));
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.btn-main > *,
+.btn-primary-main > *,
+.btn-primary-red > * {
+    position: relative;
+    z-index: 1;
+}
+
+.btn-main:hover,
 .btn-primary-main:hover,
 .btn-primary-red:hover {
-    transform: translateY(-1px) scale(1.02);
-    box-shadow: 0 16px 40px rgba(255, 107, 107, 0.55);
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(255, 111, 78, 0.35);
     color: #fff;
 }
 
-.btn-primary-main:active,
-.btn-primary-red:active {
-    transform: scale(0.99);
+.btn-main:hover::before,
+.btn-primary-main:hover::before,
+.btn-primary-red:hover::before {
+    opacity: 1;
 }
 
+.btn-main:active,
+.btn-primary-main:active,
+.btn-primary-red:active {
+    transform: scale(0.98);
+}
+
+/* Secondary Soft Button */
+.btn-soft,
 .btn-outline-main,
 .btn-outline-red {
     border-radius: 999px;
     padding: 0.6rem 1.4rem;
     font-weight: 600;
-    color: #ff6b6b;
-    border: 1.8px solid #ff6b6b;
-    background: transparent;
-    transition: all 0.2s ease;
+    color: var(--coral-main);
+    border: none;
+    background: var(--coral-light);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.btn-soft:hover,
 .btn-outline-main:hover,
 .btn-outline-red:hover {
-    background: #ffe9e9;
-    color: #ff6b6b;
+    background: #FFD7C8;
+    color: var(--coral-dark);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 111, 78, 0.15);
 }
 
+/* ============================================
+   MAP SECTION - Modern Card & Pastel Chips
+   ============================================ */
+
+.map-card {
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 111, 78, 0.08);
+}
+
+#map {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Pastel Filter Chips */
 .chip-filter input {
     display: none;
 }
 
 .filter-chip {
     border-radius: 999px;
-    padding: 0.35rem 0.9rem;
-    border: 1.5px solid #ff6b6b;
-    color: #ff6b6b;
-    background: #ffefef;
+    padding: 0.4rem 1rem;
+    border: 1.5px solid var(--coral-light);
+    color: var(--coral-main);
+    background: var(--coral-soft);
     font-size: 0.8rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
 }
 
-.chip-filter input:checked+.filter-chip {
-    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+.filter-chip:hover {
+    background: var(--coral-light);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 111, 78, 0.2);
+}
+
+.chip-filter input:checked + .filter-chip {
+    background: linear-gradient(135deg, var(--coral-main), var(--coral-dark));
     color: #fff;
     border-color: transparent;
+    box-shadow: 0 4px 12px var(--coral-shadow);
 }
+
+.chip-filter input:checked + .filter-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 111, 78, 0.3);
+}
+
+/* ============================================
+   CARD STYLES - Modern with Gradient Borders
+   ============================================ */
 
 .stat-card {
-    border-radius: 20px;
+    border-radius: 24px;
     background: #ffffff;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
     position: relative;
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 111, 78, 0.08);
 }
 
+/* Soft gradient border effect */
 .stat-card::before {
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 2px;
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.5), rgba(78, 205, 196, 0.4));
+    background: linear-gradient(135deg, rgba(255, 111, 78, 0.3), rgba(230, 91, 61, 0.2));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .stat-card:hover {
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
 }
 
-.stat-badge::after {
-    content: "";
+.stat-card:hover::before {
+    opacity: 1;
+}
+
+/* Paw badge icon top-left */
+.stat-card::after {
+    content: "🐾";
     position: absolute;
     top: 12px;
     left: 12px;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: #ffe3e3;
-    color: #ff6b6b;
+    background: var(--coral-light);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 700;
+    font-size: 14px;
+    opacity: 0.6;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.stat-food::after {
-    content: "F";
+.stat-card:hover::after {
+    opacity: 1;
+    transform: scale(1.1) rotate(5deg);
 }
 
-.stat-pin::after {
-    content: "N";
+/* Stat badge icons - paw emoji */
+.stat-badge::after {
+    content: "🐾";
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--coral-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.stat-calendar::after {
-    content: "B";
+.stat-card:hover .stat-badge::after {
+    opacity: 1;
+    transform: scale(1.1) rotate(5deg);
 }
 
-.stat-online::after {
-    content: "O";
-}
-
-.stat-visit::after {
-    content: "V";
-}
+/* All stat badges use paw emoji now */
 
 .map-card {
     border-radius: 20px;
@@ -403,73 +530,138 @@ body.pet-theme::before {
     top: 6px;
     bottom: 6px;
     width: 2px;
-    background: rgba(255, 107, 107, 0.3);
+    background: linear-gradient(180deg, var(--coral-main), var(--coral-light));
+    border-radius: 999px;
 }
 
 .timeline-item {
     position: relative;
     padding-left: 18px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+    border-radius: 12px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
 .timeline-item:hover {
-    transform: translateX(2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(255, 111, 78, 0.15);
+    background: rgba(255, 111, 78, 0.03);
 }
 
 .timeline-dot {
     position: absolute;
-    left: -3px;
-    top: 14px;
-    width: 10px;
-    height: 10px;
+    left: -1px;
+    top: 18px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: #ff6b6b;
+    background: var(--coral-main);
+    box-shadow: 0 0 0 3px var(--coral-soft), 0 2px 8px rgba(255, 111, 78, 0.3);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
+
+.timeline-item:hover .timeline-dot {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 4px var(--coral-light), 0 4px 12px rgba(255, 111, 78, 0.4);
+}
+
+/* ============================================
+   FEED FORM - Soft & Friendly Design
+   ============================================ */
 
 .feed-form-card {
-    border-radius: 20px;
-    background: #fff7f2;
-    border: 1px solid rgba(255, 107, 107, 0.2);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+    border-radius: 24px;
+    background: var(--coral-soft);
+    border: 1px solid rgba(255, 111, 78, 0.15);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
 }
 
+.feed-form-card .form-control,
+.feed-form-card .form-select {
+    border-radius: 12px;
+    border: 1.5px solid rgba(255, 111, 78, 0.2);
+    background: #fff;
+    transition: all 0.25s ease;
+}
+
+.feed-form-card .form-control:focus,
+.feed-form-card .form-select:focus {
+    border-color: var(--coral-main);
+    box-shadow: 0 0 0 3px rgba(255, 111, 78, 0.15);
+    outline: none;
+}
+
+.feed-form-card .form-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+/* Step Labels */
 .feed-steps {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
 }
 
 .feed-step {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    font-size: 0.75rem;
-    color: #3a2c2c;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-dark);
+    font-weight: 500;
 }
 
 .feed-step-dot {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: #ffe3e3;
+    background: linear-gradient(135deg, var(--coral-light), var(--coral-soft));
     display: inline-flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    color: #ff6b6b;
+    color: var(--coral-main);
+    font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(255, 111, 78, 0.2);
+    transition: transform 0.3s ease;
 }
+
+.feed-step:hover .feed-step-dot {
+    transform: scale(1.1);
+}
+
+.feed-step-label {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+/* ============================================
+   MINI GALLERY - Hover Zoom & Coral Overlay
+   ============================================ */
 
 .gallery-item {
     display: block;
     position: relative;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
 }
 
 .gallery-item img {
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 .gallery-item span {
@@ -481,12 +673,20 @@ body.pet-theme::before {
     opacity: 0;
     color: #fff;
     font-weight: 600;
-    background: rgba(255, 107, 107, 0.45);
+    font-size: 1rem;
+    background: linear-gradient(135deg, rgba(255, 111, 78, 0.85), rgba(230, 91, 61, 0.75));
+    backdrop-filter: blur(2px);
     transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .gallery-item:hover img {
-    transform: scale(1.05);
+    transform: scale(1.08);
 }
 
 .gallery-item:hover span {
@@ -527,8 +727,13 @@ body.pet-theme::before {
     background: #ffd700;
 }
 
+/* ============================================
+   FOOTER - Wave Divider & Pastel Background
+   ============================================ */
+
 .wave-divider {
-    margin-top: 24px;
+    margin-top: 3rem;
+    position: relative;
 }
 
 .wave-divider svg {
@@ -538,12 +743,31 @@ body.pet-theme::before {
 }
 
 .wave-divider path {
-    fill: #ffe9e9;
+    fill: var(--coral-light);
 }
 
 .site-map {
-    background: #e05353;
-    padding: 32px 0 48px;
+    background: linear-gradient(135deg, var(--coral-light), var(--coral-soft));
+    padding: 3rem 0 3rem;
+    position: relative;
+}
+
+.site-map::before {
+    content: "🐾";
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    font-size: 2rem;
+    opacity: 0.2;
+}
+
+.site-map::after {
+    content: "💛";
+    position: absolute;
+    bottom: 1rem;
+    left: 2rem;
+    font-size: 1.5rem;
+    opacity: 0.2;
 }
 
 .site-map .section-card {
@@ -685,45 +909,77 @@ body.pet-theme::before {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 0.4rem 0.8rem;
+    padding: 0.5rem 1rem;
     border-radius: 999px;
-    background: rgba(255, 82, 82, 0.12);
-    color: #8e0000;
+    background: rgba(255, 255, 255, 0.7);
+    color: var(--coral-dark);
     text-decoration: none;
-    transition: background 0.2s ease, transform 0.2s ease;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 111, 78, 0.2);
 }
 
 .site-map-link:hover {
-    background: rgba(198, 40, 40, 0.2);
-    color: #8e0000;
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--coral-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 111, 78, 0.2);
+    border-color: var(--coral-main);
 }
 
-/* --- Global layout & typography polish --- */
+/* ============================================
+   LAYOUT POLISH - Spacing & Typography
+   ============================================ */
+
 main.container {
     max-width: 1100px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+/* Increased vertical rhythm */
+section {
+    margin-bottom: 3rem;
+}
+
+section.hero-card {
+    margin-bottom: 3.5rem;
+}
+
+.stats-row {
+    margin-bottom: 3rem;
 }
 
 body.pet-theme {
     font-smooth: always;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .section-title {
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
 }
 
 .section-subtitle {
-    font-size: 0.98rem;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
 }
 
-/* --- Navbar glass effect --- */
+/* ============================================
+   NAVBAR - Coral Glass Effect
+   ============================================ */
+
 .pet-navbar {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     background: linear-gradient(120deg,
-            rgba(198, 40, 40, 0.94),
-            rgba(255, 107, 107, 0.94));
+            rgba(255, 111, 78, 0.95),
+            rgba(230, 91, 61, 0.95));
+    box-shadow: 0 4px 20px rgba(255, 111, 78, 0.2);
 }
 
 .pet-navbar .navbar-brand {
@@ -771,11 +1027,52 @@ body.pet-theme {
 }
 
 /* --- Cards & lists --- */
+/* Section Cards with Gradient Borders */
 .section-card,
 .map-card,
 .gallery-card,
 .announcements-card {
-    border-radius: 22px;
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 111, 78, 0.08);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.section-card::before,
+.map-card::before,
+.gallery-card::before,
+.announcements-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(255, 111, 78, 0.25), rgba(230, 91, 61, 0.15));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.section-card:hover,
+.map-card:hover,
+.gallery-card:hover,
+.announcements-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+.section-card:hover::before,
+.map-card:hover::before,
+.gallery-card:hover::before,
+.announcements-card:hover::before {
+    opacity: 1;
 }
 
 .list-group-item {
