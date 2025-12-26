@@ -227,7 +227,7 @@ body.pet-theme::before {
 }
 
 .hero-card {
-    background: linear-gradient(135deg, var(--coral-main), var(--coral-dark));
+    background: linear-gradient(135deg, #43cea2 0%, #185a9d 50%, #667eea 100%);
     border-radius: 30px;
     padding: 64px 44px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(255, 111, 78, 0.1);
@@ -1195,7 +1195,7 @@ body.pet-theme::before {
     min-height: 360px;
     border-radius: 26px;
     overflow: hidden;
-    background: #ff6b6b;
+    background: linear-gradient(135deg, #43cea2 0%, #185a9d 50%, #667eea 100%);
 }
 .hero-cover {
     position: absolute;
@@ -1207,7 +1207,7 @@ body.pet-theme::before {
 .hero-gradient {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.35), rgba(255, 142, 83, 0.35));
+    background: linear-gradient(135deg, rgba(67, 206, 162, 0.2), rgba(102, 126, 234, 0.2));
 }
 .hero-wave {
     position: absolute;
