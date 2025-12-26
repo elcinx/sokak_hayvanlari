@@ -514,6 +514,62 @@ body.pet-theme::before {
         transform: translateY(0);
     }
 }
+.hero-card {
+    animation: heroGlow 1.2s ease both;
+}
+@keyframes heroGlow {
+    0% {
+        opacity: 0;
+        transform: translateY(16px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(6px);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
+    }
+}
+.brand-emoji {
+    display: inline-block;
+    margin-left: 6px;
+    animation: waggle 2s ease-in-out infinite;
+}
+@keyframes waggle {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(12deg);
+    }
+}
+.hero-badge {
+    animation: floaty 3s ease-in-out infinite;
+}
+@keyframes floaty {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+.stat-card {
+    animation-delay: 0.08s;
+}
+.stat-card:nth-child(2) {
+    animation-delay: 0.12s;
+}
+.stat-card:nth-child(3) {
+    animation-delay: 0.16s;
+}
+.stat-card:nth-child(4) {
+    animation-delay: 0.2s;
+}
+.stat-card:nth-child(5) {
+    animation-delay: 0.24s;
+}
 .site-map-link {
     display: inline-flex;
     align-items: center;
