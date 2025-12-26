@@ -16,20 +16,17 @@
         />
         <style>
             :root {
-                --pet-red: #c62828;
-                --pet-red-light: #ff5252;
-                --pet-red-dark: #8e0000;
-                --pet-bg: #fff5f5;
+                --pet-red: #ff6b6b;
+                --pet-red-light: #ff8e53;
+                --pet-red-dark: #e05353;
+                --pet-bg: #fff7f2;
                 --pet-card: #ffffff;
-                --pet-ink: #2b1c1c;
-                --pet-shadow: 0 12px 30px rgba(198, 40, 40, 0.12);
+                --pet-ink: #3a2c2c;
+                --pet-shadow: 0 12px 30px rgba(255, 107, 107, 0.18);
             }
             body.pet-theme {
-                background: var(--pet-bg);
-                background-image: radial-gradient(circle at top right, rgba(255, 82, 82, 0.12), transparent 45%),
-                    radial-gradient(circle at 20% 20%, rgba(198, 40, 40, 0.08), transparent 40%);
                 color: var(--pet-ink);
-                font-family: "Georgia", "Times New Roman", serif;
+                font-family: "Trebuchet MS", "Segoe UI", sans-serif;
                 line-height: 1.6;
             }
             .ck-editor__editable[role="textbox"] {
@@ -62,23 +59,9 @@
                 margin-left: 8px;
             }
             .hero {
-                background: linear-gradient(120deg, rgba(198, 40, 40, 0.9), rgba(255, 82, 82, 0.75)),
-                    url("https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1400&q=80") center/cover no-repeat;
-                border-radius: 22px;
                 color: #fff;
-                padding: 60px 40px;
                 position: relative;
                 overflow: hidden;
-            }
-            .hero::after {
-                content: "";
-                position: absolute;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.25);
-            }
-            .hero > * {
-                position: relative;
-                z-index: 1;
             }
             .hero-title {
                 font-size: clamp(2rem, 3vw, 3rem);
