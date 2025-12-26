@@ -1719,7 +1719,7 @@ body.pet-theme {
 }
 
 .pet-navbar {
-    background: linear-gradient(90deg, var(--theme-blue-1), var(--theme-blue-2));
+    background: linear-gradient(90deg, #1a6bb5, #0b2d52);
     box-shadow: 0 10px 24px rgba(24, 90, 157, 0.25);
 }
 
