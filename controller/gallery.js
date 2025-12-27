@@ -14,8 +14,7 @@ exports.listPublic = async (req, res, next) => {
              LEFT JOIN users u ON u.userid=f.user_id
              WHERE f.photo_url IS NOT NULL
              ORDER BY f.created_at DESC
-             LIMIT ? OFFSET ?`,
-            [limit, offset]
+             LIMIT ${limit} OFFSET ${offset}`
         );
         const [[count]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs WHERE photo_url IS NOT NULL");
         const totalPages = Math.max(1, Math.ceil((count?.c || 0) / limit));
