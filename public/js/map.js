@@ -474,7 +474,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateActivePointCounter() {
         const el = document.getElementById("activePoints");
         if (!el) return;
-        // feedsLayer üzerinde şu anda görünür olan marker sayısı
+        // Görünür marker adedi
         let visible = 0;
         feedMarkers.forEach((m) => {
             if (feedsLayer.hasLayer(m)) visible++;
