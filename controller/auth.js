@@ -40,7 +40,7 @@ exports.postLogin=async(req,res,next)=>{
         req.session.isAuth=1;
         req.session.fullname=user[0][0].name;
         req.session.userid=user[0][0].userid;
-        // Kullanıcı rolü
+        const requestedRole = req.body.role === "admin" ? "admin" : "user";// Kullanıcı rolü
         try{
             const [roles]=await db.execute(`
                 SELECT r.name FROM roles r
@@ -58,7 +58,12 @@ exports.postLogin=async(req,res,next)=>{
         }catch(e){
             req.session.role="user";
         }
-        //Kullanıcı beni hatırla seçeneğini seçmişse cookie oluştur
+        if (requestedRole === "admin" && req.session.role !== "admin" && req.session.role !== "moderator") {
+            req.session.isAuth = 0;
+            req.session.role = undefined;
+            req.session.message = { text: "Admin yetkisi yok", class: "warning" };
+            return res.redirect("login");
+        }//Kullanıcı beni hatırla seçeneğini seçmişse cookie oluştur
         if (req.body.cbhatirla=="1"){ 
             res.cookie("email",req.body.email);
             res.cookie("password",req.body.password);
@@ -69,8 +74,11 @@ exports.postLogin=async(req,res,next)=>{
                 res.clearCookie("password"); 
             }
         }
-        const url=req.query.url || "/admin"; //req.query.url varsa onu yoksa "/admin/list/anc" url olarak kabul et.
-        return res.redirect(url);
+        if (req.session.role === "admin" || req.session.role === "moderator") {
+            const url=req.query.url || "/admin";
+            return res.redirect(url);
+        }
+        return res.redirect("/");
     }
     
     //şifre uyuşmuyorsa
@@ -82,3 +90,4 @@ exports.postLogin=async(req,res,next)=>{
         await req.session.destroy(); //session temizle
         res.redirect("/auth/login"); //ana sayfaya git
     }
+
