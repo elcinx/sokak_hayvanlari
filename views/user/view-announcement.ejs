@@ -7,10 +7,17 @@
         <div class="row g-4">
             <div class="col-lg-8">
                 <div class="section-card p-4">
-                    <h1 class="mb-3"><%= contentTitle %></h1>
-                    <h5 class="text-muted"><%= viewData.title %></h5>
-                    <div class="mt-3">
-                        <%- viewData.exp %>
+                    <% if (viewData.image) { %>
+                        <div class="mb-3">
+                            <img src="<%= viewData.image %>" alt="<%= viewData.title %>" class="img-fluid rounded">
+                        </div>
+                    <% } %>
+                    <h1 class="mb-3"><%= viewData.title %></h1>
+                    <% if (viewData.description) { %>
+                        <p class="text-muted"><%= viewData.description %></p>
+                    <% } %>
+                    <div class="mt-3" style="white-space: pre-line;">
+                        <%- viewData.fullContent || viewData.exp || "" %>
                     </div>
                 </div>
             </div>
