@@ -1,295 +1,341 @@
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title><%= title %></title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="/static/template/assets/favicon.ico" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="/static/template/css/styles.css" rel="stylesheet" />
-        <link href="/static/css/style.css" rel="stylesheet" />
-        <!-- Leaflet -->
-        <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        />
-        <style>
-            :root {
-                --pet-red: #FF6F4E;
-                --pet-red-light: #FFE7DD;
-                --pet-red-dark: #E65B3D;
-                --pet-bg: #FFF4EE;
-                --pet-card: #ffffff;
-                --pet-ink: #3a2c2c;
-                --pet-shadow: 0 8px 30px rgba(255, 111, 78, 0.15);
-            }
-            body.pet-theme {
-                color: var(--pet-ink);
-                font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-                line-height: 1.6;
-            }
-            .ck-editor__editable[role="textbox"] {
-                min-height: 200px;
-            }
-            #map {
-                width: 100%;
-                min-height: 440px;
-                border: 1px solid rgba(198, 40, 40, 0.2);
-                border-radius: 16px;
-            }
-            .pet-navbar {
-                background: rgba(198, 40, 40, 0.96);
-                box-shadow: 0 10px 24px rgba(198, 40, 40, 0.25);
-            }
-            .pet-navbar .navbar-brand,
-            .pet-navbar .nav-link {
-                color: #fff !important;
-            }
-            .pet-navbar .nav-link:hover {
-                color: #FFE7DD !important;
-                border-bottom: 2px solid #FFE7DD;
-            }
-            .paw-dot {
-                display: inline-block;
-                width: 10px;
-                height: 10px;
-                background: #ffe3e3;
-                border-radius: 50%;
-                margin-left: 8px;
-            }
-            .hero {
-                color: #fff;
-                position: relative;
-                overflow: hidden;
-            }
-            .hero-title {
-                font-size: clamp(2rem, 3vw, 3rem);
-                font-weight: 700;
-            }
-            .hero-subtitle {
-                font-size: 1.1rem;
-                max-width: 560px;
-                opacity: 0.9;
-            }
-            .stat-card {
-                background: var(--pet-card);
-                border-radius: 16px;
-                box-shadow: var(--pet-shadow);
-                border: 1px solid rgba(198, 40, 40, 0.12);
-                transition: transform 0.2s ease;
-            }
-            .stat-card:hover {
-                transform: translateY(-4px);
-            }
-            .stat-icon {
-                width: 42px;
-                height: 42px;
-                border-radius: 12px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                background: rgba(255, 82, 82, 0.15);
-                color: var(--pet-red);
-                font-size: 20px;
-            }
-            .section-card {
-                background: var(--pet-card);
-                border-radius: 18px;
-                border: 1px solid rgba(198, 40, 40, 0.12);
-                box-shadow: var(--pet-shadow);
-            }
-            .btn-primary-red {
-                border-radius: 999px;
-                padding: 0.6rem 1.4rem;
-                font-weight: 600;
-                color: #fff;
-                background: linear-gradient(90deg, #ff5252, #c62828);
-                border: none;
-                box-shadow: 0 10px 24px rgba(198, 40, 40, 0.25);
-                transition: all 0.2s ease-out;
-            }
-            .btn-primary-red:hover {
-                background: linear-gradient(90deg, #e64545, #a81c1c);
-                transform: scale(1.03);
-                color: #fff;
-            }
-            .btn-outline-red {
-                border-radius: 999px;
-                padding: 0.6rem 1.4rem;
-                font-weight: 600;
-                color: var(--pet-red);
-                background: rgba(255, 255, 255, 0.6);
-                border: 1.5px solid var(--pet-red);
-                transition: all 0.2s ease-out;
-            }
-            .btn-outline-red:hover {
-                background: #ffe6e6;
-                color: var(--pet-red-dark);
-                transform: scale(1.03);
-            }
-            .chip-filter input {
-                display: none;
-            }
-            .chip-filter label {
-                border-radius: 999px;
-                padding: 0.35rem 0.9rem;
-                border: 1.5px solid var(--pet-red);
-                color: var(--pet-red);
-                font-size: 0.8rem;
-                cursor: pointer;
-                transition: all 0.2s ease-out;
-            }
-            .chip-filter input:checked + label {
-                background: linear-gradient(90deg, #ff5252, #c62828);
-                color: #fff;
-                border-color: transparent;
-            }
-            .map-toolbar .btn,
-            .map-toolbar .form-check-label {
-                font-size: 0.85rem;
-            }
-            .mini-gallery img {
-                border-radius: 12px;
-                transition: transform 0.2s ease, filter 0.2s ease;
-            }
-            .mini-gallery a:hover img {
-                transform: scale(1.03);
-                filter: brightness(0.85);
-            }
-            .mini-gallery a {
-                position: relative;
-                display: block;
-            }
-            .mini-gallery a span {
-                position: absolute;
-                inset: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #fff;
-                font-size: 20px;
-                opacity: 0;
-                transition: opacity 0.2s ease;
-            }
-            .mini-gallery a:hover span {
-                opacity: 1;
-            }
-            .rank-badge {
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                background: rgba(198, 40, 40, 0.15);
-                color: var(--pet-red);
-                font-weight: 700;
-            }
-            .login-card {
-                max-width: 420px;
-                margin: 8vh auto;
-                background: var(--pet-card);
-                border-radius: 20px;
-                box-shadow: var(--pet-shadow);
-                border: 1px solid rgba(198, 40, 40, 0.12);
-            }
-            .form-control:focus,
-            .form-check-input:focus {
-                border-color: var(--pet-red);
-                box-shadow: 0 0 0 0.2rem rgba(198, 40, 40, 0.2);
-            }
-            .admin-theme .admin-wrapper {
-                display: flex;
-                min-height: 100vh;
-                background: var(--pet-bg);
-            }
-            .admin-theme .admin-sidebar {
-                width: 240px;
-                background: #fff;
-                border-right: 1px solid rgba(198, 40, 40, 0.12);
-                box-shadow: 10px 0 24px rgba(198, 40, 40, 0.04);
-                position: sticky;
-                top: 0;
-                height: 100vh;
-            }
-            .admin-theme .admin-sidebar .nav-link {
-                color: var(--pet-ink);
-                border-radius: 12px;
-                padding: 10px 14px;
-                margin: 4px 0;
-            }
-            .admin-theme .admin-sidebar .admin-link {
-                position: relative;
-                padding-left: 16px;
-            }
-            .admin-theme .admin-sidebar .admin-link::before {
-                content: "";
-                position: absolute;
-                left: 6px;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 6px;
-                height: 6px;
-                border-radius: 999px;
-                background: rgba(198, 40, 40, 0.2);
-            }
-            .admin-theme .admin-sidebar .nav-link.active,
-            .admin-theme .admin-sidebar .nav-link:hover {
-                background: var(--pet-red);
-                color: #fff;
-            }
-            .admin-theme .admin-sidebar .nav-link.active::before,
-            .admin-theme .admin-sidebar .nav-link:hover::before {
-                background: #fff;
-            }
-            .admin-theme .admin-main {
-                flex: 1;
-            }
-            .admin-theme .admin-topbar {
-                background: #fff;
-                border-bottom: 1px solid rgba(198, 40, 40, 0.12);
-                box-shadow: 0 8px 20px rgba(198, 40, 40, 0.08);
-            }
-            .admin-theme .admin-card {
-                background: #fff;
-                border-radius: 18px;
-                box-shadow: var(--pet-shadow);
-                border: 1px solid rgba(198, 40, 40, 0.12);
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-            }
-            .admin-theme .admin-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 16px 30px rgba(198, 40, 40, 0.18);
-            }
-            .admin-theme .table thead th {
-                background: rgba(198, 40, 40, 0.08);
-            }
-            .admin-theme .table tbody tr:hover {
-                background: rgba(198, 40, 40, 0.04);
-            }
-            .admin-theme .badge-soft {
-                background: rgba(198, 40, 40, 0.12);
-                color: var(--pet-red);
-                border-radius: 999px;
-                padding: 0.35rem 0.6rem;
-            }
-            .admin-theme .admin-gallery-item {
-                position: relative;
-                overflow: hidden;
-            }
-            .admin-theme .admin-gallery-overlay {
-                position: absolute;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.45);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-                transition: opacity 0.2s ease;
-            }
-            .admin-theme .admin-gallery-item:hover .admin-gallery-overlay {
-                opacity: 1;
-            }
-        </style>
-    </head>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>
+        <%= title %>
+    </title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="/static/template/assets/favicon.ico" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/static/template/css/styles.css" rel="stylesheet" />
+    <link href="/static/css/style.css" rel="stylesheet" />
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --pet-red: #FF6F4E;
+            --pet-red-light: #FFE7DD;
+            --pet-red-dark: #E65B3D;
+            --pet-bg: #FFF4EE;
+            --pet-card: #ffffff;
+            --pet-ink: #3a2c2c;
+            --pet-shadow: 0 8px 30px rgba(255, 111, 78, 0.15);
+        }
+
+        body.pet-theme {
+            color: var(--pet-ink);
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            line-height: 1.6;
+        }
+
+        .ck-editor__editable[role="textbox"] {
+            min-height: 200px;
+        }
+
+        #map {
+            width: 100%;
+            min-height: 440px;
+            border: 1px solid rgba(198, 40, 40, 0.2);
+            border-radius: 16px;
+        }
+
+        .pet-navbar {
+            background: linear-gradient(90deg, #1a6bb5, #0b2d52);
+            box-shadow: 0 10px 24px rgba(12, 58, 110, 0.35);
+        }
+
+        .pet-navbar .navbar-brand,
+        .pet-navbar .nav-link {
+            color: #fff !important;
+        }
+
+        .pet-navbar .nav-link:hover {
+            color: #dff2ff !important;
+            border-bottom: 2px solid #dff2ff;
+        }
+
+        .paw-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #ffe3e3;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+
+        .hero {
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 3vw, 3rem);
+            font-weight: 700;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            max-width: 560px;
+            opacity: 0.9;
+        }
+
+        .stat-card {
+            background: var(--pet-card);
+            border-radius: 16px;
+            box-shadow: var(--pet-shadow);
+            border: 1px solid rgba(198, 40, 40, 0.12);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 82, 82, 0.15);
+            color: var(--pet-red);
+            font-size: 20px;
+        }
+
+        .section-card {
+            background: var(--pet-card);
+            border-radius: 18px;
+            border: 1px solid rgba(198, 40, 40, 0.12);
+            box-shadow: var(--pet-shadow);
+        }
+
+        .btn-primary-red {
+            border-radius: 999px;
+            padding: 0.6rem 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(90deg, #ff5252, #c62828);
+            border: none;
+            box-shadow: 0 10px 24px rgba(198, 40, 40, 0.25);
+            transition: all 0.2s ease-out;
+        }
+
+        .btn-primary-red:hover {
+            background: linear-gradient(90deg, #e64545, #a81c1c);
+            transform: scale(1.03);
+            color: #fff;
+        }
+
+        .btn-outline-red {
+            border-radius: 999px;
+            padding: 0.6rem 1.4rem;
+            font-weight: 600;
+            color: var(--pet-red);
+            background: rgba(255, 255, 255, 0.6);
+            border: 1.5px solid var(--pet-red);
+            transition: all 0.2s ease-out;
+        }
+
+        .btn-outline-red:hover {
+            background: #ffe6e6;
+            color: var(--pet-red-dark);
+            transform: scale(1.03);
+        }
+
+        .chip-filter input {
+            display: none;
+        }
+
+        .chip-filter label {
+            border-radius: 999px;
+            padding: 0.35rem 0.9rem;
+            border: 1.5px solid var(--pet-red);
+            color: var(--pet-red);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .chip-filter input:checked+label {
+            background: linear-gradient(90deg, #ff5252, #c62828);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .map-toolbar .btn,
+        .map-toolbar .form-check-label {
+            font-size: 0.85rem;
+        }
+
+        .mini-gallery img {
+            border-radius: 12px;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .mini-gallery a:hover img {
+            transform: scale(1.03);
+            filter: brightness(0.85);
+        }
+
+        .mini-gallery a {
+            position: relative;
+            display: block;
+        }
+
+        .mini-gallery a span {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 20px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .mini-gallery a:hover span {
+            opacity: 1;
+        }
+
+        .rank-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(198, 40, 40, 0.15);
+            color: var(--pet-red);
+            font-weight: 700;
+        }
+
+        .login-card {
+            max-width: 420px;
+            margin: 8vh auto;
+            background: var(--pet-card);
+            border-radius: 20px;
+            box-shadow: var(--pet-shadow);
+            border: 1px solid rgba(198, 40, 40, 0.12);
+        }
+
+        .form-control:focus,
+        .form-check-input:focus {
+            border-color: var(--pet-red);
+            box-shadow: 0 0 0 0.2rem rgba(198, 40, 40, 0.2);
+        }
+
+        .admin-theme .admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+            background: var(--pet-bg);
+        }
+
+        .admin-theme .admin-sidebar {
+            width: 240px;
+            background: #fff;
+            border-right: 1px solid rgba(198, 40, 40, 0.12);
+            box-shadow: 10px 0 24px rgba(198, 40, 40, 0.04);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .admin-theme .admin-sidebar .nav-link {
+            color: var(--pet-ink);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin: 4px 0;
+        }
+
+        .admin-theme .admin-sidebar .admin-link {
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .admin-theme .admin-sidebar .admin-link::before {
+            content: "";
+            position: absolute;
+            left: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(198, 40, 40, 0.2);
+        }
+
+        .admin-theme .admin-sidebar .nav-link.active,
+        .admin-theme .admin-sidebar .nav-link:hover {
+            background: var(--pet-red);
+            color: #fff;
+        }
+
+        .admin-theme .admin-sidebar .nav-link.active::before,
+        .admin-theme .admin-sidebar .nav-link:hover::before {
+            background: #fff;
+        }
+
+        .admin-theme .admin-main {
+            flex: 1;
+        }
+
+        .admin-theme .admin-topbar {
+            background: #fff;
+            border-bottom: 1px solid rgba(198, 40, 40, 0.12);
+            box-shadow: 0 8px 20px rgba(198, 40, 40, 0.08);
+        }
+
+        .admin-theme .admin-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: var(--pet-shadow);
+            border: 1px solid rgba(198, 40, 40, 0.12);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .admin-theme .admin-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px rgba(198, 40, 40, 0.18);
+        }
+
+        .admin-theme .table thead th {
+            background: rgba(198, 40, 40, 0.08);
+        }
+
+        .admin-theme .table tbody tr:hover {
+            background: rgba(198, 40, 40, 0.04);
+        }
+
+        .admin-theme .badge-soft {
+            background: rgba(198, 40, 40, 0.12);
+            color: var(--pet-red);
+            border-radius: 999px;
+            padding: 0.35rem 0.6rem;
+        }
+
+        .admin-theme .admin-gallery-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-theme .admin-gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .admin-theme .admin-gallery-item:hover .admin-gallery-overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
