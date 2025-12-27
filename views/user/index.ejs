@@ -64,21 +64,21 @@
                                         <section class="row g-4 mb-4 stats-row">
                 <div class="col-12 col-md-4">
                     <div class="stat-card stat-green h-100">
-                        <div class="stat-icon icon-green">??</div>
+                        <div class="stat-icon icon-green">📍</div>
                         <div class="stat-label">Aktif Nokta</div>
                         <div class="stat-value" id="activePoints"><%= summary.activePoints %></div>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="stat-card stat-blue h-100">
-                        <div class="stat-icon icon-blue">??</div>
+                        <div class="stat-icon icon-blue">👥</div>
                         <div class="stat-label">Online Kullanici</div>
                         <div class="stat-value" id="onlineUsers">-</div>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="stat-card stat-orange h-100">
-                        <div class="stat-icon icon-orange">??</div>
+                        <div class="stat-icon icon-orange">📈</div>
                         <div class="stat-label">Bugunku Ziyaretci</div>
                         <div class="stat-value" id="todayVisits"><%= summary.todayVisits || '-' %></div>
                     </div>
@@ -236,25 +236,23 @@
                 </svg>
             </div>
 
-                    <footer class="site-map mt-4" id="siteMap">
+                            <footer class="site-map mt-4" id="siteMap">
             <div class="container">
-                <div class="sitemap-wrap">
-                    <div class="sitemap-card">
-                        <div class="sitemap-header">
-                            <div class="sitemap-paw">??</div>
-                            <h2 class="sitemap-title">Site Haritasi</h2>
-                            <p class="sitemap-subtitle">Tum sayfalara hizlica ulasin</p>
-                        </div>
-                        <div class="sitemap-grid">
-                            <a href="/" class="sitemap-pill"><span class="sitemap-icon">??</span> Ana Sayfa</a>
-                            <a href="/announcements" class="sitemap-pill"><span class="sitemap-icon">??</span> Duyurular</a>
-                            <a href="/#mapSection" class="sitemap-pill"><span class="sitemap-icon">???</span> Besleme Haritasi</a>
-                            <a href="/#miniGallery" class="sitemap-pill"><span class="sitemap-icon">??</span> Galeri</a>
-                            <a href="/#about" class="sitemap-pill"><span class="sitemap-icon">??</span> Hakkinda</a>
-                            <a href="/auth/login" class="sitemap-pill"><span class="sitemap-icon">??</span> Yonetici Girisi</a>
-                        </div>
-                        <div class="sitemap-footer">?? Birlikte gucluyuz ??</div>
+                <div class="sitemap-card sitemap-compact">
+                    <div class="sitemap-header compact">
+                        <div class="sitemap-paw">??</div>
+                        <h2 class="sitemap-title">Site Haritasi</h2>
+                        <p class="sitemap-subtitle">Tum sayfalara hizli erisim</p>
                     </div>
+                    <div class="sitemap-grid compact">
+                        <a href="/" class="sitemap-pill"><span class="sitemap-icon">??</span> Ana Sayfa</a>
+                        <a href="/announcements" class="sitemap-pill"><span class="sitemap-icon">??</span> Duyurular</a>
+                        <a href="/#mapSection" class="sitemap-pill"><span class="sitemap-icon">???</span> Besleme Haritasi</a>
+                        <a href="/#miniGallery" class="sitemap-pill"><span class="sitemap-icon">??</span> Galeri</a>
+                        <a href="/#about" class="sitemap-pill"><span class="sitemap-icon">??</span> Hakkinda</a>
+                        <a href="/auth/login" class="sitemap-pill"><span class="sitemap-icon">??</span> Yonetici Girisi</a>
+                    </div>
+                    <div class="sitemap-footer">?? Birlikte gucluyuz ??</div>
                 </div>
             </div>
         </footer>
@@ -267,6 +265,8 @@
     </body>
 
 </html>
+
+
 
 
 

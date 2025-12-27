@@ -130,6 +130,19 @@
     backdrop-filter: blur(14px);
 }
 
+.sitemap-card.sitemap-compact {
+    width: min(980px, 100%);
+    padding: 40px 32px;
+}
+
+.sitemap-header.compact {
+    margin-bottom: 28px;
+}
+
+.sitemap-grid.compact {
+    gap: 12px;
+}
+
 .sitemap-header {
     text-align: center;
     margin-bottom: 40px;
@@ -165,7 +178,7 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 18px 22px;
+    padding: 14px 18px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(26, 107, 181, 0.25);
