@@ -1204,11 +1204,11 @@ body.pet-theme::before {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 32px;
     align-items: center;
-    padding: 48px 40px;
+    padding: 40px 36px;
 }
 .hero-visual {
     position: relative;
-    min-height: 320px;
+    min-height: 290px;
     border-radius: 26px;
     overflow: hidden;
     background: linear-gradient(135deg, #43cea2 0%, #185a9d 50%, #667eea 100%);
@@ -1267,12 +1267,12 @@ body.pet-theme::before {
     transform: translateX(-50%);
 }
 .hero-bowls svg {
-    width: 220px;
+    width: 200px;
     height: auto;
 }
 .hero-cat svg,
 .hero-dog svg {
-    width: 150px;
+    width: 135px;
     height: auto;
 }
 @media (max-width: 992px) {
