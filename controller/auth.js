@@ -86,6 +86,62 @@ exports.postLogin=async(req,res,next)=>{
     res.redirect("login");
 }
 
+exports.getRegister=(req,res,next)=>{
+    const message=req.session.message;
+    delete req.session.message;
+    res.render("auth/register",{
+        title:"Register",
+        contentTitle:"Register",
+        message:message
+    });
+}
+
+exports.postRegister=async(req,res,next)=>{
+    const name=(req.body.name||"").trim();
+    const surname=(req.body.surname||"").trim();
+    const email=(req.body.email||"").trim();
+    const password=req.body.password||"";
+    const passwordConfirm=req.body.passwordConfirm||"";
+
+    if (!name || !email || !password){
+        req.session.message={text:"Zorunlu alanlar eksik",class:"warning"};
+        return res.redirect("register");
+    }
+    if (passwordConfirm && passwordConfirm !== password){
+        req.session.message={text:"Sifreler uyusmuyor",class:"warning"};
+        return res.redirect("register");
+    }
+
+    const [existing]=await db.execute("SELECT userid FROM users WHERE email=?",[email]);
+    if (existing.length>0){
+        req.session.message={text:"Email zaten kayitli",class:"warning"};
+        return res.redirect("register");
+    }
+
+    const hashed=await bcrypt.hash(password,10);
+    const [insertRes]=await db.execute(
+        "INSERT INTO users (name, surname, email, password) VALUES (?,?,?,?)",
+        [name, surname, email, hashed]
+    );
+
+    const userId=insertRes.insertId;
+    if (userId){
+        let roleId=null;
+        const [roleRows]=await db.execute("SELECT roleid FROM roles WHERE name='user' LIMIT 1");
+        roleId=roleRows[0]?.roleid;
+        if (!roleId){
+            const [altRows]=await db.execute("SELECT roleid FROM roles WHERE name='kullanici' LIMIT 1");
+            roleId=altRows[0]?.roleid;
+        }
+        if (roleId){
+            await db.execute("INSERT IGNORE INTO user_roles (userid, roleid) VALUES (?,?)",[userId, roleId]);
+        }
+    }
+
+    req.session.message={text:"Kayit basarili. Giris yapabilirsiniz.",class:"success"};
+    return res.redirect("login");
+}
+
     exports.signout=async(req,res)=>{
         await req.session.destroy(); //session temizle
         res.redirect("/auth/login"); //ana sayfaya git
