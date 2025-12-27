@@ -230,6 +230,10 @@ async function ensureTables() {
             [a.title, a.exp, a.slug, a.category, a.publish_at]
         );
     }
+    // Remove placeholder announcements like "Duyuru 1..10" if they exist
+    await db.execute(
+        "DELETE FROM announcements WHERE title REGEXP '^Duyuru [0-9]+' OR title REGEXP '^ONEMLI Duyuru [0-9]+'"
+    );
 
     // Make first user admin if none
     const [userRoleCount] = await db.execute("SELECT COUNT(*) AS c FROM user_roles");
