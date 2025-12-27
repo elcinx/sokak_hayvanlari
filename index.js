@@ -47,7 +47,6 @@ app.use(helmet({
             styleSrc: ["'self'", "https://unpkg.com", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
             imgSrc: ["'self'", "https://res.cloudinary.com", "data:", "https:"],
             fontSrc: ["'self'", "data:", "https:"],
-            mediaSrc: ["'self'", "data:"],
             connectSrc: ["'self'", "https:"]
         }
     }
@@ -184,13 +183,9 @@ io.on("connection", (socket) => {
     socket.on("disconnect", broadcastOnline);
 });
 
-// ensureTables() // Geçici olarak devre dışı
 ensureTables()
     .then(() => {
         return bootstrapAdmin();
-    })
-    .catch(err => {
-        console.log("Migration failed - server running without database");
     })
     .then(() => {
         if (config.seedEnabled && config.nodeEnv !== "production") {

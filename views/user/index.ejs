@@ -9,13 +9,12 @@
                                                 <section class="hero hero-card hero-showcase mb-4">
                     <div class="hero-content">
                         <div class="hero-text">
-                            <div class="hero-eyebrow mb-2">Sokak Hayvanlari Platformu</div>
-                            <h1 class="hero-title mb-3">Onlar Icin Bir Kap Sevgi Dolu!</h1>
+                            <div class="hero-eyebrow mb-2">Sokak Hayvanları Platformu</div>
+                            <h1 class="hero-title mb-3">Onlar İçin Sevgi Dolu Bir Kap!</h1>
                             <div class="hero-subtitle-pill mb-4">
-                                Sokak dostlarimiza birlikte ulasalim
+                                Sokak dostlarimiza birlikte ulaşalım
                             </div>
                             <div class="d-flex flex-wrap gap-3 hero-actions">
-                                <a href="#mapSection" class="btn btn-main btn-lg" id="heroLocateBtn">Konumumu Bul</a>
                                 <button class="btn btn-soft btn-lg" id="openFeedForm" type="button">+ Besleme Ekle</button>
                             </div>
                             <div class="hero-badge mt-4">Topluluk projesi &#x1F43E;</div>
@@ -55,8 +54,8 @@
                     <div class="row align-items-center">
                         <div class="col-lg-8">
                             <h2 class="section-title mb-2">Hakkinda</h2>
-                            <p class="section-subtitle mb-0">Biz bu toplulukta sokak hayvanlarini beslemek icin
-                                buradayiz. Siz de katilin, birlikte daha cok cana dokunalim.</p>
+                            <p class="section-subtitle mb-0">Sokak Hayvanları topluluğu olarak, şehirde sessizce yaşayan dostlarımızın sesi olmak için buradayız. Onların sıcak bir yuvaya, bir kap mama ve biraz sevgiye ne kadar ihtiyaç duyduğunu biliyoruz. Amacımız yalnızca beslemek değil; farkındalık oluşturmak, dayanışmayı büyütmek ve herkesin küçük bir dokunuşla büyük bir değişime katkı sağlayabileceğini göstermek.
+                            Siz de bu yolculuğun bir parçası olun. Bir kap su, küçük bir mama desteği ya da yalnızca haber yayarak bile birçok canın hayatına dokunabilirsiniz. Unutmayın; birlikte daha güçlüyüz ve birlikte daha çok canın umut ışığı olabiliriz.</p>
                         </div>
                     </div>
                 </section>
@@ -72,14 +71,14 @@
                 <div class="col-12 col-md-4">
                     <div class="stat-card stat-blue h-100">
                         <div class="stat-icon icon-blue">👥</div>
-                        <div class="stat-label">Online Kullanici</div>
+                        <div class="stat-label">Online Kullanıcı</div>
                         <div class="stat-value" id="onlineUsers">-</div>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="stat-card stat-orange h-100">
                         <div class="stat-icon icon-orange">📈</div>
-                        <div class="stat-label">Bugunku Ziyaretci</div>
+                        <div class="stat-label">Bugünkü Ziyaretçi</div>
                         <div class="stat-value" id="todayVisits"><%= summary.todayVisits || '-' %></div>
                     </div>
                 </div>
@@ -91,8 +90,8 @@
                             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 map-header">
                                 <div>
                                     <h3 class="section-title mb-1">Harita & Noktalar</h3>
-                                    <p class="section-subtitle mb-0">Konumuna en yakin besleme noktalarini harita
-                                        uzerinden kesfet.</p>
+                                    <p class="section-subtitle mb-0">Konumuna en yakın besleme noktalarını harita
+                                        üzerinden keşfet.</p>
                                 </div>
                                 <div class="map-toolbar d-flex flex-wrap gap-2 mt-2 mt-lg-0">
                                     <button class="btn btn-soft btn-sm" id="toggleHeatmap">Heatmap</button>
@@ -124,9 +123,9 @@
                         </div>
 
                         <div class="section-card p-3 p-lg-4 mt-4">
-                            <h4 class="section-title mb-3">Top 5 Besleme Noktasi</h4>
+                            <h4 class="section-title mb-3">Top 5 Besleme Noktası</h4>
                             <ul class="list-group list-group-flush top5-list" id="weeklyTop">
-                                <li class="list-group-item">Yukleniyor...</li>
+                                <li class="list-group-item">Yükleniyor...</li>
                             </ul>
                         </div>
                     </div>
@@ -145,7 +144,7 @@
                                             <div class="fw-semibold">
                                                 <%= element.title %>
                                             </div>
-                                            <div class="small text-muted mb-2">Duyuru detayi icin tikla</div>
+                                            <div class="small text-muted mb-2">Duyuru detayı için tıkla</div>
                                             <a href="/announcements/<%=element.slug || element.id %>" class="btn btn-soft btn-sm">Detayi Gor</a>
                                         </div>
                                     </div>
@@ -169,27 +168,27 @@
                                 </div>
                             </div>
                             <div id="feedHelpBar" class="feed-help mb-3" style="display:none;">Haritadan bir nokta
-                                secerek yeni besleme ekleyebilirsiniz.</div>
+                                seçerek yeni besleme ekleyebilirsiniz.</div>
                             <form method="POST" action="/api/feeds" enctype="multipart/form-data"
                                 class="feed-form feed-form-card" id="feedCreateForm">
                                 <div class="card-body">
-                                    <h5 class="card-title mb-3">Yeni Besleme Kaydi</h5>
+                                    <h5 class="card-title mb-3">Yeni Besleme Kaydı</h5>
                                     <input type="hidden" name="lat" id="feedLat">
                                     <input type="hidden" name="lng" id="feedLng">
-                                    <div class="mb-3 small text-muted" id="selectedLocationInfo">Henuz haritadan konum
-                                        secmediniz.</div>
+                                    <div class="mb-3 small text-muted" id="selectedLocationInfo">Henüz haritadan konum
+                                        seçmediniz.</div>
                                     <div class="mb-3">
                                         <label for="feedType" class="form-label">Besleme Tipi</label>
                                         <select name="type" id="feedType" class="form-select">
                                             <option value="mama">Kuru mama</option>
                                             <option value="yas_mama">Yas mama</option>
-                                            <option value="yemek_artigi">Yemek artigi</option>
+                                            <option value="yemek_artigi">Yemek artığı</option>
                                             <option value="su">Su</option>
-                                            <option value="diger">Diger</option>
+                                            <option value="diger">Diğer</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="feedNote" class="form-label">Not (istege bagli)</label>
+                                        <label for="feedNote" class="form-label">Not (isteğe bağlı)</label>
                                         <textarea name="note" id="feedNote" class="form-control" rows="3"
                                             placeholder="Orn: 3 kedi + 1 kopek vardi, alan golgeli."></textarea>
                                     </div>
@@ -197,12 +196,12 @@
                                         <label for="feedPhoto" class="form-label">Fotograf (opsiyonel)</label>
                                         <input type="file" name="photo" id="feedPhoto" class="form-control">
                                     </div>
-                                    <div class="alert alert-success d-none" id="feedSuccessAlert">Tesekkurler! Besleme
-                                        kaydiniz haritaya eklendi.</div>
+                                    <div class="alert alert-success d-none" id="feedSuccessAlert">Teşekkürler! Besleme
+                                        kaydınız haritaya eklendi.</div>
                                     <div class="alert alert-danger d-none" id="feedErrorAlert"></div>
                                     <button type="submit" class="btn btn-main feed-submit-btn" disabled>Beslemeyi Kaydet
                                         🐾</button>
-                                    <div class="form-text mt-2">* Once haritadan bir nokta secmeniz gerekiyor.</div>
+                                    <div class="form-text mt-2">* Once haritadan bir nokta seçmeniz gerekiyor.</div>
                                 </div>
                             </form>
                         </div>
@@ -222,30 +221,28 @@
                 <div class="site-map-panel">
                     <div class="site-map-text">
                         <h5>Site Map</h5>
-                        <p>Sokak Hayvanlari platformunda hizli erisim.</p>
+                        <p>Sokak Hayvanlari platformunda hızlı erişim.</p>
                     </div>
                     <div class="site-map-links">
                         <a href="/" class="site-map-pill">Ana Sayfa</a>
                         <a href="/#mapSection" class="site-map-pill">Harita & Noktalar</a>
                         <a href="/#miniGallery" class="site-map-pill">Galeri</a>
                         <a href="/announcements" class="site-map-pill">Duyurular</a>
-                        <a href="/#about" class="site-map-pill">Hakkinda</a>
-                        <a href="/auth/login" class="site-map-pill">Giris / Admin</a>
+                        <a href="/#about" class="site-map-pill">Hakkında</a>
+                        <a href="/auth/login" class="site-map-pill">Giriş / Admin</a>
                     </div>
                 </div>
                 <div class="footer-links">
                     <div class="footer-brand">
                         <img src="/static/img/kedikopek.png" alt="Sokak Hayvanlari" class="site-logo">
-                        <span>Sokak Hayvanlari</span>
+                        <span>Sokak Hayvanları</span>
                     </div>
                     <div class="footer-nav">
-                        <a href="/#about">Hakkimizda</a>
-                        <a href="/announcements">Iletisim</a>
-                        <a href="/#mapSection">Gonullu Ol</a>
+                        <a href="/#about">Hakkımızda</a>
+                        <a href="/announcements">İletişim</a>
+                        <a href="/#mapSection">Gönüllü Ol</a>
                     </div>
                     <div class="footer-social">
-                        <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
-                        <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
                         <a href="https://x.com" target="_blank" rel="noreferrer">X</a>
                     </div>
                 </div>
