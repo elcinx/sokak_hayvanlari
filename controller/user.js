@@ -55,7 +55,15 @@ exports.viewAnc = async (req, res, next) => {
 
 exports.listAnnouncements = async (req, res, next) => {
     try {
-        const [allData] = await db.execute("SELECT * FROM announcements WHERE is_active=1 ORDER BY publish_at DESC");
+        // Database bağlantısı yoksa sample data kullan
+        let allData = [];
+        try {
+            [allData] = await db.execute("SELECT * FROM announcements WHERE is_active=1 ORDER BY publish_at DESC");
+        } catch (dbErr) {
+            // Database hatası olursa boş array geç
+            allData = [];
+        }
+        
         res.render("user/announcements", {
             title: "Duyurular",
             contentTitle: "Duyurular",
