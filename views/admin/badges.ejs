@@ -7,20 +7,6 @@
         <div class="admin-main">
             <%- include('./partials/topbar', { contentTitle, contentDesc: 'Rozet tanimlari ve son kazananlar' }) %>
             <div class="container-fluid py-4">
-                <!-- Hero Başlık ve Hızlı Aksiyonlar -->
-                <section class="admin-hero rounded-4 p-4 p-md-5 mb-4">
-                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div>
-                            <div class="eyebrow text-uppercase">Yönetim • Rozetler</div>
-                            <h2 class="hero-heading mb-2"><%= contentTitle || 'Rozetler' %></h2>
-                            <p class="mb-0 hero-sub">Rozet tanımlarını yönetin, son kazananları görüntüleyin.</p>
-                        </div>
-                        <div class="quick-actions d-flex flex-wrap gap-2">
-                            <a href="#" class="btn btn-light btn-action disabled" title="Örnek">+ Yeni Rozet (yakında)</a>
-                            <a href="/admin/dashboard" class="btn btn-light btn-action">Dashboard</a>
-                        </div>
-                    </div>
-                </section>
                 <div class="row g-4">
                     <div class="col-lg-7">
                         <div class="admin-card p-3 h-100">
@@ -72,21 +58,6 @@
         </div>
     </div>
     <style>
-        /* Hero alanı */
-        .admin-hero {
-            background: radial-gradient(1200px 400px at -10% -20%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%),
-                        linear-gradient(135deg, var(--pet-red), #0b2d52);
-            color: #fff;
-            position: relative;
-            overflow: hidden;
-        }
-        .admin-hero .eyebrow { letter-spacing: .08em; font-size: .8rem; opacity: .9; }
-        .admin-hero .hero-heading { font-weight: 800; }
-        .admin-hero .hero-sub { opacity: .95; }
-        .btn-action { background: rgba(255,255,255,.92); border: 1px solid rgba(0,0,0,.06); box-shadow: 0 6px 18px rgba(0,0,0,.06); }
-        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.08); }
-
-        /* Kart ve tablo cilası */
         .admin-card { border: 1px solid rgba(26, 107, 181, 0.08); border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgba(26,107,181,.06); }
         .table thead th { background: rgba(26,107,181,.06); color: var(--pet-ink); font-weight: 600; border-bottom: 2px solid rgba(26,107,181,.1); }
         .table tbody tr:hover { background: rgba(26,107,181,.03); }
