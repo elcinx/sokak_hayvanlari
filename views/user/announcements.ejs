@@ -63,7 +63,7 @@
                 }
             ];
             
-            const announcements = data.length > 0 ? data : sampleAnnouncements;
+            const announcements = (data && data.length > 0) ? data : sampleAnnouncements;
             %>
             
             <% announcements.forEach(item=>{ %>
