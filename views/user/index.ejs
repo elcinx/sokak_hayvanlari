@@ -236,57 +236,28 @@
                 </svg>
             </div>
 
-            <footer class="site-map mt-4" id="siteMap">
-                <div class="container">
-                    <div class="section-card p-3 p-lg-4">
-                        <div class="row align-items-center">
-                            <div class="col-md-4">
-                                <h5 class="mb-2">Site Map</h5>
-                                <p class="text-muted mb-0">Sokak Hayvanlari platformunda hizli erisim.</p>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="row g-2">
-                                    <div class="col-6 col-lg-4"><a href="/" class="site-map-link">Ana Sayfa</a></div>
-                                    <div class="col-6 col-lg-4"><a href="/#mapSection" class="site-map-link">Harita &
-                                            Noktalar</a></div>
-                                    <div class="col-6 col-lg-4"><a href="/#miniGallery" class="site-map-link">Galeri</a>
-                                    </div>
-                                    <div class="col-6 col-lg-4"><a href="/announcements"
-                                            class="site-map-link">Duyurular</a></div>
-                                    <div class="col-6 col-lg-4"><a href="/#about" class="site-map-link">Hakkinda</a>
-                                    </div>
-                                    <div class="col-6 col-lg-4"><a href="/auth/login" class="site-map-link">Giris /
-                                            Admin</a></div>
-                                </div>
-                            </div>
+                    <footer class="site-map mt-4" id="siteMap">
+            <div class="container">
+                <div class="sitemap-wrap">
+                    <div class="sitemap-card">
+                        <div class="sitemap-header">
+                            <div class="sitemap-paw">??</div>
+                            <h2 class="sitemap-title">Site Haritasi</h2>
+                            <p class="sitemap-subtitle">Tum sayfalara hizlica ulasin</p>
                         </div>
-                    </div>
-                    <div class="footer-links mt-4">
-                        <div class="row align-items-center">
-                        <div class="col-md-4">
-                            <div class="footer-brand d-flex align-items-center gap-2">
-                                <img src="/static/img/kedikopek.png" alt="Sokak Hayvanlari" class="site-logo">
-                                <span>Sokak Hayvanlari</span>
-                            </div>
+                        <div class="sitemap-grid">
+                            <a href="/" class="sitemap-pill"><span class="sitemap-icon">??</span> Ana Sayfa</a>
+                            <a href="/announcements" class="sitemap-pill"><span class="sitemap-icon">??</span> Duyurular</a>
+                            <a href="/#mapSection" class="sitemap-pill"><span class="sitemap-icon">???</span> Besleme Haritasi</a>
+                            <a href="/#miniGallery" class="sitemap-pill"><span class="sitemap-icon">??</span> Galeri</a>
+                            <a href="/#about" class="sitemap-pill"><span class="sitemap-icon">??</span> Hakkinda</a>
+                            <a href="/auth/login" class="sitemap-pill"><span class="sitemap-icon">??</span> Yonetici Girisi</a>
                         </div>
-                            <div class="col-md-4">
-                                <div class="footer-nav">
-                                    <a href="/#about">Hakkimizda</a>
-                                    <a href="/announcements">Iletisim</a>
-                                    <a href="/#mapSection">Gonullu Ol</a>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="footer-social">
-                                    <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
-                                    <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-                                    <a href="https://x.com" target="_blank" rel="noreferrer">X</a>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="sitemap-footer">?? Birlikte gucluyuz ??</div>
                     </div>
                 </div>
-            </footer>
+            </div>
+        </footer>
 
             <%- include('../partials/script') %>
                 <script src="/socket.io/socket.io.js"></script>
@@ -296,6 +267,7 @@
     </body>
 
 </html>
+
 
 
 
