@@ -24,6 +24,8 @@ router.get("/feeds/delete/:id", requireAuth, requireRole("admin"), feedsControll
 router.get("/comments",requireAuth,requireRole("admin"),csrf,adminPanel.commentsList);
 router.get("/comments/delete/:id",requireAuth,requireRole("admin"),adminPanel.deleteComment);
 router.get("/badges", requireAuth, requireRole("admin"), csrf, leaderboard.adminListBadges);
+router.get("/users", requireAuth, requireRole("admin"), csrf, adminPanel.usersPage);
+router.post("/users", requireAuth, requireRole("admin"), adminPanel.usersCreate);
 
 router.get("/add/anc",requireAuth,requireRole("admin","moderator"),csrf,adminController.adminGetAddAnc)
 router.post("/add/anc",requireAuth,requireRole("admin","moderator"),adminController.adminPostAddAnc)

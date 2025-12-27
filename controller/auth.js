@@ -24,9 +24,11 @@ exports.getLogin=(req,res,next)=>{
 
 exports.postLogin=async(req,res,next)=>{
     console.log(req.body);
+    const email=(req.body.email||"").trim().toLowerCase();
+    const password=req.body.password||"";
 
     // const user=authData.find(x=>x.email==req.body.email);
-    const user=await db.execute("SELECT * FROM users WHERE email=?",[req.body.email]); //liste içinde liste döner
+    const user=await db.execute("SELECT * FROM users WHERE email=?",[email]); //liste içinde liste döner
     console.log(user);
      if (user[0].length==0)  {
         req.session.message={text:"Email hatalı",class:"warning"}
@@ -36,7 +38,7 @@ exports.postLogin=async(req,res,next)=>{
 
     console.log(user[0][0].password);
 
-    if (await bcrypt.compare(req.body.password,user[0][0].password)){ //şifre uyuşuyorsa
+    if (await bcrypt.compare(password,user[0][0].password)){ //şifre uyuşuyorsa
         req.session.isAuth=1;
         req.session.fullname=user[0][0].name;
         req.session.userid=user[0][0].userid;
@@ -58,6 +60,22 @@ exports.postLogin=async(req,res,next)=>{
         }catch(e){
             req.session.role="user";
         }
+        if (!req.session.role) {
+            req.session.role = "user";
+        }
+        if (req.session.role === "user") {
+            try {
+                const [roleRows] = await db.execute("SELECT roleid FROM roles WHERE name='user' LIMIT 1");
+                let roleId = roleRows[0]?.roleid;
+                if (!roleId) {
+                    const [altRows] = await db.execute("SELECT roleid FROM roles WHERE name='kullanici' LIMIT 1");
+                    roleId = altRows[0]?.roleid;
+                }
+                if (roleId) {
+                    await db.execute("INSERT IGNORE INTO user_roles (userid, roleid) VALUES (?,?)", [req.session.userid, roleId]);
+                }
+            } catch (e) {}
+        }
         if (requestedRole === "admin" && req.session.role !== "admin" && req.session.role !== "moderator") {
             req.session.isAuth = 0;
             req.session.role = undefined;
@@ -65,8 +83,8 @@ exports.postLogin=async(req,res,next)=>{
             return res.redirect("login");
         }//Kullanıcı beni hatırla seçeneğini seçmişse cookie oluştur
         if (req.body.cbhatirla=="1"){ 
-            res.cookie("email",req.body.email);
-            res.cookie("password",req.body.password);
+            res.cookie("email",email);
+            res.cookie("password",password);
         }
         else{ //kullanıcı daha önce beni hatırla seçeneğini seçmişse ancak daha sonra checkbox işaretini kaldırmışsa cookieleri sil
             if (req.cookies.email!=undefined & req.cookies.password!=undefined) { //
@@ -99,7 +117,7 @@ exports.getRegister=(req,res,next)=>{
 exports.postRegister=async(req,res,next)=>{
     const name=(req.body.name||"").trim();
     const surname=(req.body.surname||"").trim();
-    const email=(req.body.email||"").trim();
+    const email=(req.body.email||"").trim().toLowerCase();
     const password=req.body.password||"";
     const passwordConfirm=req.body.passwordConfirm||"";
 
@@ -146,4 +164,8 @@ exports.postRegister=async(req,res,next)=>{
         await req.session.destroy(); //session temizle
         res.redirect("/auth/login"); //ana sayfaya git
     }
+
+
+
+
 

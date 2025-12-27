@@ -3,6 +3,7 @@ const metrics = require("./metrics");
 const logger = require("../utils/logger");
 const config = require("../config");
 const storage = require("../services/storage");
+const bcrypt = require("bcrypt");
 
 exports.dashboard = async (req, res, next) => {
     try {
@@ -226,6 +227,76 @@ exports.badgesPage = async (req, res, next) => {
         });
     } catch (err) {
         logger.error(req, err, "admin_badges");
+        next(err);
+    }
+};
+
+exports.usersPage = async (req, res, next) => {
+    try {
+        const flash = req.session.flash;
+        delete req.session.flash;
+        const [rows] = await db.execute(
+            `SELECT u.userid, u.name, u.surname, u.email,
+                GROUP_CONCAT(r.name) AS roles
+             FROM users u
+             LEFT JOIN user_roles ur ON ur.userid=u.userid
+             LEFT JOIN roles r ON r.roleid=ur.roleid
+             GROUP BY u.userid, u.name, u.surname, u.email
+             ORDER BY u.userid DESC`
+        );
+        res.render("admin/users", {
+            title: "Kullanicilar",
+            contentTitle: "Kullanicilar",
+            users: rows,
+            flash,
+            csrfToken: req.csrfToken()
+        });
+    } catch (err) {
+        logger.error(req, err, "admin_users_page");
+        next(err);
+    }
+};
+
+exports.usersCreate = async (req, res, next) => {
+    try {
+        const name = (req.body.name || "").trim();
+        const surname = (req.body.surname || "").trim();
+        const email = (req.body.email || "").trim().toLowerCase();
+        const password = req.body.password || "";
+
+        if (!name || !email || !password) {
+            req.session.flash = { type: "warning", text: "Zorunlu alanlar eksik" };
+            return res.redirect("/admin/users");
+        }
+
+        const [existing] = await db.execute("SELECT userid FROM users WHERE email=?", [email]);
+        if (existing.length > 0) {
+            req.session.flash = { type: "warning", text: "Email zaten kayitli" };
+            return res.redirect("/admin/users");
+        }
+
+        const hashed = await bcrypt.hash(password, 10);
+        const [insertRes] = await db.execute(
+            "INSERT INTO users (name, surname, email, password) VALUES (?,?,?,?)",
+            [name, surname, email, hashed]
+        );
+        const userId = insertRes.insertId;
+
+        let adminRoleId = null;
+        const [roleRows] = await db.execute("SELECT roleid FROM roles WHERE name='admin' LIMIT 1");
+        adminRoleId = roleRows[0]?.roleid;
+        if (!adminRoleId) {
+            const [roleInsert] = await db.execute("INSERT INTO roles (name) VALUES ('admin')");
+            adminRoleId = roleInsert.insertId;
+        }
+        if (userId && adminRoleId) {
+            await db.execute("INSERT IGNORE INTO user_roles (userid, roleid) VALUES (?, ?)", [userId, adminRoleId]);
+        }
+
+        req.session.flash = { type: "success", text: "Yeni admin olusturuldu" };
+        return res.redirect("/admin/users");
+    } catch (err) {
+        logger.error(req, err, "admin_users_create");
         next(err);
     }
 };

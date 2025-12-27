@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr">
+<%- include('../partials/head') %>
+<body class="pet-theme admin-theme">
+    <div class="admin-wrapper">
+        <%- include('./partials/sidebar', { activePage: 'users' }) %>
+        <div class="admin-main">
+            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Yeni admin olustur ve kullanicilari gor' }) %>
+            <div class="container-fluid py-4">
+                <% if (typeof flash !== "undefined" && flash && flash.text) { %>
+                    <div class="alert alert-<%= flash.type || 'info' %>"><%= flash.text %></div>
+                <% } %>
+
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="admin-card p-4">
+                            <h5 class="fw-bold mb-3">Yeni Admin Olustur</h5>
+                            <form method="post" action="/admin/users">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <div class="mb-3">
+                                    <label class="form-label">Ad</label>
+                                    <input type="text" name="name" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Soyad</label>
+                                    <input type="text" name="surname" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">E-posta</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Sifre</label>
+                                    <input type="password" name="password" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-pet w-100">Admin Olustur</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="admin-card p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold mb-0">Kullanicilar</h5>
+                                <span class="badge bg-info bg-opacity-20 text-info"><%= users.length %> kayit</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Ad Soyad</th>
+                                            <th>E-posta</th>
+                                            <th>Rol</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% users.forEach(u=>{ %>
+                                            <tr>
+                                                <td><%= u.userid %></td>
+                                                <td><%= (u.name || '') %> <%= (u.surname || '') %></td>
+                                                <td><%= u.email %></td>
+                                                <td>
+                                                    <% if (u.roles) { %>
+                                                        <span class="badge bg-primary bg-opacity-20 text-primary"><%= u.roles %></span>
+                                                    <% } else { %>
+                                                        <span class="badge bg-secondary bg-opacity-20 text-secondary">-</span>
+                                                    <% } %>
+                                                </td>
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                                <% if (users.length === 0) { %>
+                                    <div class="text-center py-4 text-muted">
+                                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                        Kayit bulunmuyor
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/script') %>
+</body>
+</html>
