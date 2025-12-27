@@ -20,61 +20,22 @@
 
         <div class="row g-4">
             <% 
-            const sampleAnnouncements = [
-                {
-                    id: 1,
-                    title: "Sahilde Sokak Hayvanları İçin Mama Dağıtımı Gerçekleştirildi",
-                    description: "Yerel gönüllüler sahil bölgesinde sokak hayvanlarına mama desteği sağladı.",
-                    category: "Etkinlik",
-                    publish_at: "20 Aralık 2024",
-                    image: "/static/img/3.jpg",
-                    views: 1850,
-                    fullContent: "Şehrimizin sahil hattında yaşayan sokak hayvanları için gönüllü ekibimiz mama dağıtımı gerçekleştirdi. Soğuk kış günlerinde onların beslenmesini desteklemek amacıyla düzenlenen etkinlikte hem mama verildi hem de sağlık kontrolleri yapıldı.\n\nBu tarz etkinliklerin devam etmesi için halkımızdan mama desteği ve gönüllü katılım bekliyoruz."
-                },
-                {
-                    id: 2,
-                    title: "Kış Yaklaşıyor: Sokak Dostlarımız İçin Battaniye ve Mama Kampanyası",
-                    description: "Soğuk hava koşullarında hayvanların beslenmesi ve barınması için ortak destek kampanyası başladı.",
-                    category: "Kampanya",
-                    publish_at: "18 Aralık 2024",
-                    image: "/static/img/4.jpg",
-                    views: 2340,
-                    fullContent: "Kar yağışının yoğunlaştığı bu dönemlerde sokakta yaşam mücadelesi veren dostlarımız için yeni bir yardım kampanyası başlattık. Mama, su kabı, battaniye ve küçük kulübeler yaparak destek olabilirsiniz.\n\nKampanya kapsamında toplanan yardım malzemeleri belirlenen noktalara ekiplerimiz tarafından ulaştırılacaktır."
-                },
-                {
-                    id: 3,
-                    title: "Mahalle Besleme Noktaları Güncellendi – Gönüllüler Aranıyor",
-                    description: "Yeni besleme noktaları oluşturuldu, düzenli kontrol için gönüllüler bekleniyor.",
-                    category: "Çağrı",
-                    publish_at: "15 Aralık 2024",
-                    image: "/static/img/5.jpg",
-                    views: 1560,
-                    fullContent: "Şehrimizde belirli bölgelere yeni mama-su kapları yerleştirildi. Ancak düzenli besleme ve temizlik için gönüllülere ihtiyacımız var. Her gün 10-15 dakikanızı ayırarak bir canın hayatına dokunabilirsiniz.\n\nKatılmak isteyenler iletişim bölümünden başvuru yapabilir."
-                },
-                {
-                    id: 4,
-                    title: "Toplu Besleme Etkinliği Başarıyla Tamamlandı",
-                    description: "Gönüllülerle birlikte onlarca sokak köpeğine mama ulaştırıldı.",
-                    category: "Başarı",
-                    publish_at: "12 Aralık 2024",
-                    image: "/static/img/2.jpg",
-                    views: 3100,
-                    fullContent: "Bu hafta düzenlediğimiz toplu mama destek etkinliğinde yüzlerce dostumuza mama ulaştırdık. Besleme noktaları gezilerek mama kapları dolduruldu, su tazelendi ve yaralı hayvanlar tespit edildi.\n\nDestek veren herkese teşekkür ederiz. Yeni etkinlik tarihleri yakında paylaşılacaktır."
-                }
-            ];
-            
-            const announcements = sampleAnnouncements;
+            const imageBySlug = { 'resim-1': '/static/img/3.jpg', 'resim-2': '/static/img/4.jpg', 'resim-3': '/static/img/5.jpg', 'resim-4': '/static/img/2.jpg' };
+            const announcements = data;
             %>
             
             <% announcements.forEach(item=>{ %>
                 <div class="col-lg-6 col-12">
                     <div class="announcement-card-new section-card overflow-hidden">
+                        <% const imageSrc = item.image || imageBySlug[item.slug] || null; %>
                         <div class="announcement-image">
                             <% if (item.image) { %>
                                 <img src="<%= item.image %>" alt="<%= item.title %>" class="img-fluid">
+                            <% } else if (imageSrc) { %>
+                                <img src="<%= imageSrc %>" alt="<%= item.title %>" class="img-fluid">
                             <% } else { %>
                                 <div class="announcement-image-placeholder">
-                                    <img src="https://picsum.photos/seed/cat-dog-street-<%= item.id || Math.random() %>/400/200.jpg" alt="Sokak Hayvanları" class="img-fluid">
+                                    <img src="https://picsum.photos/seed/cat-dog-street-<%= item.id || Math.random() %>/400/200.jpg" alt="Sokak Hayvanlari" class="img-fluid">
                                 </div>
                             <% } %>
                         </div>
@@ -86,8 +47,9 @@
                             <h3 class="announcement-title mb-3">
                                 <a href="/announcements/<%= item.slug || item.id %>" class="text-decoration-none"><%= item.title %></a>
                             </h3>
+                            <% const excerpt = item.description || item.exp || ''; %>
                             <p class="announcement-excerpt mb-3">
-                                <%= item.description ? item.description.substring(0, 150) + '...' : '' %>
+                                <%= excerpt ? excerpt.substring(0, 150) + '...' : '' %>
                             </p>
                             <div class="announcement-footer d-flex justify-content-between align-items-center">
                                 <a href="/announcements/<%= item.slug || item.id %>" class="btn btn-main">

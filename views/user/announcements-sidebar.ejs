@@ -1,9 +1,11 @@
 <div class="section-card p-3">
+    <% const imageBySlug = { 'resim-1': '/static/img/3.jpg', 'resim-2': '/static/img/4.jpg', 'resim-3': '/static/img/5.jpg', 'resim-4': '/static/img/2.jpg' }; %>
     <h5 class="mb-3">Duyurular</h5>
     <div class="list-group list-group-flush">
         <% data.slice(0,5).forEach((element,index) => { %>
+            <% const imageSrc = element.image || imageBySlug[element.slug] || '/static/img/2.jpg'; %>
             <a href="/announcements/<%=element.slug || element.id %>" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
-                <img src="<%= element.image || '/static/img/2.jpg' %>" alt="<%= element.title %>" class="rounded" style="width:48px;height:48px;object-fit:cover;">
+                <img src="<%= imageSrc %>" alt="<%= element.title %>" class="rounded" style="width:48px;height:48px;object-fit:cover;">
                 <strong><%= element.title %></strong>
             </a>
         <% }) %>

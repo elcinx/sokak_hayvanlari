@@ -56,7 +56,7 @@
                         <div class="col-lg-8">
                             <h2 class="section-title mb-2">Hakkinda</h2>
                             <p class="section-subtitle mb-0">Biz bu toplulukta sokak hayvanlarini beslemek icin
-                                buradayiz. Siz de katilin, birlikte daha cok cana dokunalim. 💛</p>
+                                buradayiz. Siz de katilin, birlikte daha cok cana dokunalim.</p>
                         </div>
                     </div>
                 </section>
@@ -133,12 +133,14 @@
 
                     <div class="col-lg-4">
                         <div class="section-card p-3 p-lg-4 announcements-card timeline-card">
+                            <% const imageBySlug = { 'resim-1': '/static/img/3.jpg', 'resim-2': '/static/img/4.jpg', 'resim-3': '/static/img/5.jpg', 'resim-4': '/static/img/2.jpg' }; %>
                             <h4 class="section-title mb-3">Son Duyurular</h4>
                             <div class="list-group list-group-flush timeline-list">
                                 <% data.slice(0,5).forEach(element=>{ %>
+                                    <% const imageSrc = element.image || imageBySlug[element.slug] || '/static/img/2.jpg'; %>
                                     <div class="list-group-item timeline-item d-flex gap-2">
                                         <span class="timeline-dot"></span>
-                                        <img src="<%= element.image || '/static/img/2.jpg' %>" alt="<%= element.title %>" class="rounded" style="width:56px;height:56px;object-fit:cover;">
+                                        <img src="<%= imageSrc %>" alt="<%= element.title %>" class="rounded" style="width:56px;height:56px;object-fit:cover;">
                                         <div class="flex-grow-1">
                                             <div class="fw-semibold">
                                                 <%= element.title %>
@@ -258,7 +260,6 @@
     </body>
 
 </html>
-
 
 
 

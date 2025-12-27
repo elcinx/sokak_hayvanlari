@@ -186,6 +186,51 @@ async function ensureTables() {
     await db.execute("INSERT IGNORE INTO roles (name) VALUES (?), (?), (?)", ["admin", "moderator", "user"]);
     await db.execute("INSERT IGNORE INTO roles (name) VALUES (?), (?)", ["koordinator", "kullanici"]);
 
+    // Seed announcements if empty
+    const announcementsSeed = [
+            {
+                title: "Sahilde Sokak Hayvanlar\u0131 \u0130\u00e7in Mama Da\u011f\u0131t\u0131m\u0131 Ger\u00e7ekle\u015ftirildi",
+                exp: "Yerel g\u00f6n\u00fcll\u00fcler sahil b\u00f6lgesinde sokak hayvanlar\u0131na mama deste\u011fi sa\u011flad\u0131.\\n\\n\u015eehrimizin sahil hatt\u0131nda ya\u015fayan sokak hayvanlar\u0131 i\u00e7in g\u00f6n\u00fcll\u00fc ekibimiz mama da\u011f\u0131t\u0131m\u0131 ger\u00e7ekle\u015ftirdi. So\u011fuk k\u0131\u015f g\u00fcnlerinde onlar\u0131n beslenmesini desteklemek amac\u0131yla d\u00fczenlenen etkinlikte hem mama verildi hem de sa\u011fl\u0131k kontrolleri yap\u0131ld\u0131.\\n\\nBu tarz etkinliklerin devam etmesi i\u00e7in halk\u0131m\u0131zdan mama deste\u011fi ve g\u00f6n\u00fcll\u00fc kat\u0131l\u0131m bekliyoruz.",
+                slug: "resim-1",
+                category: "Etkinlik",
+                publish_at: "2024-12-20 00:00:00"
+            },
+            {
+                title: "K\u0131\u015f Yakla\u015f\u0131yor: Sokak Dostlar\u0131m\u0131z \u0130\u00e7in Battaniye ve Mama Kampanyas\u0131",
+                exp: "So\u011fuk hava ko\u015fullar\u0131nda hayvanlar\u0131n beslenmesi ve bar\u0131nmas\u0131 i\u00e7in ortak destek kampanyas\u0131 ba\u015flad\u0131.\\n\\nKar ya\u011f\u0131\u015f\u0131n\u0131n yo\u011funla\u015ft\u0131\u011f\u0131 bu d\u00f6nemlerde sokakta ya\u015fam m\u00fccadelesi veren dostlar\u0131m\u0131z i\u00e7in yeni bir yard\u0131m kampanyas\u0131 ba\u015flatt\u0131k. Mama, su kab\u0131, battaniye ve k\u00fc\u00e7\u00fck kul\u00fcbeler yaparak destek olabilirsiniz.\\n\\nKampanya kapsam\u0131nda toplanan yard\u0131m malzemeleri belirlenen noktalara ekiplerimiz taraf\u0131ndan ula\u015ft\u0131r\u0131lacakt\u0131r.",
+                slug: "resim-2",
+                category: "Kampanya",
+                publish_at: "2024-12-18 00:00:00"
+            },
+            {
+                title: "Mahalle Besleme Noktalar\u0131 G\u00fcncellendi - G\u00f6n\u00fcll\u00fcler Aran\u0131yor",
+                exp: "Yeni besleme noktalar\u0131 olu\u015fturuldu, d\u00fczenli kontrol i\u00e7in g\u00f6n\u00fcll\u00fcler bekleniyor.\\n\\n\u015eehrimizde belirli b\u00f6lgelere yeni mama-su kaplar\u0131 yerle\u015ftirildi. Ancak d\u00fczenli besleme ve temizlik i\u00e7in g\u00f6n\u00fcll\u00fclere ihtiyac\u0131m\u0131z var. Her g\u00fcn 10-15 dakikan\u0131z\u0131 ay\u0131rarak bir can\u0131n hayat\u0131na dokunabilirsiniz.\\n\\nKat\u0131lmak isteyenler ileti\u015fim b\u00f6l\u00fcm\u00fcnden ba\u015fvuru yapabilir.",
+                slug: "resim-3",
+                category: "Cagri",
+                publish_at: "2024-12-15 00:00:00"
+            },
+            {
+                title: "Toplu Besleme Etkinli\u011fi Ba\u015far\u0131yla Tamamland\u0131",
+                exp: "G\u00f6n\u00fcll\u00fclerle birlikte onlarca sokak k\u00f6pe\u011fine mama ula\u015ft\u0131r\u0131ld\u0131.\\n\\nBu hafta d\u00fczenledi\u011fimiz toplu mama destek etkinli\u011finde y\u00fczlerce dostumuza mama ula\u015ft\u0131rd\u0131k. Besleme noktalar\u0131 gezilerek mama kaplar\u0131 dolduruldu, su tazelendi ve yaral\u0131 hayvanlar tespit edildi.\\n\\nDestek veren herkese te\u015fekk\u00fcr ederiz. Yeni etkinlik tarihleri yak\u0131nda payla\u015f\u0131lacakt\u0131r.",
+                slug: "resim-4",
+                category: "Basari",
+                publish_at: "2024-12-12 00:00:00"
+            }
+    ];
+    for (const a of announcementsSeed) {
+        await db.execute(
+            `INSERT INTO announcements (title, exp, slug, category, publish_at, is_active)
+             VALUES (?,?,?,?,?,1)
+             ON DUPLICATE KEY UPDATE
+                title=VALUES(title),
+                exp=VALUES(exp),
+                category=VALUES(category),
+                publish_at=VALUES(publish_at),
+                is_active=1`,
+            [a.title, a.exp, a.slug, a.category, a.publish_at]
+        );
+    }
+
     // Make first user admin if none
     const [userRoleCount] = await db.execute("SELECT COUNT(*) AS c FROM user_roles");
     if (userRoleCount[0].c === 0) {
