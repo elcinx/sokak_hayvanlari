@@ -1,47 +1,57 @@
-const db = require("../model/data");
+ï»¿const db = require("../model/data");
 
 const sampleAnnouncements = [
     {
         id: 1,
         slug: "resim-1",
-        title: "Sahilde Sokak Hayvanlarý Ýçin Mama Daðýtýmý Gerçekleþtirildi",
-        description: "Yerel gönüllüler sahil bölgesinde sokak hayvanlarýna mama desteði saðladý.",
+        title: "Sahilde Sokak HayvanlarÄ± Ä°Ã§in Mama DaÄŸÄ±tÄ±mÄ± GerÃ§ekleÅŸtirildi",
+        description: "Yerel gÃ¶nÃ¼llÃ¼ler sahil bÃ¶lgesinde sokak hayvanlarÄ±na mama desteÄŸi saÄŸladÄ±.",
         category: "Etkinlik",
-        publish_at: "20 Aralýk 2024",
+        publish_at: "20 AralÄ±k 2024",
         image: "/static/img/3.jpg",
-        fullContent: "Þehrimizin sahil hattýnda yaþayan sokak hayvanlarý için gönüllü ekibimiz mama daðýtýmý gerçekleþtirdi. Soðuk kýþ günlerinde onlarýn beslenmesini desteklemek amacýyla düzenlenen etkinlikte hem mama verildi hem de saðlýk kontrolleri yapýldý.\n\nBu tarz etkinliklerin devam etmesi için halkýmýzdan mama desteði ve gönüllü katýlým bekliyoruz."
+        fullContent: "Åžehrimizin sahil hattÄ±nda yaÅŸayan sokak hayvanlarÄ± iÃ§in gÃ¶nÃ¼llÃ¼ ekibimiz mama daÄŸÄ±tÄ±mÄ± gerÃ§ekleÅŸtirdi. SoÄŸuk kÄ±ÅŸ gÃ¼nlerinde onlarÄ±n beslenmesini desteklemek amacÄ±yla dÃ¼zenlenen etkinlikte hem mama verildi hem de saÄŸlÄ±k kontrolleri yapÄ±ldÄ±.
+
+Bu tarz etkinliklerin devam etmesi iÃ§in halkÄ±mÄ±zdan mama desteÄŸi ve gÃ¶nÃ¼llÃ¼ katÄ±lÄ±m bekliyoruz."
     },
     {
         id: 2,
         slug: "resim-2",
-        title: "Kýþ Yaklaþýyor: Sokak Dostlarýmýz Ýçin Battaniye ve Mama Kampanyasý",
-        description: "Soðuk hava koþullarýnda hayvanlarýn beslenmesi ve barýnmasý için ortak destek kampanyasý baþladý.",
+        title: "KÄ±ÅŸ YaklaÅŸÄ±yor: Sokak DostlarÄ±mÄ±z Ä°Ã§in Battaniye ve Mama KampanyasÄ±",
+        description: "SoÄŸuk hava koÅŸullarÄ±nda hayvanlarÄ±n beslenmesi ve barÄ±nmasÄ± iÃ§in ortak destek kampanyasÄ± baÅŸladÄ±.",
         category: "Kampanya",
-        publish_at: "18 Aralýk 2024",
+        publish_at: "18 AralÄ±k 2024",
         image: "/static/img/4.jpg",
-        fullContent: "Kar yaðýþýnýn yoðunlaþtýðý bu dönemlerde sokakta yaþam mücadelesi veren dostlarýmýz için yeni bir yardým kampanyasý baþlattýk. Mama, su kabý, battaniye ve küçük kulübeler yaparak destek olabilirsiniz.\n\nKampanya kapsamýnda toplanan yardým malzemeleri belirlenen noktalara ekiplerimiz tarafýndan ulaþtýrýlacaktýr."
+        fullContent: "Kar yaÄŸÄ±ÅŸÄ±nÄ±n yoÄŸunlaÅŸtÄ±ÄŸÄ± bu dÃ¶nemlerde sokakta yaÅŸam mÃ¼cadelesi veren dostlarÄ±mÄ±z iÃ§in yeni bir yardÄ±m kampanyasÄ± baÅŸlattÄ±k. Mama, su kabÄ±, battaniye ve kÃ¼Ã§Ã¼k kulÃ¼beler yaparak destek olabilirsiniz.
+
+Kampanya kapsamÄ±nda toplanan yardÄ±m malzemeleri belirlenen noktalara ekiplerimiz tarafÄ±ndan ulaÅŸtÄ±rÄ±lacaktÄ±r."
     },
     {
         id: 3,
         slug: "resim-3",
-        title: "Mahalle Besleme Noktalarý Güncellendi – Gönüllüler Aranýyor",
-        description: "Yeni besleme noktalarý oluþturuldu, düzenli kontrol için gönüllüler bekleniyor.",
-        category: "Çaðrý",
-        publish_at: "15 Aralýk 2024",
+        title: "Mahalle Besleme NoktalarÄ± GÃ¼ncellendi - GÃ¶nÃ¼llÃ¼ler AranÄ±yor",
+        description: "Yeni besleme noktalarÄ± oluÅŸturuldu, dÃ¼zenli kontrol iÃ§in gÃ¶nÃ¼llÃ¼ler bekleniyor.",
+        category: "Ã‡aÄŸrÄ±",
+        publish_at: "15 AralÄ±k 2024",
         image: "/static/img/5.jpg",
-        fullContent: "Þehrimizde belirli bölgelere yeni mama-su kaplarý yerleþtirildi. Ancak düzenli besleme ve temizlik için gönüllülere ihtiyacýmýz var. Her gün 10-15 dakikanýzý ayýrarak bir canýn hayatýna dokunabilirsiniz.\n\nKatýlmak isteyenler iletiþim bölümünden baþvuru yapabilir."
+        fullContent: "Åžehrimizde belirli bÃ¶lgelere yeni mama-su kaplarÄ± yerleÅŸtirildi. Ancak dÃ¼zenli besleme ve temizlik iÃ§in gÃ¶nÃ¼llÃ¼lere ihtiyacÄ±mÄ±z var. Her gÃ¼n 10-15 dakikanÄ±zÄ± ayÄ±rarak bir canÄ±n hayatÄ±na dokunabilirsiniz.
+
+KatÄ±lmak isteyenler iletiÅŸim bÃ¶lÃ¼mÃ¼nden baÅŸvuru yapabilir."
     },
     {
         id: 4,
         slug: "resim-4",
-        title: "Toplu Besleme Etkinliði Baþarýyla Tamamlandý",
-        description: "Gönüllülerle birlikte onlarca sokak köpeðine mama ulaþtýrýldý.",
-        category: "Baþarý",
-        publish_at: "12 Aralýk 2024",
+        title: "Toplu Besleme EtkinliÄŸi BaÅŸarÄ±yla TamamlandÄ±",
+        description: "GÃ¶nÃ¼llÃ¼lerle birlikte onlarca sokak kÃ¶peÄŸine mama ulaÅŸtÄ±rÄ±ldÄ±.",
+        category: "BaÅŸarÄ±",
+        publish_at: "12 AralÄ±k 2024",
         image: "/static/img/2.jpg",
-        fullContent: "Bu hafta düzenlediðimiz toplu mama destek etkinliðinde yüzlerce dostumuza mama ulaþtýrdýk. Besleme noktalarý gezilerek mama kaplarý dolduruldu, su tazelendi ve yaralý hayvanlar tespit edildi.\n\nDestek veren herkese teþekkür ederiz. Yeni etkinlik tarihleri yakýnda paylaþýlacaktýr."
+        fullContent: "Bu hafta dÃ¼zenlediÄŸimiz toplu mama destek etkinliÄŸinde yÃ¼zlerce dostumuza mama ulaÅŸtÄ±rdÄ±k. Besleme noktalarÄ± gezilerek mama kaplarÄ± dolduruldu, su tazelendi ve yaralÄ± hayvanlar tespit edildi.
+
+Destek veren herkese teÅŸekkÃ¼r ederiz. Yeni etkinlik tarihleri yakÄ±nda paylaÅŸÄ±lacaktÄ±r."
     }
 ];
+
+
 
 exports.userHome = async (req, res, next) => {
     try {
@@ -135,3 +145,4 @@ exports.listAnnouncements = async (req, res, next) => {
         next(err);
     }
 };
+
