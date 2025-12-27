@@ -8,6 +8,8 @@ router.get("/login",csrf,authController.getLogin);
 router.post("/login",authController.postLogin);
 router.get("/register",csrf,authController.getRegister);
 router.post("/register",authController.postRegister);
+router.get("/admin-register",csrf,authController.getAdminRegister);
+router.post("/admin-register",authController.postAdminRegister);
 
 router.get("/signout",authController.signout);
 

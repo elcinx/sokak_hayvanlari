@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="tr">
+<%- include('../partials/head') %>
+<body class="pet-theme">
+    <div class="login-container min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="login-wrapper">
+            <div class="login-card active">
+                <div class="text-center mb-4">
+                    <div class="login-logo mb-3">
+                        <img src="/static/img/kedikopek.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
+                    </div>
+                    <h2 class="mb-2 fw-bold text-primary">Admin Kayit</h2>
+                    <p class="text-muted">Yonetim paneli icin admin hesabi olustur</p>
+                </div>
+
+                <form action="/auth/admin-register" method="post" class="login-form">
+                    <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+
+                    <% if (typeof(message)!="undefined") { %>
+                        <div class="alert alert-<%=message.class%> d-flex align-items-center" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <%=message.text %>
+                        </div>
+                    <% } %>
+
+                    <div class="mb-4">
+                        <label for="name" class="form-label fw-semibold">
+                            <i class="bi bi-person me-2"></i>Ad
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-person text-muted"></i>
+                            </span>
+                            <input name="name" type="text" class="form-control border-start-0"
+                                   placeholder="Adiniz"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="surname" class="form-label fw-semibold">
+                            <i class="bi bi-person-badge me-2"></i>Soyad
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-person-badge text-muted"></i>
+                            </span>
+                            <input name="surname" type="text" class="form-control border-start-0"
+                                   placeholder="Soyadiniz">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="email" class="form-label fw-semibold">
+                            <i class="bi bi-envelope me-2"></i>E-posta Adresi
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-envelope text-muted"></i>
+                            </span>
+                            <input name="email" type="email" class="form-control border-start-0"
+                                   placeholder="admin@example.com"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-semibold">
+                            <i class="bi bi-lock me-2"></i>Sifre
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-lock text-muted"></i>
+                            </span>
+                            <input name="password" type="password" class="form-control border-start-0"
+                                   placeholder="********"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-3">
+                        <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                            <i class="bi bi-person-plus me-2"></i>Admin Olustur
+                        </button>
+                        <div class="text-center">
+                            <small class="text-muted">
+                                Zaten admin hesabin var mi?
+                                <a href="/auth/login" class="text-primary text-decoration-none">Giris Yap</a>
+                            </small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .login-container {
+            background: linear-gradient(135deg, #eaf4ff 0%, #d4e9ff 50%, #c8e6ff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(26, 107, 181, 0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, -30px) rotate(180deg); }
+        }
+
+        .login-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(26, 107, 181, 0.15);
+            transition: all 0.3s ease;
+            padding: 40px;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(26, 107, 181, 0.2);
+        }
+
+        .form-control, .input-group-text {
+            border-radius: 12px;
+            border: 2px solid #e3f2fd;
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+        }
+
+        .form-control:focus {
+            border-color: var(--pet-red);
+            box-shadow: 0 0 0 0.2rem rgba(26, 107, 181, 0.15);
+            background-color: #fafcff;
+        }
+
+        .input-group .form-control {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .input-group .input-group-text {
+            border-radius: 12px 0 0 12px;
+            border-right: none;
+            background-color: #f8f9fa;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #1a6bb5, #0b2d52);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #2a7bd0, #0b2d52);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 107, 181, 0.3);
+        }
+
+        .text-primary {
+            color: var(--pet-red) !important;
+        }
+    </style>
+
+    <%- include('../partials/script') %>
+</body>
+</html>

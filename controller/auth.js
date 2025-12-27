@@ -111,6 +111,16 @@ exports.getRegister=(req,res,next)=>{
     });
 }
 
+exports.getAdminRegister = (req, res, next) => {
+    const message = req.session.message;
+    delete req.session.message;
+    res.render("auth/admin-register", {
+        title: "Admin Kayit",
+        contentTitle: "Admin Kayit",
+        message: message
+    });
+};
+
 exports.postRegister=async(req,res,next)=>{
     const name=(req.body.name||"").trim();
     const surname=(req.body.surname||"").trim();
@@ -156,6 +166,49 @@ exports.postRegister=async(req,res,next)=>{
     req.session.message={text:"Kayit basarili. Giris yapabilirsiniz.",class:"success"};
     return res.redirect("login");
 }
+
+exports.postAdminRegister = async (req, res, next) => {
+    const name = (req.body.name || "").trim();
+    const surname = (req.body.surname || "").trim();
+    const email = (req.body.email || "").trim().toLowerCase();
+    const password = req.body.password || "";
+
+    if (!name || !email || !password) {
+        req.session.message = { text: "Zorunlu alanlar eksik", class: "warning" };
+        return res.redirect("admin-register");
+    }
+
+    const [existing] = await db.execute("SELECT userid FROM users WHERE email=?", [email]);
+    if (existing.length > 0) {
+        req.session.message = { text: "Email zaten kayitli", class: "warning" };
+        return res.redirect("admin-register");
+    }
+
+    try {
+        const hashed = await bcrypt.hash(password, 10);
+        const [insertRes] = await db.execute(
+            "INSERT INTO users (name, surname, email, password) VALUES (?,?,?,?)",
+            [name, surname, email, hashed]
+        );
+
+        const userId = insertRes.insertId;
+        let adminRoleId = null;
+        const [roleRows] = await db.execute("SELECT roleid FROM roles WHERE name='admin' LIMIT 1");
+        adminRoleId = roleRows[0]?.roleid;
+        if (!adminRoleId) {
+            const [roleInsert] = await db.execute("INSERT INTO roles (name) VALUES ('admin')");
+            adminRoleId = roleInsert.insertId;
+        }
+        if (userId && adminRoleId) {
+            await db.execute("INSERT IGNORE INTO user_roles (userid, roleid) VALUES (?, ?)", [userId, adminRoleId]);
+        }
+    } catch (err) {
+        return next(err);
+    }
+
+    req.session.message = { text: "Admin olusturuldu. Giris yapabilirsiniz.", class: "success" };
+    return res.redirect("login");
+};
 
     exports.signout=async(req,res)=>{
         await req.session.destroy(); //session temizle
