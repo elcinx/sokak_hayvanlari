@@ -136,14 +136,16 @@
                             <h4 class="section-title mb-3">Son Duyurular</h4>
                             <div class="list-group list-group-flush timeline-list">
                                 <% data.slice(0,5).forEach(element=>{ %>
-                                    <div class="list-group-item timeline-item">
+                                    <div class="list-group-item timeline-item d-flex gap-2">
                                         <span class="timeline-dot"></span>
-                                        <div class="fw-semibold">
-                                            <%= element.title %>
+                                        <img src="<%= element.image || '/static/img/2.jpg' %>" alt="<%= element.title %>" class="rounded" style="width:56px;height:56px;object-fit:cover;">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-semibold">
+                                                <%= element.title %>
+                                            </div>
+                                            <div class="small text-muted mb-2">Duyuru detayi icin tikla</div>
+                                            <a href="/announcements/<%=element.slug || element.id %>" class="btn btn-soft btn-sm">Detayi Gor</a>
                                         </div>
-                                        <div class="small text-muted mb-2">Duyuru detayi icin tikla</div>
-                                        <a href="/announcements/<%=element.slug%>" class="btn btn-soft btn-sm">Detayi
-                                            Gor</a>
                                     </div>
                                     <% }) %>
                             </div>
@@ -256,7 +258,6 @@
     </body>
 
 </html>
-
 
 
 
