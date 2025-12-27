@@ -1,17 +1,35 @@
 .feed-form {
-/* === ULTIMATE OVERRIDE (EOF) === */
+/* === HERO IMAGE FIX OVERRIDES (append-only) === */
+/* 1) Remove any background image layers from the hero section */
 section.hero.hero-card.hero-showcase {
-    background:
-        url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right bottom / 520px auto,
-        linear-gradient(135deg, rgba(67, 206, 162, 0.95) 0%, rgba(24, 90, 157, 0.95) 50%, rgba(102, 126, 234, 0.95) 100%) !important;
+    background: linear-gradient(135deg, var(--theme-blue-1) 0%, var(--theme-blue-2) 50%, var(--theme-blue-3) 100%) !important;
+}
+/* 2) Remove the ::before overlay inside hero-visual (if present) */
+.hero-visual::before {
+    content: none !important;
+    background: none !important;
+}
+/* 3) Ensure we show a single inline image on the right */
+.hero-cover {
+    display: block !important;
+    width: auto;
+    height: auto;
+    max-width: 520px;
+    max-height: 100%;
+}
+@media (max-width: 991.98px) {
+    .hero-cover { max-width: 360px; }
+}
+
+/* === ULTIMATE OVERRIDE (EOF) – single image only via <img>.hero-cover === */
+section.hero.hero-card.hero-showcase {
+    background: linear-gradient(135deg, var(--theme-blue-1) 0%, var(--theme-blue-2) 50%, var(--theme-blue-3) 100%) !important;
 }
 .hero-visual { background: transparent !important; }
-.hero-cover { display: none !important; }
+.hero-cover { display: block !important; }
 @media (max-width: 991.98px) {
     section.hero.hero-card.hero-showcase {
-        background:
-            url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right 12px bottom 12px / 360px auto,
-            linear-gradient(135deg, rgba(67, 206, 162, 0.95) 0%, rgba(24, 90, 157, 0.95) 50%, rgba(102, 126, 234, 0.95) 100%) !important;
+        background: linear-gradient(135deg, var(--theme-blue-1) 0%, var(--theme-blue-2) 50%, var(--theme-blue-3) 100%) !important;
     }
 }
     border-radius: 1rem;

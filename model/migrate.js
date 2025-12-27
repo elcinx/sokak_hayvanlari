@@ -238,6 +238,11 @@ async function ensureTables() {
         "DELETE FROM announcements WHERE title IN ('ONEMLI Duyuru 1', 'ÖNEMLI Duyuru 1', 'ÖNEMLİ Duyuru 1')"
     );
 
+    // Remove Black Sea (Karadeniz) sea-area feed points
+    await db.execute(
+        "DELETE FROM feed_logs WHERE lat > 41.0 AND lat < 43.0 AND lng > 27.0 AND lng < 41.0"
+    );
+
     // Make first user admin if none
     const [userRoleCount] = await db.execute("SELECT COUNT(*) AS c FROM user_roles");
     if (userRoleCount[0].c === 0) {
