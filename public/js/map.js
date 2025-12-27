@@ -64,6 +64,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const defaultSelectedText = selectedLocationInfo ? selectedLocationInfo.textContent : "";
 
     if (isAuth) {
+        // Login sonrası besleme formunu otomatik aç
+        if (sessionStorage.getItem("showFeedFormAfterLogin") === "1") {
+            sessionStorage.removeItem("showFeedFormAfterLogin");
+            if (openFeedFormBtn) {
+                openFeedFormBtn.click();
+            }
+        }
         const pending = sessionStorage.getItem("pendingFeedForm");
         if (pending) {
             try {
@@ -375,7 +382,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (openFeedFormBtn) {
-        openFeedFormBtn.addEventListener("click", () => {
+        openFeedFormBtn.addEventListener("click", (event) => {
+            if (!isAuth) {
+                // Kullanıcı giriş yapmadan besleme eklemek istiyor
+                sessionStorage.setItem("showFeedFormAfterLogin", "1");
+                window.location.href = "/auth/login?url=/";
+                return;
+            }
             if (mapSection) {
                 mapSection.scrollIntoView({ behavior: "smooth", block: "start" });
             }
