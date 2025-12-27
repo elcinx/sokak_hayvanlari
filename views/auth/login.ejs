@@ -4,7 +4,17 @@
 <body class="pet-theme">
     <div class="login-container min-vh-100 d-flex align-items-center justify-content-center">
         <div class="login-wrapper">
-            <div class="login-card p-5 shadow-lg">
+            <div class="login-tabs mb-4">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="admin">
+                        <i class="bi bi-shield-lock me-2"></i>Admin Girişi
+                    </button>
+                    <button class="tab-btn" data-tab="user">
+                        <i class="bi bi-person me-2"></i>Kullanıcı Girişi
+                    </button>
+                </div>
+            </div>
+            <div class="login-card admin-login active" id="adminTab">
                 <div class="text-center mb-4">
                     <div class="login-logo mb-3">
                         <img src="/static/kedikopek.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
@@ -79,7 +89,88 @@
                 <div class="text-center mt-4">
                     <small class="text-muted">
                         <i class="bi bi-shield-check me-1"></i>
-                        Güvenli giriş sistemi
+                        Güvenli admin giriş sistemi
+                    </small>
+                </div>
+            </div>
+            
+            <!-- User Login Card -->
+            <div class="login-card user-login" id="userTab">
+                <div class="text-center mb-4">
+                    <div class="login-logo mb-3">
+                        <img src="/static/kedikopek.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
+                    </div>
+                    <h2 class="mb-2 fw-bold text-primary">Kullanıcı Girişi</h2>
+                    <p class="text-muted">Platforma giriş yapın</p>
+                </div>
+                
+                <form action="/auth/login" method="post" class="login-form">
+                    <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                    <input type="hidden" name="role" value="user">
+                    
+                    <div class="mb-4">
+                        <label for="userEmail" class="form-label fw-semibold">
+                            <i class="bi bi-envelope me-2"></i>E-posta Adresi
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-envelope text-muted"></i>
+                            </span>
+                            <input name="email" type="email" class="form-control border-start-0" 
+                                   id="userEmail"
+                                   placeholder="kullanici@example.com" 
+                                   required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="userPassword" class="form-label fw-semibold">
+                            <i class="bi bi-lock me-2"></i>Şifre
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-lock text-muted"></i>
+                            </span>
+                            <input name="password" type="password" class="form-control border-start-0" 
+                                   id="userPassword"
+                                   placeholder="••••••••" 
+                                   required>
+                            <button class="btn btn-outline-secondary border-start-0" type="button" id="toggleUserPassword">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="userRemember" value="1" 
+                                   name="cbhatirla">
+                            <label class="form-check-label" for="userRemember">
+                                Beni hatırla
+                            </label>
+                        </div>
+                        <a href="/auth/reset-password" class="text-decoration-none text-primary small">
+                            Şifremi unuttum
+                        </a>
+                    </div>
+                    
+                    <div class="d-grid gap-3">
+                        <button type="submit" class="btn btn-primary btn-lg fw-semibold user-login-btn">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap
+                        </button>
+                        <div class="text-center">
+                            <small class="text-muted">
+                                Hesabınız yok mu? 
+                                <a href="/auth/register" class="text-primary text-decoration-none">Kayıt Ol</a>
+                            </small>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        <i class="bi bi-shield-check me-1"></i>
+                        Güvenli kullanıcı giriş sistemi
                     </small>
                 </div>
             </div>
@@ -117,13 +208,56 @@
             padding: 20px;
         }
         
+        .login-tabs {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 10px 30px rgba(26, 107, 181, 0.1);
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .tab-btn:hover {
+            background: rgba(26, 107, 181, 0.05);
+            color: var(--pet-red);
+        }
+        
+        .tab-btn.active {
+            background: var(--pet-red);
+            color: white;
+            box-shadow: 0 4px 12px rgba(26, 107, 181, 0.3);
+        }
+        
         .login-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 20px 40px rgba(26, 107, 181, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            padding: 40px;
+            display: none;
+        }
+        
+        .login-card.active {
+            display: block;
         }
         
         .login-card:hover {
@@ -231,43 +365,85 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const loginCards = document.querySelectorAll('.login-card');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetTab = this.dataset.tab;
+                    
+                    // Update buttons
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update cards
+                    loginCards.forEach(card => {
+                        card.classList.remove('active');
+                        if (card.id === targetTab + 'Tab') {
+                            card.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Password toggle for admin
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.querySelector('input[name="password"]');
             const passwordIcon = document.getElementById('passwordIcon');
-            const loginBtn = document.getElementById('loginBtn');
             
-            // Toggle password visibility
-            togglePassword.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                passwordIcon.className = type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
-            });
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    passwordIcon.className = type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+                });
+            }
             
-            // Add loading state to login button
-            loginBtn.addEventListener('click', function() {
-                if (!loginBtn.disabled) {
-                    loginBtn.disabled = true;
-                    loginBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i>Giriş Yapılıyor...';
-                    
-                    // Re-enable after 3 seconds if form hasn't submitted
-                    setTimeout(() => {
-                        if (loginBtn.disabled) {
-                            loginBtn.disabled = false;
-                            loginBtn.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap';
-                        }
-                    }, 3000);
-                }
+            // Password toggle for user
+            const toggleUserPassword = document.getElementById('toggleUserPassword');
+            const userPasswordInput = document.getElementById('userPassword');
+            
+            if (toggleUserPassword && userPasswordInput) {
+                toggleUserPassword.addEventListener('click', function() {
+                    const type = userPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    userPasswordInput.setAttribute('type', type);
+                    this.querySelector('i').className = type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+                });
+            }
+            
+            // Add loading state to login buttons
+            const loginBtns = document.querySelectorAll('.admin-login-btn, .user-login-btn');
+            
+            loginBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!btn.disabled) {
+                        btn.disabled = true;
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i>Giriş Yapılıyor...';
+                        
+                        // Re-enable after 3 seconds if form hasn't submitted
+                        setTimeout(() => {
+                            if (btn.disabled) {
+                                btn.disabled = false;
+                                btn.innerHTML = originalText;
+                            }
+                        }, 3000);
+                    }
+                });
             });
             
             // Add input validation feedback
-            const emailInput = document.querySelector('input[name="email"]');
-            emailInput.addEventListener('blur', function() {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (this.value && !emailRegex.test(this.value)) {
-                    this.classList.add('is-invalid');
-                } else {
-                    this.classList.remove('is-invalid');
-                }
+            const emailInputs = document.querySelectorAll('input[type="email"]');
+            emailInputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (this.value && !emailRegex.test(this.value)) {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                    }
+                });
             });
         });
     </script>
