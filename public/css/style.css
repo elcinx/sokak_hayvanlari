@@ -287,6 +287,8 @@
     border-radius: 26px;
     overflow: hidden;
     background: linear-gradient(135deg, var(--theme-blue-1) 0%, var(--theme-blue-2) 50%, var(--theme-blue-3) 100%);
+    max-width: 420px;
+    justify-self: end;
 }
 .hero-cover {
     position: absolute;
@@ -294,7 +296,8 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: top left;
+    object-position: center left;
+    transform: scale(1.08);
 }
 .hero-gradient {
     position: absolute;
