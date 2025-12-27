@@ -289,6 +289,40 @@ body.pet-theme::before {
     backdrop-filter: blur(8px);
 }
 
+/* Dashboard card style */
+.dashboard-row {
+    align-items: stretch;
+}
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(24, 90, 157, 0.18);
+    border-radius: 24px;
+    padding: 28px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(24, 90, 157, 0.15);
+}
+.dashboard-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(67, 206, 162, 0.15);
+    font-size: 28px;
+}
+.dashboard-value {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #0f2c3f;
+}
+.dashboard-label {
+    font-size: 0.95rem;
+    color: #5c6f7c;
+    font-weight: 600;
+}
+
 .hero-eyebrow {
     letter-spacing: 0.16em;
     text-transform: uppercase;

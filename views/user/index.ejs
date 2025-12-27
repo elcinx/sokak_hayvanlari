@@ -61,64 +61,29 @@
                     </div>
                 </section>
 
-                <section class="row g-3 mb-4 stats-row">
-                    <div class="col-6 col-md-4 col-lg-2">
-                        <div class="stat-card p-3 h-100 stat-badge stat-food">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="stat-icon">P</span>
-                                <span class="small text-muted">Toplam Besleme</span>
-                            </div>
-                            <div class="display-6 fw-bold mt-2" id="totalFeeds">
-                                <%= summary.totalFeeds %>
-                            </div>
-                        </div>
+                            <section class="row g-4 mb-4 stats-row dashboard-row">
+                <div class="col-12 col-md-4">
+                    <div class="dashboard-card h-100">
+                        <div class="dashboard-icon"><span>??</span></div>
+                        <div class="dashboard-value" id="activePoints"><%= summary.activePoints %></div>
+                        <div class="dashboard-label">Aktif Nokta</div>
                     </div>
-                    <div class="col-6 col-md-4 col-lg-2">
-                        <div class="stat-card p-3 h-100 stat-badge stat-pin">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="stat-icon">L</span>
-                                <span class="small text-muted">Aktif Nokta</span>
-                            </div>
-                            <div class="display-6 fw-bold mt-2" id="activePoints">
-                                <%= summary.activePoints %>
-                            </div>
-                        </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="dashboard-card h-100">
+                        <div class="dashboard-icon"><span>??</span></div>
+                        <div class="dashboard-value" id="onlineUsers">-</div>
+                        <div class="dashboard-label">Online Kullanici</div>
                     </div>
-                    <div class="col-6 col-md-4 col-lg-2">
-                        <div class="stat-card p-3 h-100 stat-badge stat-calendar">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="stat-icon">D</span>
-                                <span class="small text-muted">Bugun Besleme</span>
-                            </div>
-                            <div class="display-6 fw-bold mt-2" id="todayFeeds">
-                                <%= summary.todayFeeds %>
-                            </div>
-                        </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="dashboard-card h-100">
+                        <div class="dashboard-icon"><span>??</span></div>
+                        <div class="dashboard-value" id="todayVisits"><%= summary.todayVisits || '-' %></div>
+                        <div class="dashboard-label">Bugunku Ziyaretci</div>
                     </div>
-                    <div class="col-6 col-md-4 col-lg-2">
-                        <div class="stat-card p-3 h-100 stat-badge stat-online">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="stat-icon">O</span>
-                                <span class="small text-muted">Online</span>
-                            </div>
-                            <div class="display-6 fw-bold mt-2" id="onlineUsers">-</div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4 col-lg-2">
-                        <div class="stat-card p-3 h-100 stat-badge stat-visit">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="stat-icon">V</span>
-                                <span class="small text-muted">Ziyaretci / Bugun</span>
-                            </div>
-                            <div class="h3 fw-bold mt-2 mb-0" id="totalVisits">
-                                <%= summary.totalVisits || '-' %>
-                            </div>
-                            <div class="small text-muted">Bugun: <span id="todayVisits">
-                                    <%= summary.todayVisits || '-' %>
-                                </span></div>
-                        </div>
-                    </div>
-                </section>
+                </div>
+            </section>
 
                 <section class="row g-4">
                     <div class="col-lg-8">
@@ -331,5 +296,6 @@
     </body>
 
 </html>
+
 
 
