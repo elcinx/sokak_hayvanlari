@@ -17,7 +17,7 @@
             <div class="login-card admin-login active" id="adminTab">
                 <div class="text-center mb-4">
                     <div class="login-logo mb-3">
-                        <img src="/static/kedikopek.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
+                        <img src="/static/img/kedikopek.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
                     </div>
                     <h2 class="mb-2 fw-bold text-primary">Admin Girişi</h2>
                     <p class="text-muted">Yönetim paneli için giriş yapınız</p>
@@ -25,6 +25,7 @@
                 
                 <form action="/auth/login" method="post" class="login-form">
                     <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                    <input type="hidden" name="role" value="admin">
                     
                     <% if (typeof(message)!="undefined") { %>
                         <div class="alert alert-<%=message.class%> d-flex align-items-center" role="alert">
@@ -80,8 +81,8 @@
                     </div>
                     
                     <div class="d-grid gap-3">
-                        <button type="submit" class="btn btn-primary btn-lg fw-semibold" id="loginBtn">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap
+                        <button type="submit" class="btn btn-primary btn-lg fw-semibold admin-login-btn" id="loginBtn">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Admin Girişi
                         </button>
                     </div>
                 </form>
@@ -98,7 +99,7 @@
             <div class="login-card user-login" id="userTab">
                 <div class="text-center mb-4">
                     <div class="login-logo mb-3">
-                        <img src="/static/kedikopek.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
+                        <img src="/static/img/kedikopek.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
                     </div>
                     <h2 class="mb-2 fw-bold text-primary">Kullanıcı Girişi</h2>
                     <p class="text-muted">Platforma giriş yapın</p>
