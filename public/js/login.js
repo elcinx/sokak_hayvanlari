@@ -48,11 +48,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  var loginBtns = document.querySelectorAll('.admin-login-btn, .user-login-btn');
+  var loginForms = document.querySelectorAll('form.login-form');
 
-  loginBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      if (!btn.disabled) {
+  loginForms.forEach(function (form) {
+    form.addEventListener('submit', function () {
+      var btn = form.querySelector('button[type="submit"]');
+      if (btn && !btn.disabled) {
         btn.disabled = true;
         var originalText = btn.innerHTML;
         btn.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i>Giris Yapiliyor...';
