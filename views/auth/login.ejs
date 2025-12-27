@@ -86,6 +86,37 @@
                         </button>
                     </div>
                 </form>
+
+                <div class="admin-create-card mt-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="admin-create-icon me-2">🛡️</div>
+                        <h6 class="mb-0 fw-semibold">Yeni Admin Olustur</h6>
+                    </div>
+                    <form method="post" action="/admin/users" class="admin-create-form">
+                        <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <label class="form-label small mb-1">Ad</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small mb-1">Soyad</label>
+                                <input type="text" name="surname" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small mb-1">E-posta</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small mb-1">Sifre</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary w-100 mt-3">
+                            Yeni Admin Olustur
+                        </button>
+                    </form>
+                </div>
                 
                 <div class="text-center mt-4">
                     <small class="text-muted">
@@ -358,6 +389,23 @@
         
         .text-primary {
             color: var(--pet-red) !important;
+        }
+
+        .admin-create-card {
+            border: 1px dashed rgba(26, 107, 181, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .admin-create-icon {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 107, 181, 0.1);
+            border-radius: 10px;
         }
         
         @media (max-width: 480px) {
