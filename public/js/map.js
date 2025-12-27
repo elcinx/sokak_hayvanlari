@@ -108,6 +108,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const filters = document.querySelectorAll(".filter-status");
     filters.forEach((f) => f.addEventListener("change", applyFilters));
     function applyFilters() {
+        if (!filters || filters.length === 0) {
+            feedMarkers.forEach((m) => feedsLayer.addLayer(m));
+            return;
+        }
         const active = Array.from(filters)
             .filter((f) => f.checked)
             .map((f) => f.value);
