@@ -94,7 +94,7 @@ exports.postLogin=async(req,res,next)=>{
         }
         const redirectUrl = (req.session.role === "admin" || req.session.role === "moderator")
             ? (req.query.url || "/admin")
-            : "/";
+            : (req.query.url || "/");
         return req.session.save(() => res.redirect(redirectUrl));
     }
     
