@@ -2,6 +2,14 @@ document.addEventListener('DOMContentLoaded', function () {
   var tabBtns = document.querySelectorAll('.tab-btn');
   var loginCards = document.querySelectorAll('.login-card');
 
+  // Varsayilan aktif sekme URL parametrelerinden
+  const params = new URLSearchParams(window.location.search);
+  const initialTab = params.get('tab');
+  if (initialTab === 'user') {
+    tabBtns.forEach(function(b){ if(b.dataset.tab==='user'){ b.classList.add('active'); } else { b.classList.remove('active'); }});
+    loginCards.forEach(function(card){ card.classList.remove('active'); if(card.id==='userTab'){ card.classList.add('active'); }});
+  }
+
   tabBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var targetTab = this.dataset.tab;

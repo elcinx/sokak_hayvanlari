@@ -386,7 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!isAuth) {
                 // Kullanıcı giriş yapmadan besleme eklemek istiyor
                 sessionStorage.setItem("showFeedFormAfterLogin", "1");
-                window.location.href = "/auth/login?url=/";
+                window.location.href = "/auth/login?tab=user&url=/";
                 return;
             }
             if (mapSection) {
@@ -404,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!isAuth) {
                 showAlert(feedErrorAlert, "Besleme eklemek icin giris yapmalisiniz.");
                 sessionStorage.setItem("pendingFeedForm", JSON.stringify({"lat": selectedLat, "lng": selectedLng, "note": (feedNote && feedNote.value) ? feedNote.value : ""}));
-                window.location.href = "/auth/login?url=/";
+                window.location.href = "/auth/login?tab=user&url=/";
                 return;
             }
 
