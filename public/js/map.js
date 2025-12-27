@@ -160,6 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function applyFilters() {
         if (!filters || filters.length === 0) {
             feedMarkers.forEach((m) => feedsLayer.addLayer(m));
+            updateActivePointCounter();
             return;
         }
         const active = Array.from(filters)
@@ -173,6 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 feedsLayer.removeLayer(m);
             }
         });
+        updateActivePointCounter();
     }
 
     // Heatmap toggle
@@ -323,6 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 map.setView([20, 0], 2);
             }
         }
+        updateActivePointCounter();
     }
 
     function updateSelectedText() {
@@ -466,5 +469,16 @@ document.addEventListener("DOMContentLoaded", () => {
         showAlert(feedErrorAlert, "");
         showAlert(feedSuccessAlert, "");
         setSubmitEnabled(true);
+    }
+
+    function updateActivePointCounter() {
+        const el = document.getElementById("activePoints");
+        if (!el) return;
+        // feedsLayer üzerinde şu anda görünür olan marker sayısı
+        let visible = 0;
+        feedMarkers.forEach((m) => {
+            if (feedsLayer.hasLayer(m)) visible++;
+        });
+        el.innerText = String(visible);
     }
 });
