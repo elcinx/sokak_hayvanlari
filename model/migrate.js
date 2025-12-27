@@ -234,6 +234,9 @@ async function ensureTables() {
     await db.execute(
         "DELETE FROM announcements WHERE title REGEXP '^Duyuru [0-9]+' OR title REGEXP '^ONEMLI Duyuru [0-9]+'"
     );
+    await db.execute(
+        "DELETE FROM announcements WHERE title IN ('ONEMLI Duyuru 1', 'ÖNEMLI Duyuru 1', 'ÖNEMLİ Duyuru 1')"
+    );
 
     // Make first user admin if none
     const [userRoleCount] = await db.execute("SELECT COUNT(*) AS c FROM user_roles");
