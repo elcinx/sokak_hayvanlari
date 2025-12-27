@@ -1,95 +1,20 @@
-.feed-form {
-/* === HERO IMAGE FIX OVERRIDES (append-only) === */
-/* 1) Remove any background image layers from the hero section */
-section.hero.hero-card.hero-showcase {
-    background: linear-gradient(135deg, var(--theme-blue-1) 0%, var(--theme-blue-2) 50%, var(--theme-blue-3) 100%) !important;
-}
-/* 2) Remove the ::before overlay inside hero-visual (if present) */
-.hero-visual::before {
-    content: none !important;
-    background: none !important;
-}
-/* 3) Ensure we show a single inline image on the right */
-.hero-cover {
-    display: block !important;
-    width: auto;
-    height: auto;
-    max-width: 520px;
-    max-height: 100%;
-}
-@media (max-width: 991.98px) {
-    .hero-cover { max-width: 360px; }
-}
-
-/* === ULTIMATE OVERRIDE (EOF) – single image only via <img>.hero-cover === */
-section.hero.hero-card.hero-showcase {
-    background: linear-gradient(135deg, var(--theme-blue-1) 0%, var(--theme-blue-2) 50%, var(--theme-blue-3) 100%) !important;
-}
-.hero-visual { background: transparent !important; }
-.hero-cover { display: block !important; }
-@media (max-width: 991.98px) {
-    section.hero.hero-card.hero-showcase {
-        background: linear-gradient(135deg, var(--theme-blue-1) 0%, var(--theme-blue-2) 50%, var(--theme-blue-3) 100%) !important;
-    }
-}
-    border-radius: 1rem;
-    background: #ffffff;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(198, 40, 40, 0.1);
-}
-
-/* Overlay PNG inside the right hero box to guarantee visibility */
 .hero-visual {
     position: relative;
+    padding: 8px 12px;
 }
-.hero-visual::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right bottom / 520px auto;
-    pointer-events: none;
-}
-@media (max-width: 991.98px) {
-    .hero-visual::before { background-size: 360px auto; background-position: right 12px bottom 12px; }
-}
-/* === FINAL OVERRIDE: Hero background image should always show === */
-section.hero.hero-card.hero-showcase {
-    /* Put IMAGE first (top layer), gradient second (bottom layer) */
-    background:
-        url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right bottom / 520px auto,
-        linear-gradient(135deg, rgba(67, 206, 162, 0.95) 0%, rgba(24, 90, 157, 0.95) 50%, rgba(102, 126, 234, 0.95) 100%) !important;
-}
-.hero-visual { background: transparent !important; }
-.hero-cover { display: none !important; }
-@media (max-width: 991.98px) {
-    section.hero.hero-card.hero-showcase {
-        background:
-            url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right 12px bottom 12px / 360px auto,
-            linear-gradient(135deg, rgba(67, 206, 162, 0.95) 0%, rgba(24, 90, 157, 0.95) 50%, rgba(102, 126, 234, 0.95) 100%) !important;
-    }
-}
-
-/* === Hero background image override (kept consistent) === */
-section.hero.hero-card.hero-showcase {
-    background:
-        url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right bottom / 520px auto,
-        linear-gradient(135deg, rgba(67, 206, 162, 0.95) 0%, rgba(24, 90, 157, 0.95) 50%, rgba(102, 126, 234, 0.95) 100%) !important;
-}
-
-/* Hero right box should not cover background image */
-.hero-visual {
-    background: transparent !important;
-}
-
-/* Hide inline hero image if present */
 .hero-cover {
-    display: none !important;
+    position: absolute;
+    inset: 8px 12px;
+    width: calc(100% - 24px);
+    height: calc(100% - 16px);
+    object-fit: contain;
+    object-position: bottom right;
 }
-
 @media (max-width: 991.98px) {
-    section.hero.hero-card.hero-showcase {
-        background-size: cover, 360px auto;
-        background-position: center, right 12px bottom 12px;
+    .hero-cover {
+        inset: 8px;
+        width: calc(100% - 16px);
+        height: calc(100% - 16px);
     }
 }
 
