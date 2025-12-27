@@ -92,11 +92,8 @@ exports.postLogin=async(req,res,next)=>{
                 res.clearCookie("password"); 
             }
         }
-        if (req.session.role === "admin" || req.session.role === "moderator") {
-            const url=req.query.url || "/admin";
-            return res.redirect(url);
-        }
-        return res.redirect("/");
+        const redirectUrl = (req.session.role === "admin" || req.session.role === "moderator") ? (req.query.url || "/admin") : "/";
+        return req.session.save(() => res.redirect(redirectUrl));
     }
     
     //şifre uyuşmuyorsa
@@ -164,6 +161,8 @@ exports.postRegister=async(req,res,next)=>{
         await req.session.destroy(); //session temizle
         res.redirect("/auth/login"); //ana sayfaya git
     }
+
+
 
 
 
