@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!mapEl || typeof L === "undefined") return;
 
     const isAuth = document.body.dataset.isAuth === "true";
-
     // Online kullanici sayisi
     if (typeof io === "function") {
         const socket = io();
@@ -63,6 +62,57 @@ document.addEventListener("DOMContentLoaded", () => {
     const feedSubmitBtn = document.querySelector(".feed-submit-btn");
     const mapSection = document.getElementById("mapSection");
     const defaultSelectedText = selectedLocationInfo ? selectedLocationInfo.textContent : "";
+
+    if (isAuth) {
+        const pending = sessionStorage.getItem("pendingFeedForm");
+        if (pending) {
+            try {
+                const data = JSON.parse(pending);
+                if (Number.isFinite(data.lat) && Number.isFinite(data.lng)) {
+                    selectedLat = data.lat;
+                    selectedLng = data.lng;
+                    if (feedNote && data.note) feedNote.value = data.note;
+                    setSelectedLocation(selectedLat, selectedLng);
+                    // Otomatik kaydet
+                    if (feedForm) {
+                        if (feedLatInput) feedLatInput.value = selectedLat.toFixed(6);
+                        if (feedLngInput) feedLngInput.value = selectedLng.toFixed(6);
+                        const formData = new FormData(feedForm);
+                        const action = feedForm.getAttribute("action") || "/api/feeds";
+                        fetch(action, {
+                            method: "POST",
+                            body: formData,
+                            credentials: "same-origin",
+                        })
+                            .then(async (res) => {
+                                const ct = res.headers.get("content-type") || "";
+                                if (res.redirected || ct.includes("text/html")) {
+                                    throw new Error("Giris yapmalisiniz.");
+                                }
+                                const d = await res.json().catch(() => ({}));
+                                if (!res.ok) {
+                                    const msg = d.error || "Kaydetme basarisiz";
+                                    throw new Error(`${res.status} ${msg}`);
+                                }
+                                return d;
+                            })
+                            .then(() => {
+                                showAlert(feedSuccessAlert, "Besleme kaydi eklendi.");
+                                resetFeedForm();
+                                return loadFeeds({ fitBounds: false });
+                            })
+                            .catch(() => {})
+                            .finally(() => {
+                                // Artık bekleyen veri yok
+                                sessionStorage.removeItem("pendingFeedForm");
+                            });
+                    } else {
+                        sessionStorage.removeItem("pendingFeedForm");
+                    }
+                }
+            } catch (e) {}
+        }
+    }
 
     loadFeeds({ fitBounds: true });
 
@@ -337,9 +387,24 @@ document.addEventListener("DOMContentLoaded", () => {
             event.preventDefault();
             if (!isAuth) {
                 showAlert(feedErrorAlert, "Besleme eklemek icin giris yapmalisiniz.");
+                sessionStorage.setItem("pendingFeedForm", JSON.stringify({"lat": selectedLat, "lng": selectedLng, "note": (feedNote && feedNote.value) ? feedNote.value : ""}));
                 window.location.href = "/auth/login?url=/";
                 return;
             }
+
+            try {
+                const pending = sessionStorage.getItem("pendingFeedForm");
+                if (pending) {
+                    const data = JSON.parse(pending);
+                    if (Number.isFinite(data.lat) && Number.isFinite(data.lng)) {
+                        selectedLat = data.lat;
+                        selectedLng = data.lng;
+                        if (feedNote && data.note) feedNote.value = data.note;
+                        setSelectedLocation(selectedLat, selectedLng);
+                        sessionStorage.removeItem("pendingFeedForm");
+                    }
+                }
+            } catch (e) {}
             if (!Number.isFinite(selectedLat) || !Number.isFinite(selectedLng)) {
                 showAlert(feedErrorAlert, "Once haritada bir nokta sec.");
                 return;

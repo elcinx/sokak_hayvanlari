@@ -92,7 +92,9 @@ exports.postLogin=async(req,res,next)=>{
                 res.clearCookie("password"); 
             }
         }
-        const redirectUrl = (req.session.role === "admin" || req.session.role === "moderator") ? (req.query.url || "/admin") : "/";
+        const redirectUrl = (req.session.role === "admin" || req.session.role === "moderator")
+            ? (req.query.url || "/admin")
+            : "/";
         return req.session.save(() => res.redirect(redirectUrl));
     }
     

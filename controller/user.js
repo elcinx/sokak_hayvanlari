@@ -24,7 +24,7 @@ exports.userHome = async (req, res, next) => {
         const [announcements] = await db.execute("SELECT * FROM announcements WHERE is_active=1 ORDER BY publish_at DESC LIMIT 10");
         const orderedAnnouncements = orderAnnouncements(announcements);
         const [[totalFeeds]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs");
-        const [[activePoints]] = await db.execute("SELECT COUNT(DISTINCT CONCAT(lat, ',', lng)) AS c FROM feed_logs");
+        const [[activePoints]] = await db.execute("SELECT COUNT(DISTINCT CONCAT(ROUND(lat,4), ',', ROUND(lng,4))) AS c FROM feed_logs");
         const [[todayFeeds]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs WHERE DATE(created_at)=CURDATE()");
         const [galleryRaw] = await db.execute(
             `SELECT id, photo_url, note AS title FROM feed_logs 

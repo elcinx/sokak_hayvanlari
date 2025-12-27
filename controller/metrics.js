@@ -13,7 +13,10 @@ exports.getOnlineCount = () => {
 exports.summary = async (req, res, next) => {
     try {
         const [[totalFeeds]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs");
-        const [[activePoints]] = await db.execute("SELECT COUNT(DISTINCT CONCAT(lat, ',', lng)) AS c FROM feed_logs");
+        const [[activePoints]] = await db.execute(
+            // Nokta sayısını daha doğru hesaplamak için koordinatları 4 ondalık basamağa yuvarla
+            "SELECT COUNT(*) AS c FROM (SELECT 1 FROM feed_logs GROUP BY ROUND(lat,4), ROUND(lng,4)) t"
+        );
         const [[todayFeeds]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs WHERE DATE(created_at)=CURDATE()");
         const [[totalVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs");
         const [[todayVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs WHERE DATE(visited_at)=CURDATE()");
