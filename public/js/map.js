@@ -474,11 +474,28 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateActivePointCounter() {
         const el = document.getElementById("activePoints");
         if (!el) return;
-        // Görünür marker adedi
+        // Viewport içinde ve feedsLayer'da olan marker adedi
+        const bounds = map.getBounds();
         let visible = 0;
         feedMarkers.forEach((m) => {
-            if (feedsLayer.hasLayer(m)) visible++;
+            if (!feedsLayer.hasLayer(m)) return;
+            const ll = m.getLatLng();
+            // Secili marker ile ayni lokasyondaki (gecici isaret) sayilmasin
+            if (selectedMarker) {
+                const sll = selectedMarker.getLatLng();
+                if (
+                    Number(ll.lat).toFixed(6) === Number(sll.lat).toFixed(6) &&
+                    Number(ll.lng).toFixed(6) === Number(sll.lng).toFixed(6)
+                ) {
+                    return;
+                }
+            }
+            if (bounds && bounds.contains(ll)) visible++;
         });
         el.innerText = String(visible);
     }
+
+    // Harita hareketlerinde sayaç güncelle
+    map.on("moveend", updateActivePointCounter);
+    map.on("zoomend", updateActivePointCounter);
 });
