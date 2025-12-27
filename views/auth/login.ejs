@@ -88,34 +88,35 @@
                 </form>
 
                 <div class="admin-create-card mt-4">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="admin-create-icon me-2">🛡️</div>
-                        <h6 class="mb-0 fw-semibold">Yeni Admin Olustur</h6>
+                    <button class="btn btn-outline-primary w-100 admin-create-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#adminCreateCollapse" aria-expanded="false" aria-controls="adminCreateCollapse">
+                        <span class="admin-create-icon me-2">🛡️</span>Yeni Admin Olustur
+                    </button>
+                    <div class="collapse mt-3" id="adminCreateCollapse">
+                        <form method="post" action="/admin/users" class="admin-create-form">
+                            <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <label class="form-label small mb-1">Ad</label>
+                                    <input type="text" name="name" class="form-control" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small mb-1">Soyad</label>
+                                    <input type="text" name="surname" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small mb-1">E-posta</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small mb-1">Sifre</label>
+                                    <input type="password" name="password" class="form-control" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary w-100 mt-3">
+                                Yeni Admin Olustur
+                            </button>
+                        </form>
                     </div>
-                    <form method="post" action="/admin/users" class="admin-create-form">
-                        <input type="hidden" name="_csrf" value="<%=csrfToken %>">
-                        <div class="row g-2">
-                            <div class="col-12">
-                                <label class="form-label small mb-1">Ad</label>
-                                <input type="text" name="name" class="form-control" required>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label small mb-1">Soyad</label>
-                                <input type="text" name="surname" class="form-control">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label small mb-1">E-posta</label>
-                                <input type="email" name="email" class="form-control" required>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label small mb-1">Sifre</label>
-                                <input type="password" name="password" class="form-control" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-outline-primary w-100 mt-3">
-                            Yeni Admin Olustur
-                        </button>
-                    </form>
                 </div>
                 
                 <div class="text-center mt-4">
@@ -406,6 +407,13 @@
             justify-content: center;
             background: rgba(26, 107, 181, 0.1);
             border-radius: 10px;
+        }
+
+        .admin-create-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
         
         @media (max-width: 480px) {
