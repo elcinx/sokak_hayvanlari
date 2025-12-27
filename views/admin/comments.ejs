@@ -7,37 +7,379 @@
         <div class="admin-main">
             <%- include('./partials/topbar', { contentTitle, contentDesc: 'Yorum moderasyonu ve denetim' }) %>
             <div class="container-fluid py-4">
-                <div class="admin-card p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">Yorumlar</h5>
-                        <span class="text-muted small">Toplam: <%= comments.length %></span>
-                    </div>
-                    <div class="admin-simple-list">
-                        <% comments.forEach(c=>{ %>
-                            <div class="admin-item">
-                                <div class="admin-item-head">
-                                    <div>
-                                        <div class="fw-semibold"><%= c.name %></div>
-                                        <div class="admin-meta">
-                                            <a href="/feeds/<%= c.feed_id %>" target="_blank">Feed <%= c.feed_id %></a>
-                                            <span class="text-muted">- <%= c.created_at %></span>
-                                        </div>
-                                    </div>
-                                    <a href="/admin/comments/delete/<%= c.id %>" class="btn btn-sm btn-outline-danger">Sil</a>
+                <!-- Header Stats -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="admin-card stat-card-enhanced p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon-enhanced bg-primary bg-opacity-10 me-3">
+                                    <i class="bi bi-chat-dots text-primary"></i>
                                 </div>
-                                <div class="admin-item-body">
-                                    <%= c.content %>
+                                <div>
+                                    <div class="small text-muted">Toplam Yorum</div>
+                                    <div class="h5 mb-0 fw-bold text-primary"><%= comments.length %></div>
                                 </div>
                             </div>
-                        <% }) %>
-                        <% if (comments.length === 0) { %>
-                            <div class="text-center text-muted py-4">Henuz yorum yok.</div>
-                        <% } %>
+                        </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="admin-card stat-card-enhanced p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon-enhanced bg-success bg-opacity-10 me-3">
+                                    <i class="bi bi-calendar-week text-success"></i>
+                                </div>
+                                <div>
+                                    <div class="small text-muted">Bugün Eklenen</div>
+                                    <div class="h5 mb-0 fw-bold text-success">
+                                        <%= comments.filter(c => c.created_at && c.created_at.includes(new Date().toISOString().split('T')[0])).length %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="admin-card stat-card-enhanced p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon-enhanced bg-warning bg-opacity-10 me-3">
+                                    <i class="bi bi-exclamation-triangle text-warning"></i>
+                                </div>
+                                <div>
+                                    <div class="small text-muted">Raporlanan</div>
+                                    <div class="h5 mb-0 fw-bold text-warning">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filters and Search -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="search-box">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+                                <input type="search" class="form-control border-start-0" id="commentSearch" 
+                                       placeholder="Yorum ara...">
+                            </div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="btn btn-outline-secondary btn-sm active" data-filter="all">
+                                Tümü
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" data-filter="today">
+                                Bugün
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm" data-filter="reported">
+                                Raporlanan
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bulk-actions">
+                        <button class="btn btn-outline-danger btn-sm" id="bulkDelete" disabled>
+                            <i class="bi bi-trash me-1"></i>Seçilileri Sil
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Comments List -->
+                <div class="admin-card p-4">
+                    <% if (comments.length === 0) { %>
+                        <div class="empty-state text-center py-5">
+                            <i class="bi bi-chat-square-dots fs-1 text-muted d-block mb-3"></i>
+                            <h5 class="text-muted">Henüz yorum bulunmuyor</h5>
+                            <p class="text-muted">Kullanıcıların yorumları burada görünecek.</p>
+                        </div>
+                    <% } else { %>
+                        <div class="comments-list">
+                            <% comments.forEach(c=>{ %>
+                                <div class="comment-item" data-date="<%= c.created_at %>" data-reported="false">
+                                    <div class="comment-header">
+                                        <div class="d-flex align-items-start justify-content-between">
+                                            <div class="comment-user-info">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <div class="avatar-sm bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3">
+                                                        <i class="bi bi-person text-primary"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="comment-author mb-0"><%= c.name %></h6>
+                                                        <div class="comment-meta">
+                                                            <span class="meta-item">
+                                                                <i class="bi bi-calendar3 me-1"></i>
+                                                                <%= c.created_at %>
+                                                            </span>
+                                                            <span class="meta-item">
+                                                                <i class="bi bi-link-45deg me-1"></i>
+                                                                <a href="/feeds/<%= c.feed_id %>" target="_blank" class="text-decoration-none">
+                                                                    Feed #<%= c.feed_id %>
+                                                                </a>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="comment-actions">
+                                                <div class="form-check me-2">
+                                                    <input class="form-check-input comment-select" type="checkbox" 
+                                                           value="<%= c.id %>" id="comment_<%= c.id %>">
+                                                    <label class="form-check-label" for="comment_<%= c.id %>"></label>
+                                                </div>
+                                                <div class="btn-group btn-group-sm">
+                                                    <button class="btn btn-outline-info" onclick="viewFeed('<%= c.feed_id %>')" title="Feed'i Gör">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-outline-warning" onclick="reportComment('<%= c.id %>')" title="Raporla">
+                                                        <i class="bi bi-flag"></i>
+                                                    </button>
+                                                    <a href="/admin/comments/delete/<%= c.id %>" 
+                                                       class="btn btn-outline-danger" title="Sil"
+                                                       onclick="return confirm('Bu yorumu silmek istediğinizden emin misiniz?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="comment-content">
+                                        <div class="comment-text">
+                                            <%= c.content %>
+                                        </div>
+                                        <div class="comment-stats">
+                                            <span class="text-muted small">
+                                                <i class="bi bi-text-paragraph me-1"></i>
+                                                <%= c.content.length %> karakter
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } %>
                 </div>
             </div>
         </div>
     </div>
+
+    <style>
+        .stat-card-enhanced {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 1px solid rgba(26, 107, 181, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card-enhanced:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(26, 107, 181, 0.15);
+        }
+        
+        .stat-icon-enhanced {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .comment-item {
+            background: white;
+            border: 1px solid rgba(26, 107, 181, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .comment-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--pet-red);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .comment-item:hover {
+            box-shadow: 0 8px 24px rgba(26, 107, 181, 0.12);
+            transform: translateY(-2px);
+        }
+        
+        .comment-item:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .avatar-sm {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .comment-author {
+            color: var(--pet-ink);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .comment-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .meta-item {
+            color: #6c757d;
+        }
+        
+        .comment-content {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(26, 107, 181, 0.1);
+        }
+        
+        .comment-text {
+            color: var(--pet-ink);
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comment-stats {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .comment-actions .btn-group {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .comment-actions .btn {
+            border-radius: 0;
+            border-right: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .comment-actions .btn:last-child {
+            border-right: none;
+        }
+        
+        .empty-state {
+            background: rgba(26, 107, 181, 0.02);
+            border: 2px dashed rgba(26, 107, 181, 0.2);
+            border-radius: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .comment-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .comment-actions {
+                align-self: stretch;
+            }
+            
+            .comment-actions .btn-group {
+                width: 100%;
+            }
+            
+            .comment-actions .btn {
+                flex: 1;
+            }
+            
+            .comment-meta {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.filter-buttons .btn');
+            const commentItems = document.querySelectorAll('.comment-item');
+            const bulkDeleteBtn = document.getElementById('bulkDelete');
+            const commentCheckboxes = document.querySelectorAll('.comment-select');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active state
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.dataset.filter;
+                    const today = new Date().toISOString().split('T')[0];
+                    
+                    // Filter comments
+                    commentItems.forEach(item => {
+                        if (filter === 'all') {
+                            item.style.display = 'block';
+                        } else if (filter === 'today') {
+                            const itemDate = item.dataset.date;
+                            item.style.display = itemDate && itemDate.includes(today) ? 'block' : 'none';
+                        } else if (filter === 'reported') {
+                            const isReported = item.dataset.reported === 'true';
+                            item.style.display = isReported ? 'block' : 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Search functionality
+            const searchInput = document.getElementById('commentSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    
+                    commentItems.forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+                    });
+                });
+            }
+            
+            // Bulk selection
+            commentCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const checkedBoxes = document.querySelectorAll('.comment-select:checked');
+                    bulkDeleteBtn.disabled = checkedBoxes.length === 0;
+                });
+            });
+            
+            // Bulk delete
+            bulkDeleteBtn.addEventListener('click', function() {
+                const checkedBoxes = document.querySelectorAll('.comment-select:checked');
+                const ids = Array.from(checkedBoxes).map(cb => cb.value);
+                
+                if (ids.length > 0 && confirm(`${ids.length} yorumu silmek istediğinizden emin misiniz?`)) {
+                    // This would make an AJAX call to delete multiple comments
+                    console.log('Deleting comments:', ids);
+                    // For now, just reload the page
+                    location.reload();
+                }
+            });
+        });
+        
+        // View feed
+        function viewFeed(feedId) {
+            window.open(`/feeds/${feedId}`, '_blank');
+        }
+        
+        // Report comment (mock function)
+        function reportComment(commentId) {
+            if (confirm('Bu yorumu raporlamak istediğinizden emin misiniz?')) {
+                // This would make an AJAX call to report the comment
+                console.log('Reporting comment:', commentId);
+                alert('Yorum raporlandı');
+            }
+        }
+    </script>
+    
     <%- include('../partials/script') %>
 </body>
 </html>

@@ -5,37 +5,117 @@
     <div class="admin-wrapper">
         <%- include('./partials/sidebar', { activePage: 'announcements' }) %>
         <div class="admin-main">
-            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Duyurulari yonet' }) %>
+            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Duyuruları yönetin' }) %>
             <div class="container-fluid py-4">
-                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-                    <div class="input-group" style="max-width:280px;">
-                        <span class="input-group-text">Ara</span>
-                        <input type="search" class="form-control" id="adminAncSearch" placeholder="Baslik ara...">
+                <!-- Header Actions -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="search-box">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+                                <input type="search" class="form-control border-start-0" id="adminAncSearch" 
+                                       placeholder="Duyuru ara...">
+                            </div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="btn btn-outline-secondary btn-sm active" data-filter="all">
+                                Tümü (<%= data.length %>)
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" data-filter="active">
+                                Aktif
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm" data-filter="passive">
+                                Pasif
+                            </button>
+                        </div>
                     </div>
-                    <a href="/admin/add/anc" class="btn btn-pet">Yeni Duyuru</a>
+                    <a href="/admin/add/anc" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Yeni Duyuru
+                    </a>
                 </div>
-                <div class="admin-card p-3">
-                    <div class="admin-simple-list" id="adminAncTable">
+                
+                <!-- Announcements List -->
+                <div class="admin-card p-4">
+                    <div class="announcements-list" id="adminAncTable">
                         <% data.forEach((element,index) => { %>
-                            <div class="admin-item">
-                                <div class="admin-item-head">
-                                    <div>
-                                        <div class="fw-semibold"><%= element.title %></div>
-                                        <div class="admin-meta">
-                                            <span class="badge badge-soft"><%= element.category || 'Genel' %></span>
-                                            <span class="text-muted">- <%= element.publish_at %></span>
-                                            <span class="text-muted">- <%= element.is_active ? 'Aktif' : 'Pasif' %></span>
+                            <div class="announcement-item" data-status="<%= element.is_active ? 'active' : 'passive' %>">
+                                <div class="announcement-header">
+                                    <div class="d-flex align-items-start justify-content-between">
+                                        <div class="announcement-content">
+                                            <h5 class="announcement-title">
+                                                <i class="bi bi-megaphone text-primary me-2"></i>
+                                                <%= element.title %>
+                                            </h5>
+                                            <div class="announcement-meta">
+                                                <span class="category-badge <%= element.is_active ? 'bg-success' : 'bg-secondary' %>">
+                                                    <%= element.category || 'Genel' %>
+                                                </span>
+                                                <span class="meta-item">
+                                                    <i class="bi bi-calendar3 me-1"></i>
+                                                    <%= element.publish_at %>
+                                                </span>
+                                                <span class="meta-item">
+                                                    <i class="bi bi-person me-1"></i>
+                                                    <%= element.name || 'Admin' %>
+                                                </span>
+                                                <span class="status-badge <%= element.is_active ? 'text-success' : 'text-warning' %>">
+                                                    <i class="bi bi-<%= element.is_active ? 'check-circle' : 'pause-circle' %> me-1"></i>
+                                                    <%= element.is_active ? 'Aktif' : 'Pasif' %>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="announcement-actions">
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="/admin/edit/anc/<%=element.noticeid%>" 
+                                                   class="btn btn-outline-primary" title="Düzenle">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <button class="btn btn-outline-info" 
+                                                        onclick="window.open('/duyuru/<%= element.slug %>', '_blank')" 
+                                                        title="Görüntüle">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                                <button class="btn btn-outline-<%= element.is_active ? 'warning' : 'success' %>" 
+                                                        onclick="toggleStatus(<%=element.noticeid%>, <%= element.is_active %>)" 
+                                                        title="<%= element.is_active ? 'Pasif yap' : 'Aktif yap' %>">
+                                                    <i class="bi bi-<%= element.is_active ? 'pause' : 'play' %>"></i>
+                                                </button>
+                                                <button class="btn btn-outline-danger delete-btn" 
+                                                        data-id="<%=element.noticeid %>" 
+                                                        data-title="<%=element.title %>" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#exampleModal" 
+                                                        title="Sil">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="text-nowrap">
-                                        <a href="/admin/edit/anc/<%=element.noticeid%>" class="btn btn-sm btn-outline-primary">Duzenle</a>
-                                        <a href="/admin/delete/anc/<%=element.noticeid %>" class="delete-btn btn btn-sm btn-outline-danger" data-id="<%=element.noticeid %>" data-title="<%=element.title %>" data-bs-toggle="modal" data-bs-target="#exampleModal">Sil</a>
-                                    </div>
+                                    <% if (element.exp && element.exp.length > 100) { %>
+                                        <div class="announcement-excerpt mt-2">
+                                            <p class="text-muted mb-0">
+                                                <%= element.exp.substring(0, 150) %>...
+                                                <button class="btn btn-link p-0 ms-1 text-decoration-none" 
+                                                        onclick="toggleExcerpt(this)">
+                                                    Daha fazla
+                                                </button>
+                                            </p>
+                                        </div>
+                                    <% } %>
                                 </div>
                             </div>
                         <% }) %>
                         <% if (data.length === 0) { %>
-                            <div class="text-center text-muted py-4">Henuz duyuru yok.</div>
+                            <div class="empty-state text-center py-5">
+                                <i class="bi bi-megaphone fs-1 text-muted d-block mb-3"></i>
+                                <h5 class="text-muted">Henüz duyuru bulunmuyor</h5>
+                                <p class="text-muted">İlk duyurunuzu oluşturmak için "Yeni Duyuru" butonuna tıklayın.</p>
+                                <a href="/admin/add/anc" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle me-2"></i>İlk Duyuruyu Oluştur
+                                </a>
+                            </div>
                         <% } %>
                     </div>
                 </div>
@@ -44,31 +124,251 @@
     </div>
 
     <%- include('../partials/script.ejs') %>
+    
+    <!-- Delete Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Uyari</h5>
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">
+                        <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+                        Duyuru Silme Onayı
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="/admin/delete/anc" method="post">
                     <input type="hidden" name="_csrf" value="<%=csrfToken %>">
                     <div class="modal-body">
-                        <p class="fw-bold">Duyuru ID: <label id="id" class="fw-semibold"></label></p>
-                        <p class="fw-bold">Duyuru Baslik: <label id="title" class="fw-semibold"></label></p>
-                        <p class="fw-bold">Kaydi silmek istediginize emin misiniz?</p>
+                        <div class="alert alert-warning d-flex align-items-center">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            Bu işlem geri alınamaz!
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Duyuru ID:</label>
+                            <div id="id" class="form-control-plaintext fw-bold"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Duyuru Başlık:</label>
+                            <div id="title" class="form-control-plaintext fw-bold"></div>
+                        </div>
                         <input type="hidden" value="" id="ancid" name="ancid">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                            <label class="form-check-label" for="confirmDelete">
+                                Bu duyuruyu silmek istediğimi onaylıyorum
+                            </label>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <a href="#" id="yes" class="btn btn-outline-danger">Linkli Sil</a>
-                        <button type="submit" class="btn btn-danger">Sil</button>
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Vazgec</button>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-1"></i>İptal
+                        </button>
+                        <a href="#" id="yes" class="btn btn-outline-danger me-2">
+                            <i class="bi bi-link-45deg me-1"></i>Linkli Sil
+                        </a>
+                        <button type="submit" class="btn btn-danger" disabled id="deleteBtn">
+                            <i class="bi bi-trash me-1"></i>Sil
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    <style>
+        .search-box .input-group {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .search-box .form-control, .search-box .input-group-text {
+            border: 1px solid #e3f2fd;
+            background: white;
+        }
+        
+        .filter-buttons .btn {
+            border-radius: 20px;
+            font-size: 0.875rem;
+            padding: 0.375rem 0.75rem;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-buttons .btn.active {
+            background: var(--pet-red);
+            border-color: var(--pet-red);
+            color: white;
+        }
+        
+        .announcement-item {
+            background: white;
+            border: 1px solid rgba(26, 107, 181, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .announcement-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--pet-red);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .announcement-item:hover {
+            box-shadow: 0 8px 24px rgba(26, 107, 181, 0.12);
+            transform: translateY(-2px);
+        }
+        
+        .announcement-item:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .announcement-title {
+            color: var(--pet-ink);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .announcement-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .category-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .meta-item {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+        
+        .status-badge {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .announcement-actions .btn-group {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .announcement-actions .btn {
+            border-radius: 0;
+            border-right: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .announcement-actions .btn:last-child {
+            border-right: none;
+        }
+        
+        .announcement-excerpt {
+            border-top: 1px solid rgba(26, 107, 181, 0.1);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .empty-state {
+            background: rgba(26, 107, 181, 0.02);
+            border: 2px dashed rgba(26, 107, 181, 0.2);
+            border-radius: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .announcement-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .announcement-actions {
+                align-self: stretch;
+            }
+            
+            .announcement-actions .btn-group {
+                width: 100%;
+            }
+            
+            .announcement-actions .btn {
+                flex: 1;
+            }
+        }
+    </style>
+    
+    <script>
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-buttons .btn');
+            const announcementItems = document.querySelectorAll('.announcement-item');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active state
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.dataset.filter;
+                    
+                    // Filter announcements
+                    announcementItems.forEach(item => {
+                        if (filter === 'all') {
+                            item.style.display = 'block';
+                        } else {
+                            const status = item.dataset.status;
+                            item.style.display = status === filter ? 'block' : 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Confirm delete checkbox
+            const confirmCheckbox = document.getElementById('confirmDelete');
+            const deleteBtn = document.getElementById('deleteBtn');
+            
+            confirmCheckbox.addEventListener('change', function() {
+                deleteBtn.disabled = !this.checked;
+            });
+        });
+        
+        // Toggle excerpt
+        function toggleExcerpt(button) {
+            const excerpt = button.closest('.announcement-excerpt');
+            const fullText = excerpt.querySelector('p');
+            
+            if (button.textContent === 'Daha fazla') {
+                // This would need the full text from the server
+                button.textContent = 'Daha az';
+            } else {
+                button.textContent = 'Daha fazla';
+            }
+        }
+        
+        // Toggle status (mock function)
+        function toggleStatus(id, currentStatus) {
+            const newStatus = !currentStatus;
+            if (confirm(`Duyuruyu ${newStatus ? 'aktif' : 'pasif'} yapmak istediğinizden emin misiniz?`)) {
+                // This would make an AJAX call to update the status
+                location.reload();
+            }
+        }
+    </script>
+    
     <script src="/static/js/admin-list-anc.js"></script>
 </body>
 </html>

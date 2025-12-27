@@ -2,38 +2,276 @@
 <html lang="tr">
 <%- include('../partials/head') %>
 <body class="pet-theme">
-    <%- include('../partials/navbar') %>
-    <div class="container py-5">
-        <div class="login-card p-4">
-            <div class="text-center mb-3">
-                <div class="display-6">??</div>
-                <h2 class="mb-1">Giris Yap</h2>
-                <p class="text-muted">Yonetim ve profil islemleri icin giris yapin.</p>
+    <div class="login-container min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="login-wrapper">
+            <div class="login-card p-5 shadow-lg">
+                <div class="text-center mb-4">
+                    <div class="login-logo mb-3">
+                        <img src="/static/kedikopek.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
+                    </div>
+                    <h2 class="mb-2 fw-bold text-primary">Admin Girişi</h2>
+                    <p class="text-muted">Yönetim paneli için giriş yapınız</p>
+                </div>
+                
+                <form action="/auth/login" method="post" class="login-form">
+                    <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                    
+                    <% if (typeof(message)!="undefined") { %>
+                        <div class="alert alert-<%=message.class%> d-flex align-items-center" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <%=message.text %>
+                        </div>
+                    <% } %>
+                    
+                    <div class="mb-4">
+                        <label for="email" class="form-label fw-semibold">
+                            <i class="bi bi-envelope me-2"></i>E-posta Adresi
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-envelope text-muted"></i>
+                            </span>
+                            <input name="email" type="email" class="form-control border-start-0" 
+                                   value="<%=authinfo.email %>" 
+                                   placeholder="admin@example.com" 
+                                   required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-semibold">
+                            <i class="bi bi-lock me-2"></i>Şifre
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-lock text-muted"></i>
+                            </span>
+                            <input name="password" type="password" class="form-control border-start-0" 
+                                   value="<%=authinfo.password %>" 
+                                   placeholder="••••••••" 
+                                   required>
+                            <button class="btn btn-outline-secondary border-start-0" type="button" id="togglePassword">
+                                <i class="bi bi-eye" id="passwordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" value="1" 
+                                   name="cbhatirla" <%=authinfo.password?"checked":null %>>
+                            <label class="form-check-label" for="rememberMe">
+                                Beni hatırla
+                            </label>
+                        </div>
+                        <a href="/auth/reset-password" class="text-decoration-none text-primary small">
+                            Şifremi unuttum
+                        </a>
+                    </div>
+                    
+                    <div class="d-grid gap-3">
+                        <button type="submit" class="btn btn-primary btn-lg fw-semibold" id="loginBtn">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        <i class="bi bi-shield-check me-1"></i>
+                        Güvenli giriş sistemi
+                    </small>
+                </div>
             </div>
-            <form action="" method="post">
-                <input type="hidden" name="_csrf" value="<%=csrfToken %>">
-                <% if (typeof(message)!="undefined") { %>
-                    <div class="alert alert-<%=message.class%>"><%=message.text %></div>
-                <% } %>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input name="email" type="email" class="form-control" value="<%=authinfo.email %>">
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Sifre</label>
-                    <input name="password" type="password" class="form-control" value="<%=authinfo.password %>">
-                </div>
-                <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1" value="1" name="cbhatirla" <%=authinfo.password?"checked":null %>>
-                    <label class="form-check-label" for="exampleCheck1">Beni hatirla</label>
-                </div>
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-pet" id="btnkaydet">Oturum Ac</button>
-                    <a href="reset-password" class="btn btn-outline-danger">Parolayi Sifirla</a>
-                </div>
-            </form>
         </div>
     </div>
+    
+    <style>
+        .login-container {
+            background: linear-gradient(135deg, #eaf4ff 0%, #d4e9ff 50%, #c8e6ff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(26, 107, 181, 0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, -30px) rotate(180deg); }
+        }
+        
+        .login-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(26, 107, 181, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(26, 107, 181, 0.2);
+        }
+        
+        .login-logo img {
+            transition: transform 0.3s ease;
+        }
+        
+        .login-logo:hover img {
+            transform: scale(1.05);
+        }
+        
+        .form-control, .input-group-text {
+            border-radius: 12px;
+            border: 2px solid #e3f2fd;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--pet-red);
+            box-shadow: 0 0 0 0.2rem rgba(26, 107, 181, 0.15);
+            background-color: #fafcff;
+        }
+        
+        .input-group .form-control {
+            border-radius: 0 12px 12px 0;
+        }
+        
+        .input-group .input-group-text {
+            border-radius: 12px 0 0 12px;
+            border-right: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, #1a6bb5, #0b2d52);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #2a7bd0, #0b2d52);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 107, 181, 0.3);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--pet-red);
+            border-color: var(--pet-red);
+        }
+        
+        .alert {
+            border-radius: 12px;
+            border: none;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .text-primary {
+            color: var(--pet-red) !important;
+        }
+        
+        @media (max-width: 480px) {
+            .login-wrapper {
+                padding: 10px;
+            }
+            
+            .login-card {
+                padding: 30px 20px !important;
+            }
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.querySelector('input[name="password"]');
+            const passwordIcon = document.getElementById('passwordIcon');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                passwordIcon.className = type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+            });
+            
+            // Add loading state to login button
+            loginBtn.addEventListener('click', function() {
+                if (!loginBtn.disabled) {
+                    loginBtn.disabled = true;
+                    loginBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i>Giriş Yapılıyor...';
+                    
+                    // Re-enable after 3 seconds if form hasn't submitted
+                    setTimeout(() => {
+                        if (loginBtn.disabled) {
+                            loginBtn.disabled = false;
+                            loginBtn.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap';
+                        }
+                    }, 3000);
+                }
+            });
+            
+            // Add input validation feedback
+            const emailInput = document.querySelector('input[name="email"]');
+            emailInput.addEventListener('blur', function() {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (this.value && !emailRegex.test(this.value)) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                }
+            });
+        });
+    </script>
+    
     <%- include('../partials/script') %>
 </body>
 </html>

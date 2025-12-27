@@ -5,44 +5,377 @@
     <div class="admin-wrapper">
         <%- include('./partials/sidebar', { activePage: 'gallery' }) %>
         <div class="admin-main">
-            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Galeri gorunumu ve yonetimi' }) %>
+            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Galeri görünümlerini yönetin' }) %>
             <div class="container-fluid py-4">
                 <% if (flash && flash.text) { %>
-                    <div class="alert alert-<%= flash.type || 'info' %>"><%= flash.text %></div>
+                    <div class="alert alert-<%= flash.type || 'info' %> d-flex align-items-center">
+                        <i class="bi bi-<%= flash.type === 'success' ? 'check-circle' : flash.type === 'danger' ? 'x-circle' : 'info-circle' %> me-2"></i>
+                        <%= flash.text %>
+                    </div>
                 <% } %>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div></div>
-                    <a href="/admin/gallery/add" class="btn btn-pet">Yeni Yukle</a>
-                </div>
-                <% if (items.length === 0) { %>
-                    <div class="admin-card p-4 text-center">Henuz gorsel yok.</div>
-                <% } %>
-                <div class="row g-3">
-                    <% items.forEach(item=>{ %>
-                        <div class="col-12 col-sm-6 col-lg-4">
-                            <div class="admin-card admin-gallery-item">
-                                <% const imageUrl = item.image_url || item.url; %>
-                                <% if (imageUrl) { %>
-                                    <img src="<%= imageUrl %>" alt="<%= item.title %>" class="w-100" style="height:220px;object-fit:cover;">
-                                <% } %>
-                                <div class="admin-gallery-overlay">
-                                    <form method="POST" action="/admin/gallery/delete/<%= item.id %>">
-                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                        <button type="submit" class="btn btn-sm btn-outline-light">Sil</button>
-                                    </form>
-                                </div>
-                                <div class="p-3">
-                                    <div class="fw-semibold"><%= item.title %></div>
-                                    <div class="small text-muted"><%= item.owner || 'Bilinmiyor' %></div>
-                                    <div class="small text-muted"><%= item.created_at %></div>
-                                </div>
+                
+                <!-- Header Actions -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="gallery-stats">
+                            <span class="badge bg-primary bg-opacity-20 text-primary">
+                                <i class="bi bi-images me-1"></i>
+                                Toplam: <%= items.length %> görsel
+                            </span>
+                        </div>
+                        <div class="view-options">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="button" class="btn btn-outline-primary active" data-view="grid">
+                                    <i class="bi bi-grid-3x3-gap"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-view="list">
+                                    <i class="bi bi-list"></i>
+                                </button>
                             </div>
                         </div>
-                    <% }) %>
+                    </div>
+                    <a href="/admin/gallery/add" class="btn btn-primary">
+                        <i class="bi bi-cloud-upload me-2"></i>Yeni Görsel Yükle
+                    </a>
+                </div>
+                
+                <% if (items.length === 0) { %>
+                    <div class="empty-gallery-state">
+                        <div class="admin-card p-5 text-center">
+                            <i class="bi bi-images fs-1 text-muted d-block mb-3"></i>
+                            <h5 class="text-muted mb-2">Henüz görsel yüklenmemiş</h5>
+                            <p class="text-muted mb-4">Galerinize ilk görseli eklemek için yükle butonuna tıklayın.</p>
+                            <a href="/admin/gallery/add" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>İlk Görseli Yükle
+                            </a>
+                        </div>
+                    </div>
+                <% } %>
+                
+                <!-- Gallery Grid View -->
+                <div class="gallery-grid-view" id="gridView">
+                    <div class="row g-4">
+                        <% items.forEach(item=>{ %>
+                            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <div class="gallery-item-card">
+                                    <% const imageUrl = item.image_url || item.url; %>
+                                    <div class="gallery-image-container">
+                                        <% if (imageUrl) { %>
+                                            <img src="<%= imageUrl %>" alt="<%= item.title %>" 
+                                                 class="gallery-image" loading="lazy">
+                                        <% } else { %>
+                                            <div class="no-image-placeholder">
+                                                <i class="bi bi-image text-muted"></i>
+                                            </div>
+                                        <% } %>
+                                        
+                                        <!-- Image Overlay Actions -->
+                                        <div class="gallery-overlay">
+                                            <div class="overlay-actions">
+                                                <button class="btn btn-sm btn-light me-2" onclick="viewImage('<%= imageUrl %>')" title="Büyüt">
+                                                    <i class="bi bi-zoom-in"></i>
+                                                </button>
+                                                <form method="POST" action="/admin/gallery/delete/<%= item.id %>" 
+                                                      class="d-inline" onsubmit="return confirm('Bu görseli silmek istediğinizden emin misiniz?')">
+                                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Sil">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Image Badge -->
+                                        <div class="image-badge">
+                                            <span class="badge bg-primary bg-opacity-75">
+                                                <i class="bi bi-image"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Image Info -->
+                                    <div class="gallery-info">
+                                        <h6 class="gallery-title"><%= item.title || 'Başlıksız' %></h6>
+                                        <div class="gallery-meta">
+                                            <div class="meta-item">
+                                                <i class="bi bi-person me-1"></i>
+                                                <%= item.owner || 'Bilinmiyor' %>
+                                            </div>
+                                            <div class="meta-item">
+                                                <i class="bi bi-calendar3 me-1"></i>
+                                                <%= item.created_at %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+                
+                <!-- Gallery List View (Hidden by default) -->
+                <div class="gallery-list-view d-none" id="listView">
+                    <div class="admin-card">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Görsel</th>
+                                        <th>Başlık</th>
+                                        <th>Sahibi</th>
+                                        <th>Tarih</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% items.forEach(item=>{ %>
+                                        <tr>
+                                            <td>
+                                                <% const imageUrl = item.image_url || item.url; %>
+                                                <% if (imageUrl) { %>
+                                                    <img src="<%= imageUrl %>" alt="<%= item.title %>" 
+                                                         class="list-thumbnail" onclick="viewImage('<%= imageUrl %>')">
+                                                <% } else { %>
+                                                    <div class="list-thumbnail no-thumbnail">
+                                                        <i class="bi bi-image text-muted"></i>
+                                                    </div>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <div class="fw-semibold"><%= item.title || 'Başlıksız' %></div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <i class="bi bi-person text-muted me-2"></i>
+                                                    <%= item.owner || 'Bilinmiyor' %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="text-muted small">
+                                                    <i class="bi bi-calendar3 me-1"></i>
+                                                    <%= item.created_at %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <button class="btn btn-outline-primary" onclick="viewImage('<%= imageUrl %>')" title="Büyüt">
+                                                        <i class="bi bi-zoom-in"></i>
+                                                    </button>
+                                                    <form method="POST" action="/admin/gallery/delete/<%= item.id %>" 
+                                                          class="d-inline" onsubmit="return confirm('Bu görseli silmek istediğinizden emin misiniz?')">
+                                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                        <button type="submit" class="btn btn-outline-danger" title="Sil">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-white">Görsel Önizleme</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <img id="modalImage" src="" alt="Görsel" class="w-100">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .gallery-stats .badge {
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+        }
+        
+        .gallery-item-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(26, 107, 181, 0.12);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(26, 107, 181, 0.1);
+        }
+        
+        .gallery-item-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(26, 107, 181, 0.18);
+        }
+        
+        .gallery-image-container {
+            position: relative;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item-card:hover .gallery-image {
+            transform: scale(1.05);
+        }
+        
+        .no-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 107, 181, 0.05);
+            font-size: 3rem;
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item-card:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        .overlay-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .image-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+        
+        .gallery-info {
+            padding: 1.5rem;
+        }
+        
+        .gallery-title {
+            font-weight: 600;
+            color: var(--pet-ink);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .gallery-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .meta-item {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+        
+        .list-thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .list-thumbnail:hover {
+            transform: scale(1.1);
+        }
+        
+        .no-thumbnail {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 107, 181, 0.05);
+            border-radius: 8px;
+            font-size: 1.5rem;
+        }
+        
+        .empty-gallery-state .admin-card {
+            background: rgba(26, 107, 181, 0.02);
+            border: 2px dashed rgba(26, 107, 181, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-grid-view .row {
+                gap: 1rem;
+            }
+            
+            .gallery-info {
+                padding: 1rem;
+            }
+            
+            .gallery-title {
+                font-size: 0.9rem;
+            }
+            
+            .meta-item {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // View toggle functionality
+            const viewButtons = document.querySelectorAll('.view-options .btn');
+            const gridView = document.getElementById('gridView');
+            const listView = document.getElementById('listView');
+            
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active state
+                    viewButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const view = this.dataset.view;
+                    
+                    // Toggle views
+                    if (view === 'grid') {
+                        gridView.classList.remove('d-none');
+                        listView.classList.add('d-none');
+                    } else {
+                        gridView.classList.add('d-none');
+                        listView.classList.remove('d-none');
+                    }
+                });
+            });
+        });
+        
+        // View image in modal
+        function viewImage(imageUrl) {
+            if (imageUrl) {
+                document.getElementById('modalImage').src = imageUrl;
+                const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+                modal.show();
+            }
+        }
+    </script>
+    
     <%- include('../partials/script') %>
 </body>
 </html>
