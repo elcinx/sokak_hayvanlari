@@ -513,7 +513,7 @@ body.pet-theme::before {
     inset: -2px;
     border-radius: 24px;
     padding: 2px;
-    background: linear-gradient(135deg, var(--coral-main), var(--coral-dark), var(--coral-main));
+    background: linear-gradient(135deg, #43cea2, #185a9d, #667eea);
     background-size: 200% 200%;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -1204,11 +1204,11 @@ body.pet-theme::before {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 32px;
     align-items: center;
-    padding: 56px 44px;
+    padding: 48px 40px;
 }
 .hero-visual {
     position: relative;
-    min-height: 360px;
+    min-height: 320px;
     border-radius: 26px;
     overflow: hidden;
     background: linear-gradient(135deg, #43cea2 0%, #185a9d 50%, #667eea 100%);
@@ -1267,12 +1267,12 @@ body.pet-theme::before {
     transform: translateX(-50%);
 }
 .hero-bowls svg {
-    width: 260px;
+    width: 220px;
     height: auto;
 }
 .hero-cat svg,
 .hero-dog svg {
-    width: 170px;
+    width: 150px;
     height: auto;
 }
 @media (max-width: 992px) {
@@ -1683,6 +1683,7 @@ body.pet-theme {
 .feed-form-card {
     animation: none !important;
     transform: none !important;
+    box-shadow: 0 16px 40px rgba(24, 90, 157, 0.18) !important;
 }
 .stat-card:hover,
 .timeline-item:hover,
