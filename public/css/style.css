@@ -1,8 +1,78 @@
 .feed-form {
+/* === ULTIMATE OVERRIDE (EOF) === */
+section.hero.hero-card.hero-showcase {
+    background:
+        url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right bottom / 520px auto,
+        linear-gradient(135deg, rgba(67, 206, 162, 0.95) 0%, rgba(24, 90, 157, 0.95) 50%, rgba(102, 126, 234, 0.95) 100%) !important;
+}
+.hero-visual { background: transparent !important; }
+.hero-cover { display: none !important; }
+@media (max-width: 991.98px) {
+    section.hero.hero-card.hero-showcase {
+        background:
+            url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right 12px bottom 12px / 360px auto,
+            linear-gradient(135deg, rgba(67, 206, 162, 0.95) 0%, rgba(24, 90, 157, 0.95) 50%, rgba(102, 126, 234, 0.95) 100%) !important;
+    }
+}
     border-radius: 1rem;
     background: #ffffff;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(198, 40, 40, 0.1);
+}
+
+/* Overlay PNG inside the right hero box to guarantee visibility */
+.hero-visual {
+    position: relative;
+}
+.hero-visual::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right bottom / 520px auto;
+    pointer-events: none;
+}
+@media (max-width: 991.98px) {
+    .hero-visual::before { background-size: 360px auto; background-position: right 12px bottom 12px; }
+}
+/* === FINAL OVERRIDE: Hero background image should always show === */
+section.hero.hero-card.hero-showcase {
+    /* Put IMAGE first (top layer), gradient second (bottom layer) */
+    background:
+        url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right bottom / 520px auto,
+        linear-gradient(135deg, rgba(67, 206, 162, 0.95) 0%, rgba(24, 90, 157, 0.95) 50%, rgba(102, 126, 234, 0.95) 100%) !important;
+}
+.hero-visual { background: transparent !important; }
+.hero-cover { display: none !important; }
+@media (max-width: 991.98px) {
+    section.hero.hero-card.hero-showcase {
+        background:
+            url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right 12px bottom 12px / 360px auto,
+            linear-gradient(135deg, rgba(67, 206, 162, 0.95) 0%, rgba(24, 90, 157, 0.95) 50%, rgba(102, 126, 234, 0.95) 100%) !important;
+    }
+}
+
+/* === Hero background image override (kept consistent) === */
+section.hero.hero-card.hero-showcase {
+    background:
+        url('/static/img/png-clipart-dog-cat-relationship-dog-cat-relationship-pet-sitting-veterinarian-cat-animals-cat-like-mammal-thumbnail-removebg-preview.png') no-repeat right bottom / 520px auto,
+        linear-gradient(135deg, rgba(67, 206, 162, 0.95) 0%, rgba(24, 90, 157, 0.95) 50%, rgba(102, 126, 234, 0.95) 100%) !important;
+}
+
+/* Hero right box should not cover background image */
+.hero-visual {
+    background: transparent !important;
+}
+
+/* Hide inline hero image if present */
+.hero-cover {
+    display: none !important;
+}
+
+@media (max-width: 991.98px) {
+    section.hero.hero-card.hero-showcase {
+        background-size: cover, 360px auto;
+        background-position: center, right 12px bottom 12px;
+    }
 }
 
 .hero-eyebrow {
@@ -287,17 +357,20 @@
     border-radius: 26px;
     overflow: hidden;
     background: linear-gradient(135deg, var(--theme-blue-1) 0%, var(--theme-blue-2) 50%, var(--theme-blue-3) 100%);
-    max-width: 420px;
-    justify-self: end;
+    width: 100%;
+    max-width: none;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 12px 16px;
 }
 .hero-cover {
-    position: absolute;
-    inset: 0;
+    position: static;
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: center left;
-    transform: scale(1.08);
+    object-position: bottom right;
+    transform: scale(1.12);
 }
 .hero-gradient {
     position: absolute;
@@ -963,5 +1036,4 @@ body.pet-theme {
 .stat-card::before {
     content: none !important;
 }
-
 
