@@ -5,39 +5,14 @@
     <div class="admin-wrapper">
         <%- include('./partials/sidebar', { activePage: 'users' }) %>
         <div class="admin-main">
-            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Yeni admin olustur ve kullanicilari gor' }) %>
+            <%- include('./partials/topbar', { contentTitle, contentDesc: 'Kullanicilari gor' }) %>
             <div class="container-fluid py-4">
                 <% if (typeof flash !== "undefined" && flash && flash.text) { %>
                     <div class="alert alert-<%= flash.type || 'info' %>"><%= flash.text %></div>
                 <% } %>
 
                 <div class="row g-4">
-                    <div class="col-lg-4">
-                        <div class="admin-card p-4">
-                            <h5 class="fw-bold mb-3">Yeni Admin Olustur</h5>
-                            <form method="post" action="/admin/users">
-                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                <div class="mb-3">
-                                    <label class="form-label">Ad</label>
-                                    <input type="text" name="name" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Soyad</label>
-                                    <input type="text" name="surname" class="form-control">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">E-posta</label>
-                                    <input type="email" name="email" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Sifre</label>
-                                    <input type="password" name="password" class="form-control" required>
-                                </div>
-                                <button type="submit" class="btn btn-pet w-100">Admin Olustur</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-lg-8">
+                    <div class="col-12">
                         <div class="admin-card p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h5 class="fw-bold mb-0">Kullanicilar</h5>
