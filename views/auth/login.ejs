@@ -81,11 +81,14 @@
                         </a>
                     </div>
                     
-                    <div class="d-grid gap-3">
-                        <button type="submit" class="btn btn-primary btn-lg fw-semibold admin-login-btn" id="loginBtn">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Admin Girişi
-                        </button>
-                    </div>
+                <div class="d-grid gap-3">
+                    <button type="submit" class="btn btn-primary btn-lg fw-semibold admin-login-btn" id="loginBtn">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Admin Girişi
+                    </button>
+                    <a href="/auth/admin-register" class="btn btn-outline-primary btn-lg fw-semibold">
+                        <i class="bi bi-person-plus me-2"></i>Kayit Ol
+                    </a>
+                </div>
                 </form>
 
                 <div class="admin-create-card mt-4">
@@ -163,13 +166,16 @@
                         </a>
                     </div>
                     
-                    <div class="d-grid gap-3">
-                        <button type="submit" class="btn btn-primary btn-lg fw-semibold user-login-btn">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap
-                        </button>
-                        <div class="text-center">
-                            <small class="text-muted">
-                                Hesabınız yok mu? 
+                <div class="d-grid gap-3">
+                    <button type="submit" class="btn btn-primary btn-lg fw-semibold user-login-btn">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap
+                    </button>
+                    <a href="/auth/register" class="btn btn-outline-primary btn-lg fw-semibold">
+                        <i class="bi bi-person-plus me-2"></i>Kayit Ol
+                    </a>
+                    <div class="text-center">
+                        <small class="text-muted">
+                            Hesabınız yok mu? 
                                 <a href="/auth/register" class="text-primary text-decoration-none">Kayıt Ol</a>
                             </small>
                         </div>
