@@ -8,7 +8,7 @@
             <div class="col-lg-8">
                 <div class="section-card p-4">
                     <% const imageBySlug = { 'resim-1': '/static/img/3.jpg', 'resim-2': '/static/img/4.jpg', 'resim-3': '/static/img/5.jpg', 'resim-4': '/static/img/2.jpg' }; %>
-                    <% const imageSrc = viewData.image || imageBySlug[viewData.slug] || null; %>
+                    <% const imageSrc = viewData.image_url || viewData.image || imageBySlug[viewData.slug] || null; %>
                     <% if (imageSrc) { %>
                         <div class="mb-3">
                             <img src="<%= imageSrc %>" alt="<%= viewData.title %>" class="img-fluid rounded">

@@ -37,6 +37,8 @@ async function ensureTables() {
             noticeid INT AUTO_INCREMENT PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
             exp TEXT,
+            image_url VARCHAR(500),
+            image_key VARCHAR(255),
             slug VARCHAR(255) UNIQUE,
             category VARCHAR(100),
             publish_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -47,6 +49,8 @@ async function ensureTables() {
             FOREIGN KEY (created_by) REFERENCES users(userid) ON DELETE SET NULL
         )
     `);
+    try { await db.execute("ALTER TABLE announcements ADD COLUMN image_url VARCHAR(500)"); } catch(e){}
+    try { await db.execute("ALTER TABLE announcements ADD COLUMN image_key VARCHAR(255)"); } catch(e){}
 
     // Gallery items
     await db.execute(`

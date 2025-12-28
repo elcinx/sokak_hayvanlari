@@ -28,10 +28,10 @@ router.get("/users", requireAuth, requireRole("admin"), csrf, adminPanel.usersPa
 router.post("/users", requireAuth, requireRole("admin"), adminPanel.usersCreate);
 
 router.get("/add/anc",requireAuth,requireRole("admin","moderator"),csrf,adminController.adminGetAddAnc)
-router.post("/add/anc",requireAuth,requireRole("admin","moderator"),adminController.adminPostAddAnc)
+router.post("/add/anc",requireAuth,requireRole("admin","moderator"),upload.single("image"),adminController.adminPostAddAnc)
 
 router.get("/edit/anc/:id",requireAuth,requireRole("admin","moderator"),csrf,adminController.adminGetEditAnc);
-router.post("/edit/anc/:id",requireAuth,requireRole("admin","moderator"),adminController.adminPostEditAnc);
+router.post("/edit/anc/:id",requireAuth,requireRole("admin","moderator"),upload.single("image"),adminController.adminPostEditAnc);
 
 router.get("/delete/anc/:id",requireAuth,requireRole("admin"),adminController.get_deleteAnc);
 

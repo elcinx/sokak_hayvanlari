@@ -27,10 +27,10 @@
             <% announcements.forEach(item=>{ %>
                 <div class="col-lg-6 col-12">
                     <div class="announcement-card-new section-card overflow-hidden">
-                        <% const imageSrc = item.image || imageBySlug[item.slug] || null; %>
+                        <% const imageSrc = item.image_url || item.image || imageBySlug[item.slug] || null; %>
                         <div class="announcement-image">
-                            <% if (item.image) { %>
-                                <img src="<%= item.image %>" alt="<%= item.title %>" class="img-fluid">
+                            <% if (item.image_url || item.image) { %>
+                                <img src="<%= item.image_url || item.image %>" alt="<%= item.title %>" class="img-fluid">
                             <% } else if (imageSrc) { %>
                                 <img src="<%= imageSrc %>" alt="<%= item.title %>" class="img-fluid">
                             <% } else { %>

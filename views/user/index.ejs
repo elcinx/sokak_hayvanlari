@@ -142,7 +142,7 @@
                             <h4 class="section-title mb-3">Son Duyurular</h4>
                             <div class="list-group list-group-flush timeline-list">
                                 <% data.slice(0,5).forEach(element=>{ %>
-                                    <% const imageSrc = element.image || imageBySlug[element.slug] || '/static/img/2.jpg'; %>
+                                    <% const imageSrc = element.image_url || element.image || imageBySlug[element.slug] || '/static/img/2.jpg'; %>
                                     <div class="list-group-item timeline-item d-flex gap-2">
                                         <span class="timeline-dot"></span>
                                         <img src="<%= imageSrc %>" alt="<%= element.title %>" class="rounded" style="width:56px;height:56px;object-fit:cover;">
@@ -263,4 +263,3 @@
     </body>
 
 </html>
-

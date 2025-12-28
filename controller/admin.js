@@ -41,8 +41,16 @@ exports.adminPostAddAnc = async (req, res, next) => {
     const isActive = body.isActive ? true : false;
     try {
         const slug = await buildUniqueSlug(body.title || "");
+        let imageUrl = null;
+        let imageKey = null;
+        if (req.file) {
+            const storage = require("../services/storage");
+            const saved = await storage.saveImage(req.file);
+            imageUrl = saved.url;
+            imageKey = saved.key;
+        }
         await db.execute(
-            "INSERT INTO announcements (title, exp, is_active, created_by, slug, category, publish_at) VALUES (?,?,?,?,?,?,?)",
+            "INSERT INTO announcements (title, exp, is_active, created_by, slug, category, publish_at, image_url, image_key) VALUES (?,?,?,?,?,?,?,?,?)",
             [
                 body.title,
                 body.explain,
@@ -51,6 +59,8 @@ exports.adminPostAddAnc = async (req, res, next) => {
                 slug,
                 body.category || null,
                 body.publish_at || new Date(),
+                imageUrl,
+                imageKey,
             ]
         );
     } catch (err) {
@@ -73,8 +83,16 @@ exports.adminPostEditAnc = async (req, res, next) => {
     const isActive = req.body.isActive ? true : false;
     try {
         const slug = await buildUniqueSlug(req.body.title || "", req.body.noticeid);
+        let imageUrl = null;
+        let imageKey = null;
+        if (req.file) {
+            const storage = require("../services/storage");
+            const saved = await storage.saveImage(req.file);
+            imageUrl = saved.url;
+            imageKey = saved.key;
+        }
         await db.execute(
-            "UPDATE announcements SET title=?, exp=?, is_active=?, created_by=?, slug=?, category=?, publish_at=? WHERE noticeid=?",
+            "UPDATE announcements SET title=?, exp=?, is_active=?, created_by=?, slug=?, category=?, publish_at=?, image_url=COALESCE(?, image_url), image_key=COALESCE(?, image_key) WHERE noticeid=?",
             [
                 req.body.title,
                 req.body.explain,
@@ -83,6 +101,8 @@ exports.adminPostEditAnc = async (req, res, next) => {
                 slug,
                 req.body.category || null,
                 req.body.publish_at || new Date(),
+                imageUrl,
+                imageKey,
                 req.body.noticeid,
             ]
         );
