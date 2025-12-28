@@ -37,6 +37,30 @@ exports.userHome = async (req, res, next) => {
         const [[totalVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs");
         const [[todayVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs WHERE DATE(visited_at)=CURDATE()");
         const slugify = require("slugify");
+        let badges = [];
+        const userId = req.session.userid;
+        if (userId) {
+            const [badgeRows] = await db.execute(
+                `SELECT b.id, b.code, b.name, b.description,
+                        IF(ub.id IS NULL, 0, 1) AS earned
+                 FROM badges b
+                 LEFT JOIN user_badges ub
+                   ON ub.badge_id=b.id AND ub.user_id=?
+                 WHERE b.is_active=1
+                 ORDER BY b.id ASC`,
+                [userId]
+            );
+            badges = badgeRows;
+        } else {
+            const [badgeRows] = await db.execute(
+                `SELECT b.id, b.code, b.name, b.description, 0 AS earned
+                 FROM badges b
+                 WHERE b.is_active=1
+                 ORDER BY b.id ASC`
+            );
+            badges = badgeRows;
+        }
+
         res.render("user/index", {
             title: "Ana sayfa",
             contentTitle: "Ana sayfa",
@@ -49,6 +73,7 @@ exports.userHome = async (req, res, next) => {
                 todayVisits: todayVisits?.c || 0,
             },
             gallery,
+            badges,
             slugify,
         });
     } catch (err) {

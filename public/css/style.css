@@ -701,6 +701,20 @@ body.pet-theme {
     margin-bottom: 0.4rem;
 }
 
+.badge-card {
+    border: 1px solid rgba(24, 90, 157, 0.15);
+    background: #ffffff;
+}
+
+.badge-card.earned {
+    border-color: rgba(24, 90, 157, 0.4);
+    background: rgba(24, 90, 157, 0.06);
+}
+
+.badge-card.locked {
+    opacity: 0.7;
+}
+
 /* --- Gallery hover refinement --- */
 .gallery-item img {
     border-radius: 16px;

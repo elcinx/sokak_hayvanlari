@@ -98,14 +98,40 @@
                         </div>
 
                         <div class="section-card p-3 p-lg-4 mt-4">
-                            <h4 class="section-title mb-2">Ödüllendirme (Top 5)</h4>
-                            <p class="section-subtitle mb-3">En çok puan toplayan gönüllüler.</p>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <h4 class="section-title mb-1">Ödüllendirme (Top 5)</h4>
+                                    <p class="section-subtitle mb-0">En çok puan toplayan gönüllüler.</p>
+                                </div>
+                                <div class="small fw-semibold text-muted">Puan</div>
+                            </div>
                             <ul class="list-group list-group-flush top5-list" id="weeklyTop">
                                 <li class="list-group-item">Yükleniyor...</li>
                             </ul>
-                            <div class="mt-3 small text-muted">
-                                Rozet koşulları: Istikrarlı (7 gün üst üste besleme), Kesifçi (10 farklı nokta),
-                                Kış Kahramanı (Aralık-Ocak-Şubat aylarında 20 besleme).
+                            <div class="mt-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="section-title mb-0">Rozetler</h5>
+                                    <span class="small text-muted">Kazananlar</span>
+                                </div>
+                                <div class="row g-2">
+                                    <% if (badges && badges.length) { %>
+                                        <% badges.forEach(b => { %>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="badge-card <%= b.earned ? 'earned' : 'locked' %> p-2 rounded">
+                                                    <div class="fw-semibold"><%= b.name %></div>
+                                                    <div class="small text-muted"><%= b.description || '' %></div>
+                                                    <% if (!b.earned) { %>
+                                                        <div class="small text-muted">Henüz alınmadı</div>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <div class="col-12">
+                                            <div class="text-muted small">Rozet bulunamadı.</div>
+                                        </div>
+                                    <% } %>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -237,6 +263,5 @@
     </body>
 
 </html>
-
 
 
