@@ -40,6 +40,8 @@
                         <div class="admin-card p-4">
                             <form method="post" id="announcementForm" enctype="multipart/form-data">
                                 <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                                <input type="hidden" name="publish_at" id="publish_at_hidden">
+                                <input type="hidden" name="isActive" id="isActiveHidden">
                                 
                                 <!-- Title Section -->
                                 <div class="form-section mb-4">
@@ -457,6 +459,12 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('announcementForm');
+            const publishAtInput = document.getElementById('publish_at');
+            const publishAtHidden = document.getElementById('publish_at_hidden');
+            const isActiveInput = document.getElementById('isActive');
+            const isActiveHidden = document.getElementById('isActiveHidden');
+
             // Title character counter
             const titleInput = document.getElementById('title');
             const titleCount = document.getElementById('titleCount');
@@ -495,9 +503,26 @@
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             publishAt.value = now.toISOString().slice(0, 16);
+            if (publishAtHidden) {
+                publishAtHidden.value = publishAt.value;
+            }
+            if (isActiveHidden && isActiveInput) {
+                isActiveHidden.value = isActiveInput.checked ? "1" : "";
+            }
             
             // Initial preview update
             updatePreview();
+
+            if (form) {
+                form.addEventListener('submit', function() {
+                    if (publishAtInput && publishAtHidden) {
+                        publishAtHidden.value = publishAtInput.value || "";
+                    }
+                    if (isActiveInput && isActiveHidden) {
+                        isActiveHidden.value = isActiveInput.checked ? "1" : "";
+                    }
+                });
+            }
         });
         
         function updateCategory() {
