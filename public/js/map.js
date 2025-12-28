@@ -1,8 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const mapEl = document.getElementById("map");
-    if (!mapEl || typeof L === "undefined") return;
-
-    const isAuth = document.body.dataset.isAuth === "true";
     // Online kullanici sayisi
     if (typeof io === "function") {
         const socket = io();
@@ -33,6 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (todayVisits) todayVisits.innerText = d.todayVisits;
         })
         .catch(() => {});
+
+    const mapEl = document.getElementById("map");
+    if (!mapEl || typeof L === "undefined") return;
+
+    const isAuth = document.body.dataset.isAuth === "true";
 
     // Leaflet harita
     const map = L.map("map").setView([20, 0], 2);
