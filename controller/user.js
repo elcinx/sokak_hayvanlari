@@ -21,8 +21,7 @@ const orderAnnouncements = (items) => {
 
 exports.userHome = async (req, res, next) => {
     try {
-        const [announcements] = await db.execute("SELECT * FROM announcements WHERE is_active=1 ORDER BY publish_at DESC LIMIT 10");
-        const orderedAnnouncements = orderAnnouncements(announcements);
+        const [announcements] = await db.execute("SELECT * FROM announcements WHERE is_active=1 ORDER BY publish_at DESC");
         const [[totalFeeds]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs");
         const [[activePoints]] = await db.execute("SELECT COUNT(DISTINCT CONCAT(ROUND(lat,4), ',', ROUND(lng,4))) AS c FROM feed_logs");
         const [[todayFeeds]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs WHERE DATE(created_at)=CURDATE()");
@@ -64,7 +63,7 @@ exports.userHome = async (req, res, next) => {
         res.render("user/index", {
             title: "Ana sayfa",
             contentTitle: "Ana sayfa",
-            data: orderedAnnouncements,
+            data: announcements,
             summary: {
                 totalFeeds: totalFeeds?.c || 0,
                 activePoints: activePoints?.c || 0,
