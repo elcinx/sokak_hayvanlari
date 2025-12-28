@@ -81,6 +81,7 @@ const leaderboardRouter = require("./router/leaderboard.js");
 const adminRouter = require("./router/admin.js");
 const userRouter = require("./router/user.js");
 const apiRouter = require("./router/api.js");
+const visitorCounter = require("./middleware/visitorCounter");
 
 // CORS only for API
 app.use("/api", corsMiddleware);
@@ -93,7 +94,7 @@ app.use(feedsRouter);
 app.use(leaderboardRouter);
 app.use("/admin", adminRouter);
 app.use("/user", userRouter); // legacy prefix
-app.use("/", userRouter); // root site pages
+app.use("/", visitorCounter, userRouter); // root site pages
 
 if (config.nodeEnv !== "production") {
     app.get("/demo", (req,res)=> {
