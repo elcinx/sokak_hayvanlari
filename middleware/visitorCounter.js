@@ -12,11 +12,10 @@ module.exports = async (req, res, next) => {
         const ua = req.headers["user-agent"] || "";
         const salt = config.sessionSecret || "visitor";
         const ipHash = hashValue(`${ip}:${salt}`);
-        const uaHash = hashValue(`${ua}:${salt}`);
-
+        // Remove UA dependency: count only unique IP per day
         const [[last]] = await db.execute(
-            "SELECT visited_at FROM visit_logs WHERE ip_hash=? AND ua_hash=? AND DATE(visited_at)=CURDATE() LIMIT 1",
-            [ipHash, uaHash]
+            "SELECT visited_at FROM visit_logs WHERE ip_hash=? AND DATE(visited_at)=CURDATE() LIMIT 1",
+            [ipHash]
         );
         if (last && last.visited_at) {
             req.visitLogged = false;
@@ -25,7 +24,7 @@ module.exports = async (req, res, next) => {
 
         await db.execute(
             "INSERT INTO visit_logs (ip_hash, ua_hash, visited_at) VALUES (?,?,NOW())",
-            [ipHash, uaHash]
+            [ipHash, hashValue(`${ua}:${salt}`)]
         );
         req.visitLogged = true;
         next();
