@@ -463,12 +463,181 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!el) return;
         let count = 0;
         feedMarkers.forEach((m) => {
-            if (feedsLayer.hasLayer(m)) count += 1;
-        });
-        el.innerText = String(count);
+});
+applyFilters();
+if (fitBounds) {
+    if (hasValidPoint) {
+        map.fitBounds(bounds, { padding: [30, 30] });
+    } else {
+        map.setView([20, 0], 2);
+    }
+}
+updateActivePointCounter();
+}
+
+function updateSelectedText() {
+if (feedLatInput && Number.isFinite(selectedLat)) {
+    feedLatInput.value = selectedLat.toFixed(6);
+}
+if (feedLngInput && Number.isFinite(selectedLng)) {
+    feedLngInput.value = selectedLng.toFixed(6);
+}
+if (!selectedLocationInfo) return;
+if (Number.isFinite(selectedLat) && Number.isFinite(selectedLng)) {
+    selectedLocationInfo.textContent = `Secilen konum: ${selectedLat.toFixed(5)}, ${selectedLng.toFixed(5)}`;
+} else {
+    selectedLocationInfo.textContent = defaultSelectedText;
+}
+}
+
+function showAlert(el, message) {
+if (!el) return;
+if (!message) {
+    el.textContent = "";
+    el.classList.add("d-none");
+    return;
+}
+el.textContent = message;
+el.classList.remove("d-none");
+}
+
+function setSubmitEnabled(enabled) {
+if (!feedSubmitBtn) return;
+feedSubmitBtn.disabled = !enabled;
+}
+
+function resetFeedForm() {
+if (feedNote) feedNote.value = "";
+if (feedPhoto) feedPhoto.value = "";
+showAlert(feedErrorAlert, "");
+showAlert(feedSuccessAlert, "");
+selectedLat = null;
+selectedLng = null;
+updateSelectedText();
+setSubmitEnabled(false);
+if (selectedMarker) {
+    map.removeLayer(selectedMarker);
+    selectedMarker = null;
+}
+}
+
+if (openFeedFormBtn) {
+openFeedFormBtn.addEventListener("click", (event) => {
+    if (!isAuth) {
+        // Kullanıcı giriş yapmadan besleme eklemek istiyor
+        sessionStorage.setItem("showFeedFormAfterLogin", "1");
+        window.location.href = "/auth/login?tab=user&url=/";
+        return;
+    }
+    if (mapSection) {
+        mapSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    if (feedHelpBar) {
+        feedHelpBar.style.display = "inline-flex";
+    }
+});
+}
+
+if (feedForm) {
+feedForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!isAuth) {
+        showAlert(feedErrorAlert, "Besleme eklemek icin giris yapmalisiniz.");
+        sessionStorage.setItem("pendingFeedForm", JSON.stringify({"lat": selectedLat, "lng": selectedLng, "note": (feedNote && feedNote.value) ? feedNote.value : ""}));
+        window.location.href = "/auth/login?tab=user&url=/";
+        return;
     }
 
-    // Harita hareketlerinde sayaç güncelle
-    map.on("moveend", updateActivePointCounter);
-    map.on("zoomend", updateActivePointCounter);
+    try {
+        const pending = sessionStorage.getItem("pendingFeedForm");
+        if (pending) {
+            const data = JSON.parse(pending);
+            if (Number.isFinite(data.lat) && Number.isFinite(data.lng)) {
+                selectedLat = data.lat;
+                selectedLng = data.lng;
+                if (feedNote && data.note) feedNote.value = data.note;
+                setSelectedLocation(selectedLat, selectedLng);
+                sessionStorage.removeItem("pendingFeedForm");
+            }
+        }
+    } catch (e) {}
+    if (!Number.isFinite(selectedLat) || !Number.isFinite(selectedLng)) {
+        showAlert(feedErrorAlert, "Once haritada bir nokta sec.");
+        return;
+    }
+    if (selectedLat === 0 && selectedLng === 0) {
+        showAlert(feedErrorAlert, "Konum zorunlu");
+        return;
+    }
+    showAlert(feedErrorAlert, "");
+    showAlert(feedSuccessAlert, "");
+    if (feedLatInput) feedLatInput.value = selectedLat.toFixed(6);
+    if (feedLngInput) feedLngInput.value = selectedLng.toFixed(6);
+
+    const formData = new FormData(feedForm);
+    const action = feedForm.getAttribute("action") || "/api/feeds";
+    fetch(action, {
+        method: "POST",
+        body: formData,
+        credentials: "same-origin",
+    })
+        .then(async (res) => {
+            const contentType = res.headers.get("content-type") || "";
+            if (res.redirected || contentType.includes("text/html")) {
+                throw new Error("Giris yapmalisiniz.");
+            }
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                const msg = data.error || "Kaydetme basarisiz";
+                throw new Error(`${res.status} ${msg}`);
+            }
+            return data;
+        })
+        .then(() => {
+            showAlert(feedSuccessAlert, "Besleme kaydi eklendi.");
+            resetFeedForm();
+            return loadFeeds({ fitBounds: false });
+        })
+        .catch((err) => {
+            console.error(err);
+            showAlert(feedErrorAlert, err.message || "Kaydetme basarisiz");
+        });
+});
+}
+
+map.on("click", (e) => {
+setSelectedLocation(e.latlng.lat, e.latlng.lng);
+});
+
+function setSelectedLocation(lat, lng) {
+selectedLat = lat;
+selectedLng = lng;
+updateSelectedText();
+if (!selectedMarker) {
+    selectedMarker = L.marker([selectedLat, selectedLng]);
+    selectedMarker.addTo(map);
+} else {
+    selectedMarker.setLatLng([selectedLat, selectedLng]);
+}
+showAlert(feedErrorAlert, "");
+showAlert(feedSuccessAlert, "");
+setSubmitEnabled(true);
+}
+
+function updateActivePointCounter() {
+const el = document.getElementById("activePoints");
+if (!el) return;
+let count = 0;
+feedMarkers.forEach((m) => {
+    if (feedsLayer.hasLayer(m)) count += 1;
+});
+el.innerText = String(count);
+}
+
+// Harita hareketlerinde sayaç güncelle
+map.on("moveend", updateActivePointCounter);
+map.on("zoomend", updateActivePointCounter);
+
+// İlk yüklemede sayaç güncelle
+updateActivePointCounter();
 });
