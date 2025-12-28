@@ -38,7 +38,7 @@ exports.adminGetAddAnc = (req, res) => {
 
 exports.adminPostAddAnc = async (req, res, next) => {
     const body = req.body;
-    const isActive = body.isActive ? true : false;
+    const isActive = body.isActive === "0" ? false : true;
     try {
         const slug = await buildUniqueSlug(body.title || "");
         let imageUrl = null;
