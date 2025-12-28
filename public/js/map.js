@@ -202,8 +202,15 @@ document.addEventListener("DOMContentLoaded", () => {
             ul.innerHTML = "";
             list.slice(0, 5).forEach((item, idx) => {
                 const li = document.createElement("li");
-                li.className = "list-group-item d-flex justify-content-between";
-                li.innerHTML = `<span>${idx + 1}. ${item.name}</span><span>${item.points}</span>`;
+                li.className = "list-group-item d-flex justify-content-between align-items-center";
+                const badgeText = item.badges ? item.badges : "";
+                li.innerHTML = `
+                    <div>
+                        <div>${idx + 1}. ${item.name}</div>
+                        <div class="small text-muted">${badgeText}</div>
+                    </div>
+                    <span>${item.points}</span>
+                `;
                 ul.appendChild(li);
             });
             if (list.length === 0) {
