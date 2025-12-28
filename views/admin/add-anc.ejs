@@ -7,38 +7,9 @@
         <div class="admin-main">
             <%- include('./partials/topbar', { contentTitle, contentDesc: 'Yeni duyuru oluşturun' }) %>
             <div class="container-fluid py-4">
-                <!-- Form Header -->
-                <div class="d-flex align-items-center mb-4">
-                    <div class="me-auto">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="form-wizard-indicator">
-                                <div class="wizard-step active">
-                                    <div class="step-number">1</div>
-                                    <div class="step-title">Temel Bilgiler</div>
-                                </div>
-                                <div class="wizard-line"></div>
-                                <div class="wizard-step">
-                                    <div class="step-number">2</div>
-                                    <div class="step-title">Yayın Ayarları</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <a href="/admin" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-circle me-2"></i>İptal
-                        </a>
-                        <button type="button" class="btn btn-outline-primary" onclick="saveDraft()">
-                            <i class="bi bi-file-earmark me-2"></i>Taslak Kaydet
-                        </button>
-                    </div>
-                </div>
-                
                 <!-- Main Form -->
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="admin-card p-4">
-                            <form method="post" id="announcementForm" enctype="multipart/form-data">
+                <div class="admin-card p-4">
+                    <form method="post" id="announcementForm" enctype="multipart/form-data">
                                 <input type="hidden" name="_csrf" value="<%=csrfToken %>">
                                 <input type="hidden" name="publish_at" id="publish_at_hidden">
                                 <input type="hidden" name="isActive" id="isActiveHidden">
@@ -114,11 +85,7 @@
                                             <textarea name="explain" id="explain" style="display:none;"></textarea>
                                         </div>
                                         <div class="form-text">
-                                            <span id="charCount">0</span> karakter | 
-                                            <a href="#" onclick="previewContent()" class="text-decoration-none">
-                                                <i class="bi bi-eye me-1"></i>Önizle
-                                            </a>
-                                        </div>
+                                            <span id="charCount">0</span> karakter</div>
                                     </div>
                                 </div>
 
@@ -147,7 +114,7 @@
                                     </div>
                                     <div class="form-group-enhanced">
                                         <div class="d-flex gap-2">
-                                            <select class="form-select" id="categorySelect" onchange="updateCategory()">
+                                            <select class="form-select" id="categorySelect">
                                                 <option value="">Kategori seçin...</option>
                                                 <option value="Genel">Genel</option>
                                                 <option value="Bilgilendirme">Bilgilendirme</option>
@@ -160,156 +127,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="d-grid gap-2 mt-3">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-send me-2"></i>
+                                        Yayinla
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
-                    
-                    <!-- Sidebar -->
-                    <div class="col-lg-4">
-                        <div class="sticky-sidebar">
-                            <!-- Publish Settings -->
-                            <div class="admin-card p-4 mb-4">
-                                <h6 class="card-title mb-3">
-                                    <i class="bi bi-gear text-primary me-2"></i>
-                                    Yayın Ayarları
-                                </h6>
-                                <div class="form-group-enhanced mb-3">
-                                    <label for="publish_at" class="form-label fw-semibold">
-                                        <i class="bi bi-calendar3 me-1"></i>
-                                        Yayın Tarihi
-                                    </label>
-                                    <input type="datetime-local" class="form-control" id="publish_at" 
-                                           name="publish_at">
-                                    <div class="form-text">Boş bırakırsanız hemen yayınlanır.</div>
-                                </div>
-                                
-                                <div class="form-check form-switch form-check-enhanced mb-3">
-                                    <input class="form-check-input" type="checkbox" id="isActive" 
-                                           name="isActive" checked>
-                                    <label class="form-check-label" for="isActive">
-                                        <div class="check-label-text">Yayında</div>
-                                        <div class="check-label-desc">Duyuru hemen yayınlanır</div>
-                                    </label>
-                                </div>
-                                
-                                <div class="form-check form-switch form-check-enhanced mb-3">
-                                    <input class="form-check-input" type="checkbox" id="sendNotification" name="sendNotification">
-                                    <label class="form-check-label" for="sendNotification">
-                                        <div class="check-label-text">Bildirim Gönder</div>
-                                        <div class="check-label-desc">Kullanıcılara bildirim gönder</div>
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <!-- Preview Card -->
-                            <div class="admin-card p-4 mb-4">
-                                <h6 class="card-title mb-3">
-                                    <i class="bi bi-eye text-primary me-2"></i>
-                                    Önizleme
-                                </h6>
-                                <div class="announcement-preview" id="preview">
-                                    <div class="preview-header">
-                                        <div class="preview-category badge bg-primary">Genel</div>
-                                        <div class="preview-date">Şimdi</div>
-                                    </div>
-                                    <div class="preview-title">Duyuru başlığı burada görünecek</div>
-                                    <div class="preview-content">Duyuru içeriği burada görünecek...</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Actions -->
-                            <div class="d-grid gap-2">
-                                <button type="submit" form="announcementForm" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-send me-2"></i>
-                                    Yayınla
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary" onclick="saveDraft()">
-                                    <i class="bi bi-file-earmark me-2"></i>
-                                    Taslak Kaydet
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Preview Modal -->
-    <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-eye me-2"></i>
-                        Duyuru Önizleme
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="preview-full" id="fullPreview">
-                        <!-- Preview content will be inserted here -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Kapat
-                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <style>
-        .form-wizard-indicator {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .wizard-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .step-number {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.875rem;
-            color: #6c757d;
-            transition: all 0.3s ease;
-        }
-        
-        .wizard-step.active .step-number {
-            background: var(--pet-red);
-            color: white;
-        }
-        
-        .step-title {
-            font-size: 0.875rem;
-            color: #6c757d;
-            font-weight: 500;
-        }
-        
-        .wizard-step.active .step-title {
-            color: var(--pet-ink);
-            font-weight: 600;
-        }
-        
-        .wizard-line {
-            width: 60px;
-            height: 2px;
-            background: #e9ecef;
-        }
-        
         .form-section {
             padding-bottom: 2rem;
             border-bottom: 1px solid rgba(26, 107, 181, 0.1);
@@ -385,209 +217,55 @@
         .editor-content:focus {
             background: #fafbff;
         }
-        
-        .form-check-enhanced {
-            background: rgba(26, 107, 181, 0.02);
-            border: 1px solid rgba(26, 107, 181, 0.1);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .form-check-enhanced .form-check-input {
-            width: 48px;
-            height: 24px;
-        }
-        
-        .check-label-text {
-            font-weight: 600;
-            color: var(--pet-ink);
-        }
-        
-        .check-label-desc {
-            font-size: 0.875rem;
-            color: #6c757d;
-        }
-        
-        .sticky-sidebar {
-            position: sticky;
-            top: 1rem;
-        }
-        
-        .announcement-preview {
-            background: white;
-            border: 1px solid rgba(26, 107, 181, 0.1);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-        
-        .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        
-        .preview-title {
-            font-weight: 600;
-            color: var(--pet-ink);
-            margin-bottom: 0.5rem;
-        }
-        
-        .preview-content {
-            color: #6c757d;
-            font-size: 0.875rem;
-            line-height: 1.5;
-        }
-        
-        .preview-date {
-            font-size: 0.75rem;
-            color: #6c757d;
-        }
-        
-        @media (max-width: 768px) {
-            .form-wizard-indicator {
-                display: none;
-            }
-            
-            .sticky-sidebar {
-                position: relative;
-                top: 0;
-            }
-        }
     </style>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('announcementForm');
-            const publishAtInput = document.getElementById('publish_at');
             const publishAtHidden = document.getElementById('publish_at_hidden');
-            const isActiveInput = document.getElementById('isActive');
             const isActiveHidden = document.getElementById('isActiveHidden');
-
-            // Title character counter
             const titleInput = document.getElementById('title');
             const titleCount = document.getElementById('titleCount');
-            
-            titleInput.addEventListener('input', function() {
-                const count = this.value.length;
-                titleCount.textContent = `${count}/200`;
-                
-                if (count > 180) {
-                    titleCount.classList.add('text-warning');
-                } else {
-                    titleCount.classList.remove('text-warning');
-                }
-                
-                updatePreview();
-            });
-            
-            // Editor character counter
             const editor = document.getElementById('editor');
             const charCount = document.getElementById('charCount');
             const hiddenTextarea = document.getElementById('explain');
-            
-            editor.addEventListener('input', function() {
-                const text = this.innerText;
-                charCount.textContent = text.length;
-                hiddenTextarea.value = text;
-                updatePreview();
-            });
-            
-            // Category handling
             const categorySelect = document.getElementById('categorySelect');
             const categoryInput = document.getElementById('category');
-            
-            // Set default publish time to now
-            const publishAt = document.getElementById('publish_at');
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            publishAt.value = now.toISOString().slice(0, 16);
-            if (publishAtHidden) {
-                publishAtHidden.value = publishAt.value;
-            }
-            if (isActiveHidden && isActiveInput) {
-                isActiveHidden.value = isActiveInput.checked ? "1" : "";
-            }
-            
-            // Initial preview update
-            updatePreview();
 
-            if (form) {
-                form.addEventListener('submit', function() {
-                    if (publishAtInput && publishAtHidden) {
-                        publishAtHidden.value = publishAtInput.value || "";
-                    }
-                    if (isActiveInput && isActiveHidden) {
-                        isActiveHidden.value = isActiveInput.checked ? "1" : "";
+            if (titleInput && titleCount) {
+                titleInput.addEventListener('input', function() {
+                    const count = this.value.length;
+                    titleCount.textContent = `${count}/200`;
+                    if (count > 180) {
+                        titleCount.classList.add('text-warning');
+                    } else {
+                        titleCount.classList.remove('text-warning');
                     }
                 });
             }
+
+            if (editor && charCount && hiddenTextarea) {
+                editor.addEventListener('input', function() {
+                    const text = this.innerText;
+                    charCount.textContent = text.length;
+                    hiddenTextarea.value = text;
+                });
+            }
+
+            if (categorySelect && categoryInput) {
+                categoryInput.value = categorySelect.value;
+                categorySelect.addEventListener('change', function() {
+                    categoryInput.value = this.value;
+                });
+            }
+
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            if (publishAtHidden) {
+                publishAtHidden.value = now.toISOString().slice(0, 16);
+            }
+            if (isActiveHidden) {
+                isActiveHidden.value = "1";
+            }
         });
-        
-        function updateCategory() {
-            const select = document.getElementById('categorySelect');
-            const input = document.getElementById('category');
-            
-            if (select.value === 'custom') {
-                input.style.display = 'block';
-                input.focus();
-            } else {
-                input.style.display = 'none';
-                input.value = select.value;
-            }
-            
-            updatePreview();
-        }
-        
-        function updatePreview() {
-            const title = document.getElementById('title').value || 'Duyuru başlığı burada görünecek';
-            const content = document.getElementById('editor').innerText || 'Duyuru içeriği burada görünecek...';
-            const category = document.getElementById('category').value || 'Genel';
-            
-            document.querySelector('.preview-title').textContent = title;
-            document.querySelector('.preview-content').textContent = content.length > 100 ? 
-                content.substring(0, 100) + '...' : content;
-            document.querySelector('.preview-category').textContent = category;
-        }
-        
-        function formatText(command) {
-            document.execCommand(command, false, null);
-            document.getElementById('editor').focus();
-        }
-        
-        function insertLink() {
-            const url = prompt('Link adresini girin:');
-            if (url) {
-                document.execCommand('createLink', false, url);
-                document.getElementById('editor').focus();
-            }
-        }
-        
-        function previewContent() {
-            const title = document.getElementById('title').value || 'Başlıksız';
-            const content = document.getElementById('editor').innerHTML || '<p>İçerik yok</p>';
-            const category = document.getElementById('category').value || 'Genel';
-            
-            const previewHtml = `
-                <div class="announcement-full-preview">
-                    <div class="preview-header mb-3">
-                        <span class="badge bg-primary">${category}</span>
-                        <small class="text-muted">${new Date().toLocaleString('tr-TR')}</small>
-                    </div>
-                    <h3>${title}</h3>
-                    <div class="preview-content mt-3">${content}</div>
-                </div>
-            `;
-            
-            document.getElementById('fullPreview').innerHTML = previewHtml;
-            new bootstrap.Modal(document.getElementById('previewModal')).show();
-        }
-        
-        function saveDraft() {
-            // This would save as draft
-            alert('Taslak kaydedildi (simülasyon)');
-        }
     </script>
     
     <%- include('../partials/script.ejs') %>
