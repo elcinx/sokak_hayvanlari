@@ -19,7 +19,9 @@ exports.summary = async (req, res, next) => {
         );
         const [[todayFeeds]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs WHERE DATE(created_at)=CURDATE()");
         const [[totalVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs");
-        const [[todayVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs WHERE DATE(visited_at)=CURDATE()");
+        const [[todayVisits]] = await db.execute(
+            "SELECT COUNT(*) AS c FROM visit_logs WHERE DATE(CONVERT_TZ(visited_at,'+00:00','+03:00'))=CURDATE()"
+        );
         const [[totalGallery]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs WHERE photo_url IS NOT NULL");
         const [[totalAnnouncements]] = await db.execute("SELECT COUNT(*) AS c FROM announcements WHERE is_active=1");
         res.json({

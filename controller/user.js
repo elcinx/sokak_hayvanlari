@@ -36,7 +36,9 @@ exports.userHome = async (req, res, next) => {
             image_path: g.photo_url || null
         }));
         const [[totalVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs");
-        const [[todayVisits]] = await db.execute("SELECT COUNT(*) AS c FROM visit_logs WHERE DATE(visited_at)=CURDATE()");
+        const [[todayVisits]] = await db.execute(
+            "SELECT COUNT(*) AS c FROM visit_logs WHERE DATE(CONVERT_TZ(visited_at,'+00:00','+03:00'))=CURDATE()"
+        );
         const slugify = require("slugify");
         let badges = [];
         const userId = req.session.userid;
