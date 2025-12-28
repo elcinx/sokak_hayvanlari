@@ -191,12 +191,14 @@ metricsController.setOnlineCountRef(() => onlineIPs.size);
 
 io.on("connection", (socket) => {
     const ip = getIPFromSocket(socket);
+    console.log("[online] new connection ip:", ip, "total before:", onlineIPs.size);
     onlineIPs.add(ip);
     broadcastOnline();
 
     socket.on("disconnect", () => {
         // Remove IP only if this socket was the last one from this IP
         // Simplified: remove on any disconnect (may slightly undercount)
+        console.log("[online] disconnect ip:", ip, "total before:", onlineIPs.size);
         onlineIPs.delete(ip);
         broadcastOnline();
     });
