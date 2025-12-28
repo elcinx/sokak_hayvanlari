@@ -8,7 +8,7 @@
     width: calc(100% - 24px);
     height: calc(100% - 16px);
     object-fit: contain;
-    object-position: bottom right;
+    object-position: center;
 }
 @media (max-width: 991.98px) {
     .hero-cover {
