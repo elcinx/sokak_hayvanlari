@@ -64,59 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const defaultSelectedText = selectedLocationInfo ? selectedLocationInfo.textContent : "";
 
     if (isAuth) {
-        // Login sonrası besleme formunu otomatik aç
-        if (sessionStorage.getItem("showFeedFormAfterLogin") === "1") {
-            sessionStorage.removeItem("showFeedFormAfterLogin");
-            if (openFeedFormBtn) {
-                openFeedFormBtn.click();
-            }
-        }
         const pending = sessionStorage.getItem("pendingFeedForm");
         if (pending) {
             try {
                 const data = JSON.parse(pending);
-                if (Number.isFinite(data.lat) && Number.isFinite(data.lng)) {
-                    selectedLat = data.lat;
-                    selectedLng = data.lng;
-                    if (feedNote && data.note) feedNote.value = data.note;
-                    setSelectedLocation(selectedLat, selectedLng);
-                    // Otomatik kaydet
-                    if (feedForm) {
-                        if (feedLatInput) feedLatInput.value = selectedLat.toFixed(6);
-                        if (feedLngInput) feedLngInput.value = selectedLng.toFixed(6);
-                        const formData = new FormData(feedForm);
-                        const action = feedForm.getAttribute("action") || "/api/feeds";
-                        fetch(action, {
-                            method: "POST",
-                            body: formData,
-                            credentials: "same-origin",
-                        })
-                            .then(async (res) => {
-                                const ct = res.headers.get("content-type") || "";
-                                if (res.redirected || ct.includes("text/html")) {
-                                    throw new Error("Giris yapmalisiniz.");
-                                }
-                                const d = await res.json().catch(() => ({}));
-                                if (!res.ok) {
-                                    const msg = d.error || "Kaydetme basarisiz";
-                                    throw new Error(`${res.status} ${msg}`);
-                                }
-                                return d;
-                            })
-                            .then(() => {
-                                showAlert(feedSuccessAlert, "Besleme kaydi eklendi.");
-                                resetFeedForm();
-                                return loadFeeds({ fitBounds: false });
-                            })
-                            .catch(() => {})
-                            .finally(() => {
-                                // Artık bekleyen veri yok
-                                sessionStorage.removeItem("pendingFeedForm");
-                            });
-                    } else {
-                        sessionStorage.removeItem("pendingFeedForm");
-                    }
-                }
+                submitPendingFeed(data);
             } catch (e) {}
         }
     }
@@ -281,6 +233,20 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/>/g, "&gt;")
             .replace(/\"/g, "&quot;")
             .replace(/'/g, "&#39;");
+    }
+
+    async function submitPendingFeed(data) {
+        if (!data || !Number.isFinite(data.lat) || !Number.isFinite(data.lng)) return;
+        const formData = new FormData();
+        formData.append("lat", data.lat);
+        formData.append("lng", data.lng);
+        if (data.note) formData.append("note", data.note);
+        try {
+            const res = await fetch("/api/feeds", { method: "POST", body: formData, credentials: "same-origin" });
+            if (!res.ok) throw new Error();
+            sessionStorage.removeItem("pendingFeedForm");
+            await loadFeeds({ fitBounds: false });
+        } catch (e) {}
     }
 
     async function loadFeeds(options = {}) {
@@ -487,25 +453,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateActivePointCounter() {
         const el = document.getElementById("activePoints");
         if (!el) return;
-        // Viewport içinde ve feedsLayer'da olan marker adedi
-        const bounds = map.getBounds();
-        let visible = 0;
+        let count = 0;
         feedMarkers.forEach((m) => {
-            if (!feedsLayer.hasLayer(m)) return;
-            const ll = m.getLatLng();
-            // Secili marker ile ayni lokasyondaki (gecici isaret) sayilmasin
-            if (selectedMarker) {
-                const sll = selectedMarker.getLatLng();
-                if (
-                    Number(ll.lat).toFixed(6) === Number(sll.lat).toFixed(6) &&
-                    Number(ll.lng).toFixed(6) === Number(sll.lng).toFixed(6)
-                ) {
-                    return;
-                }
-            }
-            if (bounds && bounds.contains(ll)) visible++;
+            if (feedsLayer.hasLayer(m)) count += 1;
         });
-        el.innerText = String(visible);
+        el.innerText = String(count);
     }
 
     // Harita hareketlerinde sayaç güncelle

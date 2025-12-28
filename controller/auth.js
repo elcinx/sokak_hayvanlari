@@ -92,9 +92,9 @@ exports.postLogin=async(req,res,next)=>{
                 res.clearCookie("password"); 
             }
         }
-        const redirectUrl = (req.session.role === "admin" || req.session.role === "moderator")
-            ? (req.query.url || "/admin")
-            : (req.query.url || "/");
+        const redirectUrl = requestedRole === "admin"
+            ? (req.session.role === "admin" || req.session.role === "moderator" ? (req.query.url || "/admin") : "/auth/login")
+            : "/";
         return req.session.save(() => res.redirect(redirectUrl));
     }
     
@@ -216,7 +216,6 @@ exports.postAdminRegister = async (req, res, next) => {
         await req.session.destroy(); //session temizle
         res.redirect("/auth/login"); //ana sayfaya git
     }
-
 
 
 
