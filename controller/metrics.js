@@ -22,9 +22,10 @@ exports.summary = async (req, res, next) => {
         const [[todayVisits]] = await db.execute(
             "SELECT COUNT(*) AS c FROM visit_logs WHERE DATE(CONVERT_TZ(visited_at,'+00:00','+03:00'))=CURDATE()"
         );
+        console.log("[metrics.summary] todayVisits DB result:", todayVisits?.c);
         const [[totalGallery]] = await db.execute("SELECT COUNT(*) AS c FROM feed_logs WHERE photo_url IS NOT NULL");
         const [[totalAnnouncements]] = await db.execute("SELECT COUNT(*) AS c FROM announcements WHERE is_active=1");
-        res.json({
+        const result = {
             totalFeeds: totalFeeds?.c || 0,
             activePoints: activePoints?.c || 0,
             todayFeeds: todayFeeds?.c || 0,
@@ -33,7 +34,9 @@ exports.summary = async (req, res, next) => {
             totalGallery: totalGallery?.c || 0,
             totalAnnouncements: totalAnnouncements?.c || 0,
             online: onlineCount(),
-        });
+        };
+        console.log("[metrics.summary] response:", result);
+        res.json(result);
     } catch (err) {
         next(err);
     }
